@@ -1,0 +1,339 @@
+Ok, mình sẽ **note đầy đủ – có chọn lọc – theo tư duy enterprise + Clean Architecture**, và **đưa luôn code + luồng logic**, nhưng vẫn giữ nguyên triết lý ban đầu của bạn:
+
+> **Domain hiện tại KHÔNG bị phá, chỉ được làm “dày” và “đủ doanh nghiệp” hơn**
+
+---
+
+# I. TỔNG QUAN: DOMAIN HIỆN TẠI ĐANG Ở MỨC NÀO?
+
+Hiện tại bạn đã có:
+
+### ✅ Core Aggregate (RẤT TỐT)
+
+* `ServiceRequest` ⭐ (Aggregate Root)
+* State machine rõ ràng
+* Value Objects chuẩn
+
+### ✅ Supporting Entities
+
+* User
+* ServiceAgent
+* Assignment
+* AgentCapability
+* ActivityLog
+
+👉 **Domain này đã đủ để chạy MVP + AI matching**
+
+Nhưng để đạt mức **“hoàn chỉnh – chấm điểm cao – mở rộng lâu dài”**, ta **BỔ SUNG CÓ CHỦ ĐÍCH**, không nhồi.
+
+---
+
+# II. DANH SÁCH ENTITY BỔ SUNG (PHÂN LOẠI RÕ)
+
+## 🔹 A. ENTITY NÊN CÓ (High Value – nên làm)
+
+### 1️⃣ `ServiceCategory` (Hierarchy Category)
+
+> Phục vụ multi-industry, Shopee-style filtering
+
+📍 **Domain.Entities**
+
+```csharp
+namespace SmartService.Domain.Entities;
+
+public class ServiceCategory
+{
+    public Guid Id { get; private set; }
+    public string Name { get; private set; }
+    public Guid? ParentCategoryId { get; private set; }
+
+    private ServiceCategory() { }
+
+    public ServiceCategory(string name, Guid? parentId = null)
+    {
+        Id = Guid.NewGuid();
+        Name = name;
+        ParentCategoryId = parentId;
+    }
+}
+```
+
+📌 Logic:
+
+* Level 1: Kỹ thuật / Pháp lý / BĐS
+* Level 2: Điện nước, Luật đất đai…
+
+👉 **ServiceRequest.CategoryId → ServiceCategory.Id**
+
+---
+
+### 2️⃣ `ServiceProviderProfile` (Tách rõ khỏi Agent)
+
+> Để sau này mở rộng: rating, kinh nghiệm, hồ sơ pháp lý
+
+📍 **Domain.Entities**
+
+```csharp
+namespace SmartService.Domain.Entities;
+
+public class ServiceProviderProfile
+{
+    public Guid Id { get; private set; }
+    public Guid AgentId { get; private set; }
+
+    public int YearsOfExperience { get; private set; }
+    public string Bio { get; private set; }
+
+    private ServiceProviderProfile() { }
+
+    public ServiceProviderProfile(Guid agentId, int years, string bio)
+    {
+        Id = Guid.NewGuid();
+        AgentId = agentId;
+        YearsOfExperience = years;
+        Bio = bio;
+    }
+}
+```
+
+👉 Không phá `ServiceAgent`, chỉ **bổ sung thông tin chuyên sâu**
+
+---
+
+### 3️⃣ `ServiceFeedback` (Rating & Review)
+
+> Cần thiết cho hệ sinh thái Shopee-style
+
+📍 **Domain.Entities**
+
+```csharp
+namespace SmartService.Domain.Entities;
+
+public class ServiceFeedback
+{
+    public Guid Id { get; private set; }
+    public Guid ServiceRequestId { get; private set; }
+    public Guid CustomerId { get; private set; }
+
+    public int Rating { get; private set; } // 1–5
+    public string Comment { get; private set; }
+    public DateTime CreatedAt { get; private set; }
+
+    private ServiceFeedback() { }
+
+    public ServiceFeedback(Guid requestId, Guid customerId, int rating, string comment)
+    {
+        if (rating < 1 || rating > 5)
+            throw new DomainException("Rating must be between 1 and 5.");
+
+        Id = Guid.NewGuid();
+        ServiceRequestId = requestId;
+        CustomerId = customerId;
+        Rating = rating;
+        Comment = comment;
+        CreatedAt = DateTime.UtcNow;
+    }
+}
+```
+
+📌 Rule:
+
+* Chỉ tạo khi `ServiceRequest.Completed`
+
+---
+
+### 4️⃣ `ServiceAttachment`
+
+> Phục vụ pháp lý, sửa chữa, bằng chứng
+
+📍 **Domain.Entities**
+
+```csharp
+namespace SmartService.Domain.Entities;
+
+public class ServiceAttachment
+{
+    public Guid Id { get; private set; }
+    public Guid ServiceRequestId { get; private set; }
+    public string FileUrl { get; private set; }
+    public string FileType { get; private set; }
+
+    private ServiceAttachment() { }
+
+    public ServiceAttachment(Guid requestId, string url, string type)
+    {
+        Id = Guid.NewGuid();
+        ServiceRequestId = requestId;
+        FileUrl = url;
+        FileType = type;
+    }
+}
+```
+
+---
+
+## 🔹 B. ENTITY CHIẾN LƯỢC (AI / BUSINESS LOGIC)
+
+### 5️⃣ `ServiceEvaluation`
+
+> Chuẩn bị cho **AI đánh giá độ phức tạp**
+
+📍 **Domain.Entities**
+
+```csharp
+namespace SmartService.Domain.Entities;
+
+public class ServiceEvaluation
+{
+    public Guid Id { get; private set; }
+    public Guid ServiceRequestId { get; private set; }
+
+    public int SuggestedComplexity { get; private set; }
+    public string Reason { get; private set; }
+    public bool IsAutoEvaluated { get; private set; }
+
+    private ServiceEvaluation() { }
+
+    public ServiceEvaluation(Guid requestId, int complexity, string reason, bool isAuto)
+    {
+        Id = Guid.NewGuid();
+        ServiceRequestId = requestId;
+        SuggestedComplexity = complexity;
+        Reason = reason;
+        IsAutoEvaluated = isAuto;
+    }
+}
+```
+
+👉 Sau này:
+
+* Rule-based → AI → Ollama / LLM
+* **KHÔNG phá ServiceRequest**
+
+---
+
+### 6️⃣ `MatchingResult` (AI / Rule matching)
+
+📍 **Domain.Entities**
+
+```csharp
+namespace SmartService.Domain.Entities;
+
+public class MatchingResult
+{
+    public Guid Id { get; private set; }
+    public Guid ServiceRequestId { get; private set; }
+    public Guid AgentId { get; private set; }
+
+    public double Score { get; private set; }
+    public string MatchingReason { get; private set; }
+
+    private MatchingResult() { }
+
+    public MatchingResult(Guid requestId, Guid agentId, double score, string reason)
+    {
+        Id = Guid.NewGuid();
+        ServiceRequestId = requestId;
+        AgentId = agentId;
+        Score = score;
+        MatchingReason = reason;
+    }
+}
+```
+
+---
+
+# III. LUỒNG LOGIC HOÀN CHỈNH (END-TO-END)
+
+## 🔄 FLOW TỔNG
+
+```text
+Customer
+ └── Create ServiceRequest
+        └── Status = Created
+            └── ActivityLog
+
+System / AI
+ └── ServiceEvaluation
+        └── Evaluate()
+            └── Status = Evaluating
+
+Matching Engine
+ └── AgentCapability + Category
+        └── MatchingResult
+            └── Best Agent
+
+System
+ └── AssignProvider()
+        └── Assignment
+        └── Status = Assigned
+
+Agent
+ └── Start()
+        └── Status = InProgress
+
+Agent
+ └── Complete()
+        └── Status = Completed
+
+Customer
+ └── ServiceFeedback
+```
+
+---
+
+# IV. KIẾN TRÚC CLEAN (MAP RÕ)
+
+```text
+Domain
+ ├── Entities
+ │   ├── ServiceRequest ⭐
+ │   ├── ServiceCategory
+ │   ├── ServiceAgent
+ │   ├── Assignment
+ │   ├── ServiceEvaluation
+ │   ├── MatchingResult
+ │   ├── ServiceFeedback
+ │   ├── ActivityLog
+ │   └── ServiceAttachment
+ │
+ ├── ValueObjects
+ │   ├── Money
+ │   ├── ServiceComplexity
+ │   └── ServiceStatus
+ │
+ ├── Interfaces
+ │   └── IAggregateRoot
+ │
+ └── Exceptions
+     └── DomainException
+```
+
+---
+
+# V. KẾT LUẬN THẲNG & CHUẨN
+
+### ✅ Domain của bạn bây giờ:
+
+* Đủ cho **multi-industry**
+* Đủ cho **Shopee-style service**
+* Đủ cho **AI matching**
+* Đủ cho **capstone / đồ án / startup**
+
+### ❗ Quan trọng nhất
+
+> **KHÔNG CẦN THÊM ENTITY NÀO NỮA Ở DOMAIN**
+
+Từ giờ trở đi:
+
+* Chỉ phát triển **Application Layer**
+* Domain **đóng băng**
+
+---
+
+👉 Nếu bạn muốn, bước tiếp theo mình có thể:
+1️⃣ Viết **Application Use Cases (Command / Handler)**
+2️⃣ Thiết kế **Matching Algorithm v1 (rule-based)**
+3️⃣ Thiết kế **AI Evaluation Pipeline (Ollama-ready)**
+
+Bạn chọn **hướng tiếp theo**, mình đi tiếp cùng bạn.

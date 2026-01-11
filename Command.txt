@@ -1,0 +1,6 @@
+1. Địa chỉ local host kết nối : Host=localhost;Port=5432;Database=smart_service_db;Username=postgres;Password=12345
+
+2. Bộ command chạy Db mới và update
+dotnet ef migrations add Initial --project SmartService.Infrastructure --startup-project SmartService.WebAPI
+
+dotnet ef database update --project SmartService.Infrastructure --startup-project SmartService.WebAPI
