@@ -8,6 +8,7 @@ import { useAuth } from '../context/AuthContext';
 // Auth Screens
 import { LoginScreen } from '../screens/auth/LoginScreen';
 import { RegisterScreen } from '../screens/auth/RegisterScreen';
+import { ForgotPasswordScreen } from '../screens/auth/ForgotPasswordScreen';
 
 // Common Screens
 import { ProfileScreen } from '../screens/common/ProfileScreen';
@@ -39,6 +40,7 @@ const AuthNavigator = () => {
     >
       <AuthStack.Screen name="Login" component={LoginScreen} />
       <AuthStack.Screen name="Register" component={RegisterScreen} />
+      <AuthStack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
     </AuthStack.Navigator>
   );
 };
@@ -110,48 +112,68 @@ const HistoryStackNavigator = () => {
   );
 };
 
+// App Stack Navigator (After Login)
+const AppNavigator = () => {
+  return (
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        headerShown: false,
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+
+          if (route.name === 'Camera') {
+            iconName = focused ? 'camera' : 'camera-outline';
+          } else if (route.name === 'History') {
+            iconName = focused ? 'list' : 'list-outline';
+          } else if (route.name === 'Profile') {
+            iconName = focused ? 'person' : 'person-outline';
+          }
+
+          return <Ionicons name={iconName} size={size} color={color} />;
+        },
+        tabBarActiveTintColor: '#007AFF',
+        tabBarInactiveTintColor: '#666',
+        tabBarStyle: {
+          backgroundColor: '#fff',
+          borderTopColor: '#e0e0e0',
+          paddingBottom: 5,
+          paddingTop: 5,
+        },
+        tabBarLabelStyle: {
+          fontSize: 12,
+          fontWeight: '500',
+        },
+      })}
+    >
+      <Tab.Screen
+        name="Camera"
+        component={CameraStackNavigator}
+        options={{ title: 'Analyze' }}
+      />
+      <Tab.Screen
+        name="History"
+        component={HistoryStackNavigator}
+        options={{ title: 'History' }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{ title: 'Profile' }}
+      />
+    </Tab.Navigator>
+  );
+};
+
 export const RootNavigator = () => {
+  const { isAuthenticated, loading } = useAuth();
+
+  if (loading) {
+    return null; // Or a loading screen
+  }
+
   return (
     <NavigationContainer>
-      <Tab.Navigator
-        screenOptions={({ route }) => ({
-          headerShown: false,
-          tabBarIcon: ({ focused, color, size }) => {
-            let iconName;
-
-            if (route.name === 'Camera') {
-              iconName = focused ? 'camera' : 'camera-outline';
-            } else if (route.name === 'History') {
-              iconName = focused ? 'list' : 'list-outline';
-            }
-
-            return <Ionicons name={iconName} size={size} color={color} />;
-          },
-          tabBarActiveTintColor: '#007AFF',
-          tabBarInactiveTintColor: '#666',
-          tabBarStyle: {
-            backgroundColor: '#fff',
-            borderTopColor: '#e0e0e0',
-            paddingBottom: 5,
-            paddingTop: 5,
-          },
-          tabBarLabelStyle: {
-            fontSize: 12,
-            fontWeight: '500',
-          },
-        })}
-      >
-        <Tab.Screen
-          name="Camera"
-          component={CameraStackNavigator}
-          options={{ title: 'Analyze' }}
-        />
-        <Tab.Screen
-          name="History"
-          component={HistoryStackNavigator}
-          options={{ title: 'History' }}
-        />
-      </Tab.Navigator>
+      {isAuthenticated() ? <AppNavigator /> : <AuthNavigator />}
     </NavigationContainer>
   );
 };
