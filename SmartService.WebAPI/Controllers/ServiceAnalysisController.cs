@@ -15,13 +15,16 @@ public class ServiceAnalysisController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Analyze([FromBody] string description)
-    {
-        if (string.IsNullOrEmpty(description))
-            return BadRequest(new { error = "Description is required" });
+public async Task<IActionResult> Analyze([FromBody] AnalysisRequest request)
+{
+    if (string.IsNullOrEmpty(request.Description))
+        return BadRequest();
 
-        var complexity = await _handler.HandleAsync(description);
-        return Ok(new { complexity = complexity.Level });
-    }
+    // Kết quả bây giờ bao gồm cả contextDescription và dispatchPolicy
+    var result = await _handler.HandleAsync(request.Description);
+    return Ok(result);
+}
+
+public record AnalysisRequest(string Description);
 }
 

@@ -2,36 +2,42 @@ namespace SmartService.Infrastructure.AI.Ollama;
 
 public static class OllamaPromptBuilder
 {
-    public static string BuildComplexityPrompt(
-        string description,
-        string ruleJson)
+    public static string BuildContextAndPolicyPrompt(string description, string ruleJson)
+{
+    return $$"""
+    You are a strict Logic Mapper. Your only job is to classify a "Service Description" into one of the "Levels" defined in the "Rules (JSON)".
+
+    ### RULES (JSON):
+    {{ruleJson}}
+
+    ### INPUT:
+    Description: "{{description}}"
+
+    ### INSTRUCTIONS:
+    1. Scan the Description for technical keywords.
+    2. Look for these keywords in the "criteria" field of the Rules (JSON).
+    3. If "3 pha" or "cân pha" is mentioned, you MUST select Level 4.
+    4. Use the EXACT values (minExperienceYears, requiresCertification, etc.) from the selected Level.
+    5. The "contextDescription" must be in the SAME LANGUAGE as the Description.
+
+    ### OUTPUT REQUIREMENT:
+    Return ONLY a JSON object. No preamble, no explanation outside the JSON.
+
     {
-        return $$"""
-        You are an expert service complexity analyzer. Analyze the given service description 
-        and determine its complexity level based on the provided rules.
-
-        The complexity levels are defined by criteria that indicate severity and technical difficulty.
-        You must understand the semantic meaning of the description, not just match exact phrases.
-        For example, if someone says "electrical fire hazard" you should recognize it relates to 
-        "Nguy cơ cháy nổ" (fire/explosion risk).
-
-        Rules (JSON):
-        {{ruleJson}}
-
-        Service Description:
-        {{description}}
-
-        Instructions:
-        1. Analyze the description semantically, not just by exact text matching
-        2. Consider the technical complexity and risk level implied
-        3. Match to the most appropriate complexity level (1-5)
-        4. Higher numbers = higher complexity/risk
-        5. Return ONLY valid JSON with no additional text
-
-        Output format:
-        {
-          "complexityLevel": <number 1-5>
-        }
-        """;
+      "contextDescription": {
+        "summary": "...",
+        "riskExplanation": "...",
+        "safetyAdvice": "..."
+      },
+      "dispatchPolicy": {
+        "selectedLevelReason": "Mention the specific criteria matched from Rules",
+        "requiredSkillLevel": number,
+        "minExperienceYears": number,
+        "requiresCertification": true|false,
+        "requiresSeniorTechnician": true|false,
+        "riskWeight": float
+      }
     }
+    """;
+}
 }

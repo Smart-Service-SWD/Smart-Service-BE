@@ -1,10 +1,65 @@
 {
   "subCategoryId": "TECH_ELECTRIC",
   "levels": [
-    { "level": 1, "criteria": ["Thay thiết bị đơn giản"] },
-    { "level": 2, "criteria": ["Sửa lỗi nhỏ"] },
-    { "level": 3, "criteria": ["Xử lý chập điện cục bộ"] },
-    { "level": 4, "criteria": ["Ảnh hưởng an toàn"] },
-    { "level": 5, "criteria": ["Nguy cơ cháy nổ"] }
+    {
+      "level": 1,
+      "criteria": [
+        "Thay thế các loại bóng đèn: LED, huỳnh quang, đèn trang trí dây, đèn búp, đèn tuýp bán nguyệt.",
+        "Lắp đặt thiết bị điện gia dụng cơ bản có phích cắm: Lò vi sóng, nồi cơm điện, máy lọc nước, quạt bàn, máy hút bụi.",
+        "Thay thế phụ kiện điện ngoại vi: Phích cắm dân dụng, chuông cửa không dây, đuôi đèn E27, phích cắm công nghiệp loại nhỏ.",
+        "Thay mặt che hoặc khung viền công tắc/ổ cắm bị nứt vỡ nhưng không chạm vào dây nguồn phía sau.",
+        "Lắp đặt các thiết bị thông minh cắm trực tiếp (Plug-and-play) không cần đấu nối dây.",
+        "Vệ sinh bụi bẩn bề mặt bên ngoài các thiết bị điện gia đình.",
+        "Kiểm tra tình trạng hoạt động bằng bút thử điện hoặc đồng hồ đo điện áp cơ bản tại ổ cắm."
+      ]
+    },
+    {
+      "level": 2,
+      "criteria": [
+        "Lắp mới các loại quạt: Quạt trần (đã có móc), quạt hút mùi nhà bếp, quạt thông gió nhà tắm, quạt treo tường.",
+        "Đi đường dây điện nổi bằng ống nhựa tròn hoặc nẹp nhựa (máng gen) dưới 10 mét, bao gồm cả việc khoan đóng clip.",
+        "Thay thế các loại ổ cắm, công tắc âm tường đơn lẻ (loại 1 nút, 2 nút, 3 nút) khi đã có sẵn đế âm.",
+        "Lắp đặt bộ đèn chùm trang trí, đèn mâm áp trần, đèn rọi ray (đã có sẵn đầu chờ dây điện).",
+        "Thay thế Aptomat (CB) nhánh bị hỏng trong căn hộ (loại MCB đơn 1P hoặc 2P).",
+        "Lắp đặt hệ thống đèn LED dây hắt trần, đèn LED thanh nhôm cho tủ bếp.",
+        "Đấu nối và lắp đặt ổ cắm kéo dài chuyên dụng cho dàn máy tính hoặc bếp từ."
+      ]
+    },
+    {
+      "level": 3,
+      "criteria": [
+        "Dò tìm vị trí chập điện ngầm, đứt dây ngầm âm tường hoặc âm sàn bằng thiết bị đo chuyên dụng.",
+        "Xử lý các lỗi gây mất điện cục bộ ở một khu vực (ví dụ: chỉ mất điện phòng ngủ hoặc bếp) mà không rõ nguyên nhân.",
+        "Lắp đặt hoặc thay thế tủ điện tổng dân dụng (DB) bao gồm việc đấu nối lại các line dây nhánh.",
+        "Lắp đặt và cấu hình thiết bị nhà thông minh (Smart Home): Công tắc cảm ứng, bộ điều khiển trung tâm, rèm tự động.",
+        "Lắp đặt hệ thống máy bơm nước, lắp phao điện tự động chống cạn/chống tràn cho bồn nước.",
+        "Xử lý tình trạng rò rỉ điện nhẹ ra tường, khung cửa hoặc vỏ máy giặt, máy nước nóng.",
+        "Cải tạo đường dây điện cho bếp từ công suất lớn, lắp thêm đường dây cấp nguồn riêng cho máy lạnh."
+      ]
+    },
+    {
+      "level": 4,
+      "criteria": [
+        "Cân pha, tách pha cho hệ thống điện 3 pha tại biệt thự, nhà hàng hoặc các xưởng sản xuất nhỏ.",
+        "Sửa chữa và đấu nối tủ điện điều khiển có sử dụng khởi động từ (Contactor), rơ le thời gian (Timer), bộ bảo vệ mất pha.",
+        "Khắc phục sự cố quá tải diện rộng làm nóng chảy dây dẫn, biến dạng máng cáp hoặc nổ hộp nối kỹ thuật.",
+        "Làm việc ở độ cao trên 4 mét yêu cầu thang dây, giàn giáo hoặc làm việc trong hầm tối, không gian hạn chế.",
+        "Xử lý lỗi hệ thống Smart Home phức tạp chạy giao thức DALI, KNX hoặc các hệ thống chiếu sáng kịch bản.",
+        "Lắp đặt và đấu nối hệ thống điện năng lượng mặt trời (Inverter và hệ thống lưu trữ Battery).",
+        "Lắp đặt hệ thống điện cho kho lạnh, kho bảo quản thực phẩm có yêu cầu khắt khe về ổn định nguồn."
+      ]
+    },
+    {
+      "level": 5,
+      "criteria": [
+        "Xử lý khẩn cấp tình trạng cháy nổ tại tủ điện chính (MSB), nhảy CB tổng do chạm chập dây nguồn chính (Feeder).",
+        "Ứng cứu tình trạng rò điện toàn bộ tòa nhà trong điều kiện ngập lụt, thiên tai hoặc sạt lở.",
+        "Khắc phục sự cố phóng điện hồ quang (Arc Flash), nổ cực Aptomat công suất lớn trong tòa nhà chung cư/cao ốc.",
+        "Xử lý tình trạng mất trung tính gây cháy hàng loạt thiết bị điện trong nhà hoặc khu vực.",
+        "Thẩm định, cô lập rủi ro và khôi phục hệ thống điện sau hỏa hoạn hoặc các vụ nổ kỹ thuật.",
+        "Làm việc trực tiếp trên lưới điện sống (Hotline) để duy trì hoạt động cho các hệ thống khẩn cấp.",
+        "Sửa chữa hệ thống tiếp địa chống sét bị lỗi gây nguy hiểm trực tiếp đến tính mạng người sử dụng."
+      ]
+    }
   ]
 }
