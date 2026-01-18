@@ -3,58 +3,44 @@ using HotChocolate.Types;
 using Microsoft.EntityFrameworkCore;
 using SmartService.API.GraphQL;
 using SmartService.Domain.Entities;
-using SmartService.Domain.ValueObjects;
 using SmartService.Infrastructure.Persistence;
 
 namespace SmartService.API.GraphQL.Queries;
 
 [ExtendObjectType(typeof(Query))]
-public class ServiceRequestQuery
+public class ActivityLogQuery
 {
-    public async Task<List<ServiceRequest>> GetServiceRequests(
+    public async Task<List<ActivityLog>> GetActivityLogs(
         [Service] IDbContextFactory<AppDbContext> factory)
     {
         using var db = await factory.CreateDbContextAsync();
 
-        return await db.ServiceRequests
+        return await db.ActivityLogs
             .AsNoTracking()
             .OrderByDescending(x => x.CreatedAt)
             .ToListAsync();
     }
 
-    public async Task<ServiceRequest?> GetServiceRequestById(
+    public async Task<ActivityLog?> GetActivityLogById(
         Guid id,
         [Service] IDbContextFactory<AppDbContext> factory)
     {
         using var db = await factory.CreateDbContextAsync();
 
-        return await db.ServiceRequests
+        return await db.ActivityLogs
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == id);
     }
 
-    public async Task<List<ServiceRequest>> GetServiceRequestsByCustomerId(
-        Guid customerId,
+    public async Task<List<ActivityLog>> GetActivityLogsByServiceRequestId(
+        Guid serviceRequestId,
         [Service] IDbContextFactory<AppDbContext> factory)
     {
         using var db = await factory.CreateDbContextAsync();
 
-        return await db.ServiceRequests
+        return await db.ActivityLogs
             .AsNoTracking()
-            .Where(x => x.CustomerId == customerId)
-            .OrderByDescending(x => x.CreatedAt)
-            .ToListAsync();
-    }
-
-    public async Task<List<ServiceRequest>> GetServiceRequestsByStatus(
-        ServiceStatus status,
-        [Service] IDbContextFactory<AppDbContext> factory)
-    {
-        using var db = await factory.CreateDbContextAsync();
-
-        return await db.ServiceRequests
-            .AsNoTracking()
-            .Where(x => x.Status == status)
+            .Where(x => x.ServiceRequestId == serviceRequestId)
             .OrderByDescending(x => x.CreatedAt)
             .ToListAsync();
     }

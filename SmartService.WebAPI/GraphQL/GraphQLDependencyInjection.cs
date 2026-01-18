@@ -10,7 +10,17 @@ public static class GraphQLDependencyInjection
     {
         services
             .AddGraphQLServer()
-            .AddQueryType<ServiceRequestQuery>()
+            .AddQueryType<Query>() // Root Query
+            .AddType<ServiceRequestQuery>()
+            .AddType<UserQuery>()
+            .AddType<ServiceAgentQuery>()
+            .AddType<ServiceCategoryQuery>()
+            .AddType<AssignmentQuery>()
+            .AddType<AgentCapabilityQuery>()
+            .AddType<MatchingResultQuery>()
+            .AddType<ServiceAttachmentQuery>()
+            .AddType<ActivityLogQuery>()
+            .AddType<ServiceFeedbackQuery>()
             .ModifyRequestOptions(opt =>
             {
                 opt.IncludeExceptionDetails = true;

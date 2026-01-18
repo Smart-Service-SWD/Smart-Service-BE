@@ -3,59 +3,72 @@ using HotChocolate.Types;
 using Microsoft.EntityFrameworkCore;
 using SmartService.API.GraphQL;
 using SmartService.Domain.Entities;
-using SmartService.Domain.ValueObjects;
 using SmartService.Infrastructure.Persistence;
 
 namespace SmartService.API.GraphQL.Queries;
 
 [ExtendObjectType(typeof(Query))]
-public class ServiceRequestQuery
+public class ServiceFeedbackQuery
 {
-    public async Task<List<ServiceRequest>> GetServiceRequests(
+    public async Task<List<ServiceFeedback>> GetServiceFeedbacks(
         [Service] IDbContextFactory<AppDbContext> factory)
     {
         using var db = await factory.CreateDbContextAsync();
 
-        return await db.ServiceRequests
+        return await db.ServiceFeedbacks
             .AsNoTracking()
             .OrderByDescending(x => x.CreatedAt)
             .ToListAsync();
     }
 
-    public async Task<ServiceRequest?> GetServiceRequestById(
+    public async Task<ServiceFeedback?> GetServiceFeedbackById(
         Guid id,
         [Service] IDbContextFactory<AppDbContext> factory)
     {
         using var db = await factory.CreateDbContextAsync();
 
-        return await db.ServiceRequests
+        return await db.ServiceFeedbacks
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == id);
     }
 
-    public async Task<List<ServiceRequest>> GetServiceRequestsByCustomerId(
-        Guid customerId,
+    public async Task<List<ServiceFeedback>> GetFeedbackByServiceRequestId(
+        Guid serviceRequestId,
         [Service] IDbContextFactory<AppDbContext> factory)
     {
         using var db = await factory.CreateDbContextAsync();
 
-        return await db.ServiceRequests
+        return await db.ServiceFeedbacks
             .AsNoTracking()
-            .Where(x => x.CustomerId == customerId)
+            .Where(x => x.ServiceRequestId == serviceRequestId)
             .OrderByDescending(x => x.CreatedAt)
             .ToListAsync();
     }
 
-    public async Task<List<ServiceRequest>> GetServiceRequestsByStatus(
-        ServiceStatus status,
+    public async Task<List<ServiceFeedback>> GetFeedbackByUserId(
+        Guid userId,
         [Service] IDbContextFactory<AppDbContext> factory)
     {
         using var db = await factory.CreateDbContextAsync();
 
-        return await db.ServiceRequests
+        return await db.ServiceFeedbacks
             .AsNoTracking()
-            .Where(x => x.Status == status)
+            .Where(x => x.CreatedByUserId == userId)
             .OrderByDescending(x => x.CreatedAt)
             .ToListAsync();
+    }
+
+    public async Task<decimal> GetAverageRatingByServiceRequestId(
+        Guid serviceRequestId,
+        [Service] IDbContextFactory<AppDbContext> factory)
+    {
+        using var db = await factory.CreateDbContextAsync();
+
+        var feedbacks = await db.ServiceFeedbacks
+            .AsNoTracking()
+            .Where(x => x.ServiceRequestId == serviceRequestId)
+            .ToListAsync();
+
+        return feedbacks.Count > 0 ? (decimal)feedbacks.Average(x => x.Rating) : 0;
     }
 }

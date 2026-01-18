@@ -3,59 +3,57 @@ using HotChocolate.Types;
 using Microsoft.EntityFrameworkCore;
 using SmartService.API.GraphQL;
 using SmartService.Domain.Entities;
-using SmartService.Domain.ValueObjects;
 using SmartService.Infrastructure.Persistence;
 
 namespace SmartService.API.GraphQL.Queries;
 
 [ExtendObjectType(typeof(Query))]
-public class ServiceRequestQuery
+public class MatchingResultQuery
 {
-    public async Task<List<ServiceRequest>> GetServiceRequests(
+    public async Task<List<MatchingResult>> GetMatchingResults(
         [Service] IDbContextFactory<AppDbContext> factory)
     {
         using var db = await factory.CreateDbContextAsync();
 
-        return await db.ServiceRequests
+        return await db.MatchingResults
             .AsNoTracking()
-            .OrderByDescending(x => x.CreatedAt)
             .ToListAsync();
     }
 
-    public async Task<ServiceRequest?> GetServiceRequestById(
+    public async Task<MatchingResult?> GetMatchingResultById(
         Guid id,
         [Service] IDbContextFactory<AppDbContext> factory)
     {
         using var db = await factory.CreateDbContextAsync();
 
-        return await db.ServiceRequests
+        return await db.MatchingResults
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == id);
     }
 
-    public async Task<List<ServiceRequest>> GetServiceRequestsByCustomerId(
-        Guid customerId,
+    public async Task<List<MatchingResult>> GetMatchingResultsByServiceRequestId(
+        Guid serviceRequestId,
         [Service] IDbContextFactory<AppDbContext> factory)
     {
         using var db = await factory.CreateDbContextAsync();
 
-        return await db.ServiceRequests
+        return await db.MatchingResults
             .AsNoTracking()
-            .Where(x => x.CustomerId == customerId)
-            .OrderByDescending(x => x.CreatedAt)
+            .Where(x => x.ServiceRequestId == serviceRequestId)
+            .OrderByDescending(x => x.MatchingScore)
             .ToListAsync();
     }
 
-    public async Task<List<ServiceRequest>> GetServiceRequestsByStatus(
-        ServiceStatus status,
+    public async Task<List<MatchingResult>> GetRecommendedMatches(
+        Guid serviceRequestId,
         [Service] IDbContextFactory<AppDbContext> factory)
     {
         using var db = await factory.CreateDbContextAsync();
 
-        return await db.ServiceRequests
+        return await db.MatchingResults
             .AsNoTracking()
-            .Where(x => x.Status == status)
-            .OrderByDescending(x => x.CreatedAt)
+            .Where(x => x.ServiceRequestId == serviceRequestId && x.IsRecommended)
+            .OrderByDescending(x => x.MatchingScore)
             .ToListAsync();
     }
 }
