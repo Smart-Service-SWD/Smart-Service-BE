@@ -12,25 +12,21 @@ public sealed class AnalyzeServiceRequestHandler
         _ai = ai;
     }
 
-   public async Task<ServiceComplexity> HandleAsync(string description)
+public async Task<object> HandleAsync(string description)
 {
     var aiResult = await _ai.AnalyzeAsync(description);
 
-    // 1️⃣ Lấy giá trị AI trả về
-    var aiLevel = aiResult?.ComplexityLevel ?? 3;
+    // Bạn có thể vẫn dùng ServiceComplexity cho logic nghiệp vụ
+    var normalizedLevel = Math.Clamp(aiResult.Policy.RequiredSkillLevel, 1, 5);
+    var domainComplexity = ServiceComplexity.From(normalizedLevel);
 
-    // 2️⃣ Normalize / khóa mức độ phức tạp
-    var normalizedLevel = aiLevel switch
+    // Nhưng trả về toàn bộ thông tin để UI hiển thị Part A
+    return new 
     {
-        <= 1 => 1,
-        2 => 2,
-        3 => 3,
-        4 => 4,
-        >= 5 => 5
+        Complexity = domainComplexity.Level,
+        UserMessage = aiResult.Context, // Gửi Summary, Risk, Safety cho User
+        DispatchRules = aiResult.Policy // Gửi yêu cầu kỹ thuật cho System
     };
-
-    // 3️⃣ Đưa vào Domain (luôn hợp lệ)
-    return ServiceComplexity.From(normalizedLevel);
 }
 
 }

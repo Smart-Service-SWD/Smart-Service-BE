@@ -2,13 +2,9 @@ namespace SmartService.Application.DTOs;
 
 public class AiAnalysisResultDto
 {
-    public string ServiceGroup { get; set; } = default!;
-    public string SubCategoryId { get; set; } = default!;
-    public string CaseId { get; set; } = default!;
+    public ContextDescriptionDto Context { get; set; } = new();
+    public DispatchPolicyDto Policy { get; set; } = new();
 
+    // Backward compatibility
     public int ComplexityLevel { get; set; }
-    public double Confidence { get; set; }
-
-    public bool SafetyRisk { get; set; }
-    public bool LegalRequired { get; set; }
 }

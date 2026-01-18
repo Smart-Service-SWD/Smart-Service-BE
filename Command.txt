@@ -4,3 +4,5 @@
 dotnet ef migrations add Initial --project SmartService.Infrastructure --startup-project SmartService.WebAPI
 
 dotnet ef database update --project SmartService.Infrastructure --startup-project SmartService.WebAPI
+
+3. Run AI in Local : ollama run yasserrmd/Qwen2.5-7B-Instruct-1M
