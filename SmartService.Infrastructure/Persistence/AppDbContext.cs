@@ -1,10 +1,16 @@
 using Microsoft.EntityFrameworkCore;
+using SmartService.Application.Abstractions.Persistence;
 using SmartService.Domain.Entities;
 using SmartService.Domain.ValueObjects;
 
 namespace SmartService.Infrastructure.Persistence;
 
-public class AppDbContext : DbContext
+/// <summary>
+/// Entity Framework Core implementation of IAppDbContext.
+/// This is the concrete database context for the application,
+/// responsible for mapping domain entities to the database schema.
+/// </summary>
+public class AppDbContext : DbContext, IAppDbContext
 {
     // ========= ENTITIES =========
     public DbSet<User> Users => Set<User>();
@@ -16,6 +22,7 @@ public class AppDbContext : DbContext
     public DbSet<MatchingResult> MatchingResults => Set<MatchingResult>();
     public DbSet<ServiceFeedback> ServiceFeedbacks => Set<ServiceFeedback>();
     public DbSet<ActivityLog> ActivityLogs => Set<ActivityLog>();
+    public DbSet<AgentCapability> AgentCapabilities => Set<AgentCapability>();
 
     public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options)
@@ -78,12 +85,12 @@ public class AppDbContext : DbContext
             entity.Property(x => x.Description)
                   .HasMaxLength(1000);
 
-            // ---- Value Object: ServiceComplexity
+            // ---- Value Object: ServiceComplexity (nullable - only set after Evaluate)
             entity.OwnsOne(x => x.Complexity, complexity =>
             {
                 complexity.Property(c => c.Level)
-                          .HasColumnName("ComplexityLevel")
-                          .IsRequired();
+                          .HasColumnName("ComplexityLevel");
+                          // Note: Not required - Complexity is only set after Evaluate() is called
             });
 
             // ---- Value Object: Money

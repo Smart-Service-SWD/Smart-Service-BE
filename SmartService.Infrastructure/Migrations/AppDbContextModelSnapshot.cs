@@ -59,7 +59,7 @@ namespace SmartService.Infrastructure.Migrations
 
                     b.HasIndex("ServiceAgentId");
 
-                    b.ToTable("AgentCapability");
+                    b.ToTable("AgentCapabilities");
                 });
 
             modelBuilder.Entity("SmartService.Domain.Entities.Assignment", b =>
@@ -230,7 +230,6 @@ namespace SmartService.Infrastructure.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("character varying(1000)");
 
@@ -288,7 +287,7 @@ namespace SmartService.Infrastructure.Migrations
 
                             b1.HasKey("AgentCapabilityId");
 
-                            b1.ToTable("AgentCapability");
+                            b1.ToTable("AgentCapabilities");
 
                             b1.WithOwner()
                                 .HasForeignKey("AgentCapabilityId");
