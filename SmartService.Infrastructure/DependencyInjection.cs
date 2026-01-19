@@ -2,29 +2,40 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SmartService.Application.Abstractions.AI;
+using SmartService.Application.Abstractions.Persistence;
 using SmartService.Infrastructure.AI.Ollama;
 using SmartService.Infrastructure.KnowledgeBase.Complexity;
 using SmartService.Infrastructure.Persistence;
 
 namespace SmartService.Infrastructure;
 
+/// <summary>
+/// Dependency Injection configuration for Infrastructure layer.
+/// Responsible for registering:
+/// - Database context (AppDbContext)
+/// - External service implementations (AI, Knowledge Base)
+/// - Repository or Query implementations if applicable
+/// </summary>
 public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(
         this IServiceCollection services,
         IConfiguration configuration)
     {
+        // Register the database context factory
         services.AddDbContextFactory<AppDbContext>(options =>
             options.UseNpgsql(
                 configuration.GetConnectionString("DefaultConnection")));
 
+        // Register AppDbContext instance and its abstraction
+        // This allows handlers to depend on IAppDbContext interface
+        services.AddScoped<AppDbContext>();
+        services.AddScoped<IAppDbContext>(provider => provider.GetRequiredService<AppDbContext>());
 
+        // Register Knowledge Base and AI services
         services.AddSingleton<ComplexityRuleProvider>();
         services.AddSingleton<SimpleComplexityMatcher>();
         services.AddScoped<IAiAnalyzer, OllamaAiAnalyzer>();
-
-
-        
 
         return services;
     }

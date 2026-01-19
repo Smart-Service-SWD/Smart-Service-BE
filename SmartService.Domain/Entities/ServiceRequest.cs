@@ -40,13 +40,14 @@ public class ServiceRequest : IAggregateRoot
     // EF Core
     private ServiceRequest() { }
 
-    private ServiceRequest(Guid id, Guid customerId, Guid categoryId, string description)
+    private ServiceRequest(Guid id, Guid customerId, Guid categoryId, string description, ServiceComplexity? complexity = null)
     {
         Id = id;
         CustomerId = customerId;
         CategoryId = categoryId;
         Description = description;
-        Status = ServiceStatus.Created;
+        Complexity = complexity;
+        Status = complexity != null ? ServiceStatus.PendingReview : ServiceStatus.Created;
         CreatedAt = DateTime.UtcNow;
     }
 
@@ -54,7 +55,8 @@ public class ServiceRequest : IAggregateRoot
     public static ServiceRequest Create(
         Guid customerId,
         Guid categoryId,
-        string description)
+        string description,
+        ServiceComplexity? complexity = null)
     {
         if (string.IsNullOrWhiteSpace(description))
             throw new DomainException("Description is required.");
@@ -63,7 +65,8 @@ public class ServiceRequest : IAggregateRoot
             Guid.NewGuid(),
             customerId,
             categoryId,
-            description);
+            description,
+            complexity);
     }
 
     // Domain Behaviors
