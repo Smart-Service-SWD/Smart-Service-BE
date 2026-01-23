@@ -121,6 +121,11 @@ public class AppDbContext : DbContext, IAppDbContext
                 .HasForeignKey(x => x.ServiceRequestId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            // Indexes for Performance
+            entity.HasIndex(x => x.CustomerId);
+            entity.HasIndex(x => x.Status);
+            entity.HasIndex(x => x.AssignedProviderId);
+            entity.HasIndex(x => x.CreatedAt);
         });
 
         // ==========================
@@ -130,6 +135,7 @@ public class AppDbContext : DbContext, IAppDbContext
         {
             entity.HasKey(x => x.Id);
             entity.Property(x => x.FileUrl).IsRequired();
+            entity.HasIndex(x => x.ServiceRequestId);
         });
 
         // ==========================
@@ -138,6 +144,9 @@ public class AppDbContext : DbContext, IAppDbContext
         modelBuilder.Entity<MatchingResult>(entity =>
         {
             entity.HasKey(x => x.Id);
+
+            entity.HasIndex(x => x.ServiceRequestId);
+            entity.HasIndex(x => x.ServiceAgentId);
 
             entity.Property(x => x.ServiceRequestId).IsRequired();
             entity.Property(x => x.ServiceAgentId).IsRequired();

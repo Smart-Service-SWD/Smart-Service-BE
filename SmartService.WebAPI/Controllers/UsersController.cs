@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using SmartService.Application.Features.Users.Commands.CreateAgent;
@@ -13,6 +14,7 @@ namespace SmartService.API.Controllers;
 [ApiController]
 [Route("api/users")]
 [Tags("1. Users - Quản lý người dùng")]
+[Authorize(Roles = "Admin")]
 public class UsersController : ControllerBase
 {
     private readonly IMediator _mediator;

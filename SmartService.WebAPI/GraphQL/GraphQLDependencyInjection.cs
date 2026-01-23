@@ -10,6 +10,10 @@ public static class GraphQLDependencyInjection
     {
         services
             .AddGraphQLServer()
+            .AddAuthorization()
+            .AddProjections()
+            .AddFiltering()
+            .AddSorting()
             .AddQueryType<Query>() // Root Query
             .AddType<ServiceRequestQuery>()
             .AddType<UserQuery>()
@@ -23,7 +27,8 @@ public static class GraphQLDependencyInjection
             .AddType<ServiceFeedbackQuery>()
             .ModifyRequestOptions(opt =>
             {
-                opt.IncludeExceptionDetails = true;
+                // Only include exception details in development
+                opt.IncludeExceptionDetails = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development";
             });
 
         return services;

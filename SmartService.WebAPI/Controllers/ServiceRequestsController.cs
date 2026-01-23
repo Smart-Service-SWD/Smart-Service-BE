@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using SmartService.Application.Features.ServiceRequests.Commands.AssignProvider;
@@ -13,6 +14,7 @@ namespace SmartService.API.Controllers;
 [ApiController]
 [Route("api/service-requests")]
 [Tags("2. Service Requests - Quản lý yêu cầu dịch vụ")]
+[Authorize]
 public class ServiceRequestsController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -31,6 +33,7 @@ public class ServiceRequestsController : ControllerBase
     /// <response code="201">Tạo yêu cầu dịch vụ thành công</response>
     /// <response code="400">Dữ liệu đầu vào không hợp lệ</response>
     [HttpPost]
+    [Authorize(Roles = "Customer,Staff,Admin")]
     [SwaggerOperation(
         Summary = "Tạo mới yêu cầu dịch vụ",
         Description = "Tạo một yêu cầu dịch vụ mới trong hệ thống với thông tin khách hàng, danh mục, mô tả và mức độ phức tạp (ComplexityLevel tùy chọn từ 1-5). Nếu có ComplexityLevel, status sẽ là PendingReview, ngược lại là Created.",
@@ -55,6 +58,7 @@ public class ServiceRequestsController : ControllerBase
     /// <response code="400">Dữ liệu đầu vào không hợp lệ</response>
     /// <response code="404">Không tìm thấy yêu cầu dịch vụ</response>
     [HttpPatch("{serviceRequestId}/assign-provider")]
+    [Authorize(Roles = "Staff,Admin")]
     [SwaggerOperation(
         Summary = "Gán nhà cung cấp cho yêu cầu dịch vụ",
         Description = "Cập nhật yêu cầu dịch vụ bằng cách gán một nhà cung cấp cụ thể cùng với chi phí ước tính",
@@ -88,6 +92,7 @@ public class ServiceRequestsController : ControllerBase
     /// <response code="400">Dữ liệu đầu vào không hợp lệ</response>
     /// <response code="404">Không tìm thấy yêu cầu dịch vụ</response>
     [HttpPatch("{serviceRequestId}/evaluate-complexity")]
+    [Authorize(Roles = "Staff,Admin")]
     [SwaggerOperation(
         Summary = "Đánh giá độ phức tạp của yêu cầu dịch vụ",
         Description = "Cập nhật mức độ phức tạp của yêu cầu dịch vụ (Low, Medium, High)",

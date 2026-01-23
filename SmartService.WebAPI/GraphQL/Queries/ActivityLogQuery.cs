@@ -1,4 +1,5 @@
 using HotChocolate;
+using HotChocolate.Authorization;
 using HotChocolate.Types;
 using Microsoft.EntityFrameworkCore;
 using SmartService.API.GraphQL;
@@ -8,6 +9,7 @@ using SmartService.Infrastructure.Persistence;
 namespace SmartService.API.GraphQL.Queries;
 
 [ExtendObjectType(typeof(Query))]
+[Authorize]
 public class ActivityLogQuery
 {
     public async Task<List<ActivityLog>> GetActivityLogs(
