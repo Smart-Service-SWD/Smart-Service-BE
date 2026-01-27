@@ -11,6 +11,7 @@ public static class GraphQLDependencyInjection
         services
             .AddGraphQLServer()
             .AddQueryType<Query>() // Root Query
+            // Note: Mutations removed - Auth is now handled via REST API
             .AddType<ServiceRequestQuery>()
             .AddType<UserQuery>()
             .AddType<ServiceAgentQuery>()
@@ -21,6 +22,8 @@ public static class GraphQLDependencyInjection
             .AddType<ServiceAttachmentQuery>()
             .AddType<ActivityLogQuery>()
             .AddType<ServiceFeedbackQuery>()
+            .AddAuthorization() // Enable authorization directive
+            .AddHttpRequestInterceptor<HttpRequestInterceptor>() // Ensure HttpContext.User is available
             .ModifyRequestOptions(opt =>
             {
                 opt.IncludeExceptionDetails = true;

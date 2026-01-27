@@ -40,12 +40,17 @@ public class User
 
     public static User CreateAgent(string fullName, string email, string phone)
         => new(fullName, email, phone, UserRole.Agent);
+
+    public void ChangeRole(UserRole role)
+    {
+        Role = role;
+    }
 }
 
 public enum UserRole
 {
-    Customer,
-    Staff,
-    Agent,
-    Admin
+    Customer = 0,
+    Staff = 1,
+    Agent = 2,
+    Admin = 3
 }
