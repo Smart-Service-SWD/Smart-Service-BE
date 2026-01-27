@@ -36,7 +36,8 @@ public static class OllamaPromptBuilder
         "requiresCertification": true|false,
         "requiresSeniorTechnician": true|false,
         "riskWeight": float
-      }
+      },
+      "urgencyLevel": number (1-5, where 4-5 = critical/urgent)
     }
     """;
 }

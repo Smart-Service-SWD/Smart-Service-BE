@@ -49,6 +49,10 @@ public static class DependencyInjection
         services.AddScoped<IAuthRepository, AuthRepository>();
         services.AddScoped<IAuthService, AuthService>();
 
+        // Register notification service (will be implemented in WebAPI layer with SignalR)
+        // Note: IServiceRequestNotificationService implementation is registered in Program.cs
+        // because it requires SignalR HubContext which is only available in WebAPI layer
+
         return services;
     }
 }

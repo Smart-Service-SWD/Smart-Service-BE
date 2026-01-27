@@ -10,4 +10,7 @@ internal sealed class AiRawOutput
 
     [JsonPropertyName("dispatchPolicy")]
     public DispatchPolicyDto DispatchPolicy { get; set; } = new();
+    
+    [JsonPropertyName("urgencyLevel")]
+    public int UrgencyLevel { get; set; } = 1;
 }

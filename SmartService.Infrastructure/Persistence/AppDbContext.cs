@@ -24,6 +24,7 @@ public class AppDbContext : DbContext, IAppDbContext
     public DbSet<ServiceFeedback> ServiceFeedbacks => Set<ServiceFeedback>();
     public DbSet<ActivityLog> ActivityLogs => Set<ActivityLog>();
     public DbSet<AgentCapability> AgentCapabilities => Set<AgentCapability>();
+    public DbSet<ServiceAnalysis> ServiceAnalyses => Set<ServiceAnalysis>();
     public DbSet<AuthData> AuthData => Set<AuthData>();
 
     public AppDbContext(DbContextOptions<AppDbContext> options)
@@ -196,6 +197,20 @@ public class AppDbContext : DbContext, IAppDbContext
         {
             entity.HasKey(x => x.Id);
             entity.Property(x => x.Action).IsRequired();
+        });
+
+        // ==========================
+        // SERVICE ANALYSIS (AI Results)
+        // ==========================
+        modelBuilder.Entity<ServiceAnalysis>(entity =>
+        {
+            entity.HasKey(x => x.Id);
+            entity.Property(x => x.ServiceRequestId).IsRequired();
+            entity.Property(x => x.ComplexityLevel).IsRequired();
+            entity.Property(x => x.UrgencyLevel).IsRequired();
+            entity.Property(x => x.SafetyAdvice).HasMaxLength(1000);
+            entity.Property(x => x.Summary).HasMaxLength(2000);
+            entity.HasIndex(x => x.ServiceRequestId).IsUnique();
         });
 
         // ==========================

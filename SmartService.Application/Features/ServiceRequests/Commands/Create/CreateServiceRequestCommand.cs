@@ -9,5 +9,6 @@ public record CreateServiceRequestCommand(
     Guid CustomerId,
     Guid CategoryId,
     string Description,
+    string? AddressText = null,
     int? ComplexityLevel = null) : IRequest<Guid>;
 

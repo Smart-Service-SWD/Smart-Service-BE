@@ -121,10 +121,14 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddHttpClient<OllamaClient>();
 builder.Services.AddScoped<AnalyzeServiceRequestHandler>();
 
+builder.Services.AddSignalR();
 
 builder.Services
     .AddApplication()
     .AddInfrastructure(builder.Configuration);
+
+builder.Services.AddScoped<SmartService.Application.Abstractions.Notifications.IServiceRequestNotificationService, SmartService.API.Notifications.SignalRServiceRequestNotificationService>();
+builder.Services.AddHostedService<SmartService.Infrastructure.BackgroundServices.ServiceRequestAnalysisBackgroundService>();
 
 var app = builder.Build();
 
@@ -145,7 +149,8 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers(); 
+app.MapControllers();
+app.MapHub<SmartService.API.Hubs.ServiceRequestHub>("/hubs/service-request");
 app.MapGraphQL()
     .WithOptions(new HotChocolate.AspNetCore.GraphQLServerOptions
     {
