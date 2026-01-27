@@ -37,7 +37,7 @@ public class ServiceAgent
     public static ServiceAgent Create(string fullName)
     {
         if (string.IsNullOrWhiteSpace(fullName))
-            throw new DomainException("Agent name is required.");
+            throw new ServiceAgentException.AgentNameRequiredException();
 
         return new ServiceAgent(Guid.NewGuid(), fullName);
     }
