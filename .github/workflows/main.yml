@@ -1,4 +1,4 @@
-name: .NET Clean Architecture CI (No Tests)
+name: SmartService CI (No Tests)
 
 on:
   push:
@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # 1. Checkout source
+    # 1. Checkout
     - name: Checkout source
       uses: actions/checkout@v4
 
@@ -32,7 +32,7 @@ jobs:
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
 
-    # 3. Cache NuGet packages
+    # 3. Cache NuGet
     - name: Cache NuGet packages
       uses: actions/cache@v4
       with:
@@ -49,6 +49,6 @@ jobs:
     - name: Build solution
       run: dotnet build SmartService.sln -c ${{ env.BUILD_CONFIGURATION }} --no-restore
 
-    # 6. Publish API (artifact)
-    - name: Publish API
-      run: dotnet publish src/WebAPI/WebAPI.csproj -c ${{ env.BUILD_CONFIGURATION }} -o publish
+    # 6. Publish WebAPI
+    - name: Publish WebAPI
+      run: dotnet publish SmartService.WebAPI/SmartService.WebAPI.csproj -c ${{ env.BUILD_CONFIGURATION }} -o publish
