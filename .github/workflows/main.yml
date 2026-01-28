@@ -43,11 +43,11 @@ jobs:
 
     # 4. Restore
     - name: Restore dependencies
-      run: dotnet restore MySolution.sln
+      run: dotnet restore SmartService.sln
 
     # 5. Build
     - name: Build solution
-      run: dotnet build MySolution.sln -c ${{ env.BUILD_CONFIGURATION }} --no-restore
+      run: dotnet build SmartService.sln -c ${{ env.BUILD_CONFIGURATION }} --no-restore
 
     # 6. Publish API (artifact)
     - name: Publish API
