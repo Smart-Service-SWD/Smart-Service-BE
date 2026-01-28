@@ -3,13 +3,13 @@ name: .NET Clean Architecture CI (No Tests)
 on:
   push:
     branches: 
-      - main
+      - master
       - develop
       - feature/*
       - hotfix/*
   pull_request:
     branches: 
-      - main
+      - master
       - develop
 
 env:
