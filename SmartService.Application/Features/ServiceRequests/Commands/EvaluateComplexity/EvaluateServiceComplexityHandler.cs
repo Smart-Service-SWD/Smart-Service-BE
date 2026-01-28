@@ -22,7 +22,7 @@ public class EvaluateServiceComplexityHandler : IRequestHandler<EvaluateServiceC
             cancellationToken: cancellationToken);
 
         if (serviceRequest == null)
-            throw new DomainException("Service request not found.");
+            throw new ServiceRequestException.InvalidDescriptionException();
 
         serviceRequest.Evaluate(request.Complexity);
         

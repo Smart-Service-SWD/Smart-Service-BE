@@ -1,32 +1,32 @@
-using SmartService.Domain.Exceptions;
+    using SmartService.Domain.Exceptions;
 
-/// <summary>
-/// Represents a monetary value in the domain.
-/// 
-/// Money is a Value Object and therefore immutable.
-/// It enforces domain rules such as:
-/// - No negative amounts
-/// - Explicit currency handling
-/// </summary>
-namespace SmartService.Domain.ValueObjects
-{
-    public sealed class Money
+    /// <summary>
+    /// Represents a monetary value in the domain.
+    /// 
+    /// Money is a Value Object and therefore immutable.
+    /// It enforces domain rules such as:
+    /// - No negative amounts
+    /// - Explicit currency handling
+    /// </summary>
+    namespace SmartService.Domain.ValueObjects
     {
-        public decimal Amount { get; private set; }
-        public string Currency { get; private set; } = "USD";
-
-        private Money() { } // EF Core
-
-        private Money(decimal amount, string currency)
+        public sealed class Money
         {
-            if (amount < 0)
-                throw new DomainException("Amount cannot be negative.");
+            public decimal Amount { get; private set; }
+            public string Currency { get; private set; } = "USD";
+
+            private Money() { } // EF Core
+
+            private Money(decimal amount, string currency)
+            {
+                if (amount < 0)
+                throw new MoneyException.NegativeAmountException(amount);
 
             Amount = amount;
-            Currency = currency;
-        }
+                Currency = currency;
+            }
 
-        public static Money Create(decimal amount, string currency = "USD")
-            => new(amount, currency);
+            public static Money Create(decimal amount, string currency = "USD")
+                => new(amount, currency);
+        }
     }
-}
