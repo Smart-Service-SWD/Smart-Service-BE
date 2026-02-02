@@ -4,6 +4,12 @@ using Swashbuckle.AspNetCore.Annotations;
 using SmartService.Application.Features.ServiceRequests.Commands.AssignProvider;
 using SmartService.Application.Features.ServiceRequests.Commands.Create;
 using SmartService.Application.Features.ServiceRequests.Commands.EvaluateComplexity;
+using SmartService.Application.Features.ServiceRequests.Commands.Start;
+using SmartService.Application.Features.ServiceRequests.Commands.Complete;
+using SmartService.Application.Features.ServiceRequests.Commands.Cancel;
+using SmartService.Application.Features.ServiceRequests.Commands.Update;
+using SmartService.Application.Features.ServiceRequests.Commands.Approve;
+using SmartService.Application.Features.ServiceRequests.Commands.MatchAgents;
 
 namespace SmartService.API.Controllers;
 
@@ -108,6 +114,172 @@ public class ServiceRequestsController : ControllerBase
         await _mediator.Send(command, cancellationToken);
         return NoContent();
     }
+
+    /// <summary>
+    /// [UPDATE] Bắt đầu thực hiện yêu cầu dịch vụ đã được gán
+    /// </summary>
+    /// <param name="serviceRequestId">ID của yêu cầu dịch vụ</param>
+    /// <param name="cancellationToken">Token hủy</param>
+    /// <returns>Không có nội dung trả về</returns>
+    /// <response code="204">Bắt đầu thực hiện thành công</response>
+    /// <response code="400">Dữ liệu đầu vào không hợp lệ</response>
+    /// <response code="404">Không tìm thấy yêu cầu dịch vụ</response>
+    [HttpPatch("{serviceRequestId}/start")]
+    [SwaggerOperation(
+        Summary = "Bắt đầu thực hiện yêu cầu dịch vụ",
+        Description = "Chuyển trạng thái yêu cầu dịch vụ từ Assigned sang InProgress",
+        OperationId = "StartServiceRequest",
+        Tags = new[] { "2. UPDATE - Cập nhật (PATCH)" })]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Start(
+        [FromRoute] Guid serviceRequestId,
+        CancellationToken cancellationToken)
+    {
+        var command = new StartServiceRequestCommand(serviceRequestId);
+        await _mediator.Send(command, cancellationToken);
+        return NoContent();
+    }
+
+    /// <summary>
+    /// [UPDATE] Hoàn thành yêu cầu dịch vụ
+    /// </summary>
+    /// <param name="serviceRequestId">ID của yêu cầu dịch vụ</param>
+    /// <param name="cancellationToken">Token hủy</param>
+    /// <returns>Không có nội dung trả về</returns>
+    /// <response code="204">Hoàn thành yêu cầu thành công</response>
+    /// <response code="400">Dữ liệu đầu vào không hợp lệ</response>
+    /// <response code="404">Không tìm thấy yêu cầu dịch vụ</response>
+    [HttpPatch("{serviceRequestId}/complete")]
+    [SwaggerOperation(
+        Summary = "Hoàn thành yêu cầu dịch vụ",
+        Description = "Chuyển trạng thái yêu cầu dịch vụ từ InProgress sang Completed",
+        OperationId = "CompleteServiceRequest",
+        Tags = new[] { "2. UPDATE - Cập nhật (PATCH)" })]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Complete(
+        [FromRoute] Guid serviceRequestId,
+        CancellationToken cancellationToken)
+    {
+        var command = new CompleteServiceRequestCommand(serviceRequestId);
+        await _mediator.Send(command, cancellationToken);
+        return NoContent();
+    }
+
+    /// <summary>
+    /// [UPDATE] Hủy yêu cầu dịch vụ
+    /// </summary>
+    /// <param name="serviceRequestId">ID của yêu cầu dịch vụ</param>
+    /// <param name="request">Thông tin lý do hủy</param>
+    /// <param name="cancellationToken">Token hủy</param>
+    /// <returns>Không có nội dung trả về</returns>
+    /// <response code="204">Hủy yêu cầu thành công</response>
+    /// <response code="400">Dữ liệu đầu vào không hợp lệ</response>
+    /// <response code="404">Không tìm thấy yêu cầu dịch vụ</response>
+    [HttpPatch("{serviceRequestId}/cancel")]
+    [SwaggerOperation(
+        Summary = "Hủy yêu cầu dịch vụ",
+        Description = "Hủy yêu cầu dịch vụ với lý do cụ thể. Không thể hủy yêu cầu đã hoàn thành.",
+        OperationId = "CancelServiceRequest",
+        Tags = new[] { "2. UPDATE - Cập nhật (PATCH)" })]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Cancel(
+        [FromRoute] Guid serviceRequestId,
+        [FromBody] CancelServiceRequestRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = new CancelServiceRequestCommand(serviceRequestId, request.CancellationReason);
+        await _mediator.Send(command, cancellationToken);
+        return NoContent();
+    }
+
+    /// <summary>
+    /// [UPDATE] Cập nhật mô tả yêu cầu dịch vụ
+    /// </summary>
+    /// <param name="serviceRequestId">ID của yêu cầu dịch vụ</param>
+    /// <param name="request">Thông tin mô tả mới</param>
+    /// <param name="cancellationToken">Token hủy</param>
+    /// <returns>Không có nội dung trả về</returns>
+    /// <response code="204">Cập nhật mô tả thành công</response>
+    /// <response code="400">Dữ liệu đầu vào không hợp lệ</response>
+    /// <response code="404">Không tìm thấy yêu cầu dịch vụ</response>
+    [HttpPatch("{serviceRequestId}/update")]
+    [SwaggerOperation(
+        Summary = "Cập nhật mô tả yêu cầu dịch vụ",
+        Description = "Cập nhật mô tả của yêu cầu dịch vụ. Chỉ có thể cập nhật trước khi được gán.",
+        OperationId = "UpdateServiceRequest",
+        Tags = new[] { "2. UPDATE - Cập nhật (PATCH)" })]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Update(
+        [FromRoute] Guid serviceRequestId,
+        [FromBody] UpdateServiceRequestRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = new UpdateServiceRequestCommand(serviceRequestId, request.Description);
+        await _mediator.Send(command, cancellationToken);
+        return NoContent();
+    }
+
+    /// <summary>
+    /// [UPDATE] Phê duyệt yêu cầu dịch vụ
+    /// </summary>
+    /// <param name="serviceRequestId">ID của yêu cầu dịch vụ</param>
+    /// <param name="cancellationToken">Token hủy</param>
+    /// <returns>Không có nội dung trả về</returns>
+    /// <response code="204">Phê duyệt thành công</response>
+    /// <response code="400">Dữ liệu đầu vào không hợp lệ</response>
+    /// <response code="404">Không tìm thấy yêu cầu dịch vụ</response>
+    [HttpPatch("{serviceRequestId}/approve")]
+    [SwaggerOperation(
+        Summary = "Phê duyệt yêu cầu dịch vụ",
+        Description = "Chuyển trạng thái yêu cầu dịch vụ từ PendingReview sang Approved",
+        OperationId = "ApproveServiceRequest",
+        Tags = new[] { "2. UPDATE - Cập nhật (PATCH)" })]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Approve(
+        [FromRoute] Guid serviceRequestId,
+        CancellationToken cancellationToken)
+    {
+        var command = new ApproveServiceRequestCommand(serviceRequestId);
+        await _mediator.Send(command, cancellationToken);
+        return NoContent();
+    }
+
+    /// <summary>
+    /// [MATCHING] Tìm kiếm agents phù hợp cho yêu cầu dịch vụ
+    /// </summary>
+    /// <param name="serviceRequestId">ID của yêu cầu dịch vụ</param>
+    /// <param name="cancellationToken">Token hủy</param>
+    /// <returns>Danh sách agents phù hợp với điểm số</returns>
+    /// <response code="200">Tìm kiếm thành công</response>
+    /// <response code="400">Dữ liệu đầu vào không hợp lệ</response>
+    /// <response code="404">Không tìm thấy yêu cầu dịch vụ</response>
+    [HttpPost("{serviceRequestId}/match-agents")]
+    [SwaggerOperation(
+        Summary = "Tìm kiếm agents phù hợp",
+        Description = "Sử dụng thuật toán matching để tìm các agents phù hợp dựa trên category và complexity",
+        OperationId = "MatchAgentsForServiceRequest",
+        Tags = new[] { "3. MATCHING - Tìm kiếm agents" })]
+    [ProducesResponseType(typeof(List<AgentMatchDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> MatchAgents(
+        [FromRoute] Guid serviceRequestId,
+        CancellationToken cancellationToken)
+    {
+        var command = new MatchAgentsForServiceRequestCommand(serviceRequestId);
+        var result = await _mediator.Send(command, cancellationToken);
+        return Ok(result);
+    }
 }
 
 /// <summary>
@@ -122,3 +294,13 @@ public record AssignProviderRequest(
 /// </summary>
 public record EvaluateComplexityRequest(
     SmartService.Domain.ValueObjects.ServiceComplexity Complexity);
+
+/// <summary>
+/// Model yêu cầu hủy yêu cầu dịch vụ
+/// </summary>
+public record CancelServiceRequestRequest(string CancellationReason);
+
+/// <summary>
+/// Model yêu cầu cập nhật mô tả yêu cầu dịch vụ
+/// </summary>
+public record UpdateServiceRequestRequest(string Description);

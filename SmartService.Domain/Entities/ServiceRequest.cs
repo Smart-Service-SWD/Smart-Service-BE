@@ -29,6 +29,7 @@ public class ServiceRequest : IAggregateRoot
     public ServiceStatus Status { get; private set; }
     public Guid? AssignedProviderId { get; private set; }
     public Money? EstimatedCost { get; private set; }
+    public string? CancellationReason { get; private set; }
     public DateTime CreatedAt { get; private set; }
 
     private readonly List<ServiceAttachment> _attachments = new();
@@ -104,5 +105,39 @@ public class ServiceRequest : IAggregateRoot
             throw new DomainException("Service request must be in progress.");
 
         Status = ServiceStatus.Completed;
+    }
+
+    public void Cancel(string reason)
+    {
+        if (Status == ServiceStatus.Completed)
+            throw new DomainException("Cannot cancel a completed service request.");
+
+        if (Status == ServiceStatus.Cancelled)
+            throw new DomainException("Service request is already cancelled.");
+
+        if (string.IsNullOrWhiteSpace(reason))
+            throw new DomainException("Cancellation reason is required.");
+
+        CancellationReason = reason;
+        Status = ServiceStatus.Cancelled;
+    }
+
+    public void Approve()
+    {
+        if (Status != ServiceStatus.PendingReview)
+            throw new DomainException("Service request must be pending review to approve.");
+
+        Status = ServiceStatus.Approved;
+    }
+
+    public void Update(string description)
+    {
+        if (Status == ServiceStatus.Assigned || Status == ServiceStatus.InProgress || Status == ServiceStatus.Completed)
+            throw new DomainException("Cannot update service request after it has been assigned.");
+
+        if (string.IsNullOrWhiteSpace(description))
+            throw new DomainException("Description is required.");
+
+        Description = description;
     }
 }
