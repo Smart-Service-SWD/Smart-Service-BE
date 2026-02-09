@@ -8,11 +8,11 @@ Tài liệu này hướng dẫn cách sử dụng thông số kết nối Databa
 
 | Thông số | Giá trị |
 | :--- | :--- |
-| **Hostname (External)** | `dpg-d5ri7r7pm1nc739e445g-a.singapore-postgres.render.com` |
+| **Hostname (External)** | `db.jzsttmjesygjovpikpxt.supabase.co` |
 | **Port** | `5432` |
-| **Database** | `smart_service_db_paqh` |
-| **Username** | `smart_service_db_paqh_user` |
-| **Password** | `qTScHkFUQnIhjPUTeplC1nUoUolvd9Jr` |
+| **Database** | `postgres` |
+| **Username** | `postgres` |
+| **Password** | `thaithinh2412` |
 
 ---
 
@@ -20,11 +20,11 @@ Tài liệu này hướng dẫn cách sử dụng thông số kết nối Databa
 
 ### Sử dụng cho App bên ngoài (Local, Docker, Heroku, v.v.)
 Sử dụng đường dẫn **External**:
-`postgresql://smart_service_db_paqh_user:qTScHkFUQnIhjPUTeplC1nUoUolvd9Jr@dpg-d5ri7r7pm1nc739e445g-a.singapore-postgres.render.com/smart_service_db_paqh`
+`postgresql://postgres:thaithinh2412@db.jzsttmjesygjovpikpxt.supabase.co/postgres`
 
 ### Sử dụng cho App chạy nội bộ trên Render
 Sử dụng đường dẫn **Internal**:
-`postgresql://smart_service_db_paqh_user:qTScHkFUQnIhjPUTeplC1nUoUolvd9Jr@dpg-d5ri7r7pm1nc739e445g-a/smart_service_db_paqh`
+`postgresql://postgres:thaithinh2412@db.jzsttmjesygjovpikpxt.supabase.co/postgres`
 
 ---
 
@@ -35,13 +35,13 @@ Sử dụng đường dẫn **Internal**:
 1.  Mở **pgAdmin 4**.
 2.  Chuột phải vào **Servers** > **Register** > **Server...**
 3.  Tại tab **General**:
-    * **Name**: `Render - Smart Service` (hoặc tên bất kỳ).
+    * **Name**: `Smart Service` (hoặc tên bất kỳ).
 4.  Tại tab **Connection**:
-    * **Host name/address**: `dpg-d5ri7r7pm1nc739e445g-a.singapore-postgres.render.com`
+    * **Host name/address**: `db.jzsttmjesygjovpikpxt.supabase.co`
     * **Port**: `5432`
-    * **Maintenance database**: `smart_service_db_paqh`
-    * **Username**: `smart_service_db_paqh_user`
-    * **Password**: `qTScHkFUQnIhjPUTeplC1nUoUolvd9Jr`
+    * **Maintenance database**: `postgres`
+    * **Username**: `postgres`
+    * **Password**: `thaithinh2412`
     * Tích chọn **Save password?** để không phải nhập lại lần sau.
 5.  Tại tab **Parameters** (nếu cần):
     * **SSL mode**: Chọn `Require` hoặc `Prefer`.
