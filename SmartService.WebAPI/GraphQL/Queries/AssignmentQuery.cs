@@ -1,8 +1,10 @@
 using HotChocolate;
+using HotChocolate.Authorization;
 using HotChocolate.Types;
 using Microsoft.EntityFrameworkCore;
 using SmartService.API.GraphQL;
 using SmartService.Domain.Entities;
+using SmartService.Domain.ValueObjects;
 using SmartService.Infrastructure.Persistence;
 
 namespace SmartService.API.GraphQL.Queries;
@@ -10,6 +12,13 @@ namespace SmartService.API.GraphQL.Queries;
 [ExtendObjectType(typeof(Query))]
 public class AssignmentQuery
 {
+    /// <summary>
+    /// Lấy danh sách tất cả các phân công dịch vụ trong hệ thống, sắp xếp theo thời gian phân công mới nhất.
+    /// Yêu cầu quyền: Staff hoặc Admin.
+    /// </summary>
+    [GraphQLName("getAssignments")]
+    [GraphQLDescription("Lấy danh sách tất cả các phân công dịch vụ trong hệ thống, sắp xếp theo thời gian phân công mới nhất. Yêu cầu quyền: Staff hoặc Admin.")]
+    [Authorize(Roles = new[] { UserRoleConstants.Staff, UserRoleConstants.Admin })]
     public async Task<List<Assignment>> GetAssignments(
         [Service] IDbContextFactory<AppDbContext> factory)
     {
@@ -21,8 +30,15 @@ public class AssignmentQuery
             .ToListAsync();
     }
 
+    /// <summary>
+    /// Lấy thông tin chi tiết của một phân công dịch vụ theo ID (yêu cầu dịch vụ, nhà cung cấp, chi phí ước tính).
+    /// Yêu cầu: Đã đăng nhập.
+    /// </summary>
+    [GraphQLName("getAssignmentById")]
+    [GraphQLDescription("Lấy thông tin chi tiết của một phân công dịch vụ theo ID. Yêu cầu: Đã đăng nhập.")]
+    [Authorize]
     public async Task<Assignment?> GetAssignmentById(
-        Guid id,
+        [GraphQLDescription("ID của phân công dịch vụ cần lấy thông tin")] Guid id,
         [Service] IDbContextFactory<AppDbContext> factory)
     {
         using var db = await factory.CreateDbContextAsync();
@@ -32,8 +48,15 @@ public class AssignmentQuery
             .FirstOrDefaultAsync(x => x.Id == id);
     }
 
+    /// <summary>
+    /// Lấy danh sách các phân công dịch vụ của một yêu cầu dịch vụ cụ thể.
+    /// Yêu cầu: Đã đăng nhập.
+    /// </summary>
+    [GraphQLName("getAssignmentsByServiceRequestId")]
+    [GraphQLDescription("Lấy danh sách các phân công dịch vụ của một yêu cầu dịch vụ cụ thể. Yêu cầu: Đã đăng nhập.")]
+    [Authorize]
     public async Task<List<Assignment>> GetAssignmentsByServiceRequestId(
-        Guid serviceRequestId,
+        [GraphQLDescription("ID của yêu cầu dịch vụ cần lấy danh sách phân công")] Guid serviceRequestId,
         [Service] IDbContextFactory<AppDbContext> factory)
     {
         using var db = await factory.CreateDbContextAsync();
@@ -44,8 +67,15 @@ public class AssignmentQuery
             .ToListAsync();
     }
 
+    /// <summary>
+    /// Lấy danh sách các phân công dịch vụ của một nhà cung cấp dịch vụ cụ thể, sắp xếp theo thời gian phân công mới nhất.
+    /// Yêu cầu quyền: Agent (chỉ xem được của mình), Staff hoặc Admin (xem được tất cả).
+    /// </summary>
+    [GraphQLName("getAssignmentsByAgentId")]
+    [GraphQLDescription("Lấy danh sách các phân công dịch vụ của một nhà cung cấp dịch vụ cụ thể. Yêu cầu quyền: Agent, Staff hoặc Admin.")]
+    [Authorize(Roles = new[] { UserRoleConstants.Agent, UserRoleConstants.Staff, UserRoleConstants.Admin })]
     public async Task<List<Assignment>> GetAssignmentsByAgentId(
-        Guid agentId,
+        [GraphQLDescription("ID của nhà cung cấp dịch vụ cần lấy danh sách phân công")] Guid agentId,
         [Service] IDbContextFactory<AppDbContext> factory)
     {
         using var db = await factory.CreateDbContextAsync();

@@ -2,8 +2,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SmartService.Application.Abstractions.AI;
+using SmartService.Application.Abstractions.Auth;
 using SmartService.Application.Abstractions.Persistence;
 using SmartService.Infrastructure.AI.Ollama;
+using SmartService.Infrastructure.Auth;
 using SmartService.Infrastructure.KnowledgeBase.Complexity;
 using SmartService.Infrastructure.Persistence;
 
@@ -36,6 +38,20 @@ public static class DependencyInjection
         services.AddSingleton<ComplexityRuleProvider>();
         services.AddSingleton<SimpleComplexityMatcher>();
         services.AddScoped<IAiAnalyzer, OllamaAiAnalyzer>();
+
+        // Register Authentication services
+        // Configure TokenConfiguration from appsettings.json
+        services.Configure<TokenConfiguration>(configuration.GetSection("JwtSettings"));
+        
+        // Register auth services
+        services.AddScoped<JwtTokenService>();
+        services.AddScoped<AesEncryptionService>();
+        services.AddScoped<IAuthRepository, AuthRepository>();
+        services.AddScoped<IAuthService, AuthService>();
+
+        // Register notification service (will be implemented in WebAPI layer with SignalR)
+        // Note: IServiceRequestNotificationService implementation is registered in Program.cs
+        // because it requires SignalR HubContext which is only available in WebAPI layer
 
         return services;
     }

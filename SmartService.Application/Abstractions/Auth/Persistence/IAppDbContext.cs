@@ -23,6 +23,7 @@ public interface IAppDbContext
     DbSet<ServiceFeedback> ServiceFeedbacks { get; }
     DbSet<ActivityLog> ActivityLogs { get; }
     DbSet<AgentCapability> AgentCapabilities { get; }
+    DbSet<ServiceAnalysis> ServiceAnalyses { get; }
 
     /// <summary>
     /// Saves all changes made to the database asynchronously.

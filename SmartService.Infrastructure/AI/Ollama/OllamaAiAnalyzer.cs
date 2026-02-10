@@ -49,7 +49,8 @@ public sealed class OllamaAiAnalyzer : IAiAnalyzer
             {
                 Context = aiOutput?.ContextDescription ?? new(),
                 Policy = aiOutput?.DispatchPolicy ?? new(),
-                ComplexityLevel = aiOutput?.DispatchPolicy?.RequiredSkillLevel ?? 1
+                ComplexityLevel = aiOutput?.DispatchPolicy?.RequiredSkillLevel ?? 1,
+                UrgencyLevel = Math.Clamp(aiOutput?.UrgencyLevel ?? 1, 1, 5)
             };
         }
         catch
@@ -59,7 +60,8 @@ public sealed class OllamaAiAnalyzer : IAiAnalyzer
             {
                 Context = new(),
                 Policy = new(),
-                ComplexityLevel = 1
+                ComplexityLevel = 1,
+                UrgencyLevel = 1
             };
         }
     }

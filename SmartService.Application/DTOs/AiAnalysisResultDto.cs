@@ -7,4 +7,7 @@ public class AiAnalysisResultDto
 
     // Backward compatibility
     public int ComplexityLevel { get; set; }
+    
+    // New fields for AI-driven matching
+    public int UrgencyLevel { get; set; } = 1; // 1-5 scale
 }

@@ -1,4 +1,5 @@
 using HotChocolate;
+using HotChocolate.Authorization;
 using HotChocolate.Types;
 using Microsoft.EntityFrameworkCore;
 using SmartService.API.GraphQL;
@@ -10,6 +11,13 @@ namespace SmartService.API.GraphQL.Queries;
 [ExtendObjectType(typeof(Query))]
 public class AgentCapabilityQuery
 {
+    /// <summary>
+    /// Lấy danh sách tất cả khả năng/năng lực của các nhà cung cấp dịch vụ trong hệ thống.
+    /// Yêu cầu: Đã đăng nhập.
+    /// </summary>
+    [GraphQLName("getAgentCapabilities")]
+    [GraphQLDescription("Lấy danh sách tất cả khả năng/năng lực của các nhà cung cấp dịch vụ trong hệ thống. Yêu cầu: Đã đăng nhập.")]
+    [Authorize]
     public async Task<List<AgentCapability>> GetAgentCapabilities(
         [Service] IDbContextFactory<AppDbContext> factory)
     {
@@ -24,8 +32,15 @@ public class AgentCapabilityQuery
             .ToList();
     }
 
+    /// <summary>
+    /// Lấy thông tin chi tiết của một khả năng/năng lực của nhà cung cấp dịch vụ theo ID (danh mục, độ phức tạp hỗ trợ).
+    /// Yêu cầu: Đã đăng nhập.
+    /// </summary>
+    [GraphQLName("getAgentCapabilityById")]
+    [GraphQLDescription("Lấy thông tin chi tiết của một khả năng/năng lực của nhà cung cấp dịch vụ theo ID. Yêu cầu: Đã đăng nhập.")]
+    [Authorize]
     public async Task<AgentCapability?> GetAgentCapabilityById(
-        Guid id,
+        [GraphQLDescription("ID của khả năng/năng lực cần lấy thông tin")] Guid id,
         [Service] IDbContextFactory<AppDbContext> factory)
     {
         using var db = await factory.CreateDbContextAsync();
@@ -39,8 +54,15 @@ public class AgentCapabilityQuery
             .FirstOrDefault(x => x.Id == id);
     }
 
+    /// <summary>
+    /// Lấy danh sách tất cả khả năng/năng lực của một nhà cung cấp dịch vụ cụ thể.
+    /// Yêu cầu: Đã đăng nhập.
+    /// </summary>
+    [GraphQLName("getCapabilitiesByAgentId")]
+    [GraphQLDescription("Lấy danh sách tất cả khả năng/năng lực của một nhà cung cấp dịch vụ cụ thể. Yêu cầu: Đã đăng nhập.")]
+    [Authorize]
     public async Task<List<AgentCapability>> GetCapabilitiesByAgentId(
-        Guid agentId,
+        [GraphQLDescription("ID của nhà cung cấp dịch vụ cần lấy danh sách khả năng/năng lực")] Guid agentId,
         [Service] IDbContextFactory<AppDbContext> factory)
     {
         using var db = await factory.CreateDbContextAsync();
@@ -55,8 +77,15 @@ public class AgentCapabilityQuery
         return agent.Capabilities.ToList();
     }
 
+    /// <summary>
+    /// Lấy danh sách tất cả khả năng/năng lực của các nhà cung cấp dịch vụ trong một danh mục dịch vụ cụ thể.
+    /// Yêu cầu: Đã đăng nhập.
+    /// </summary>
+    [GraphQLName("getCapabilitiesByCategoryId")]
+    [GraphQLDescription("Lấy danh sách tất cả khả năng/năng lực của các nhà cung cấp dịch vụ trong một danh mục dịch vụ cụ thể. Yêu cầu: Đã đăng nhập.")]
+    [Authorize]
     public async Task<List<AgentCapability>> GetCapabilitiesByCategoryId(
-        Guid categoryId,
+        [GraphQLDescription("ID của danh mục dịch vụ cần lấy danh sách khả năng/năng lực")] Guid categoryId,
         [Service] IDbContextFactory<AppDbContext> factory)
     {
         using var db = await factory.CreateDbContextAsync();

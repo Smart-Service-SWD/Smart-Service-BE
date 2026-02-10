@@ -17,7 +17,7 @@ public class MatchingResult
     public Guid ServiceRequestId { get; private set; }
     public Guid ServiceAgentId { get; private set; }
 
-    public ServiceComplexity SupportedComplexity { get; private set; } = null;
+    public ServiceComplexity SupportedComplexity { get; private set; } = null!;
     public decimal MatchingScore { get; private set; }
     public bool IsRecommended { get; private set; }
 

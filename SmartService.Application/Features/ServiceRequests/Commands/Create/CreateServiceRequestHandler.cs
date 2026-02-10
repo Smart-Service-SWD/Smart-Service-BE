@@ -29,6 +29,7 @@ public class CreateServiceRequestHandler : IRequestHandler<CreateServiceRequestC
             request.CustomerId,
             request.CategoryId,
             request.Description,
+            request.AddressText,
             complexity);
 
         _context.ServiceRequests.Add(serviceRequest);

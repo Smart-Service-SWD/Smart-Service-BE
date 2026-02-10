@@ -30,6 +30,12 @@ public class ServiceRequest : IAggregateRoot
     public Guid? AssignedProviderId { get; private set; }
     public Money? EstimatedCost { get; private set; }
     public DateTime CreatedAt { get; private set; }
+    
+    public string? AddressText { get; private set; }
+    
+    // Skeleton for future location features (commented out to avoid runtime errors)
+    // public double? Latitude { get; set; }
+    // public double? Longitude { get; set; }
 
     private readonly List<ServiceAttachment> _attachments = new();
     public IReadOnlyCollection<ServiceAttachment> Attachments => _attachments.AsReadOnly();
@@ -40,14 +46,15 @@ public class ServiceRequest : IAggregateRoot
     // EF Core
     private ServiceRequest() { }
 
-    private ServiceRequest(Guid id, Guid customerId, Guid categoryId, string description, ServiceComplexity? complexity = null)
+    private ServiceRequest(Guid id, Guid customerId, Guid categoryId, string description, string? addressText = null, ServiceComplexity? complexity = null)
     {
         Id = id;
         CustomerId = customerId;
         CategoryId = categoryId;
         Description = description;
+        AddressText = addressText;
         Complexity = complexity;
-        Status = complexity != null ? ServiceStatus.PendingReview : ServiceStatus.Created;
+        Status = ServiceStatus.AwaitingAnalysis;
         CreatedAt = DateTime.UtcNow;
     }
 
@@ -56,6 +63,7 @@ public class ServiceRequest : IAggregateRoot
         Guid customerId,
         Guid categoryId,
         string description,
+        string? addressText = null,
         ServiceComplexity? complexity = null)
     {
         if (string.IsNullOrWhiteSpace(description))
@@ -66,7 +74,16 @@ public class ServiceRequest : IAggregateRoot
             customerId,
             categoryId,
             description,
+            addressText,
             complexity);
+    }
+    
+    public void MarkAsAnalyzed(int urgencyLevel)
+    {
+        if (Status != ServiceStatus.AwaitingAnalysis)
+            throw new ServiceRequestException.InvalidStatusForOperationException("MarkAsAnalyzed", "AwaitingAnalysis");
+        
+        Status = urgencyLevel >= 4 ? ServiceStatus.UrgentDispatch : ServiceStatus.Created;
     }
 
     // Domain Behaviors
