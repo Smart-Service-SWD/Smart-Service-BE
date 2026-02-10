@@ -67,7 +67,7 @@ public class ServiceRequest : IAggregateRoot
         ServiceComplexity? complexity = null)
     {
         if (string.IsNullOrWhiteSpace(description))
-            throw new DomainException("Description is required.");
+            throw new ServiceRequestException.InvalidDescriptionException();
 
         return new ServiceRequest(
             Guid.NewGuid(),
@@ -91,7 +91,7 @@ public class ServiceRequest : IAggregateRoot
     public void Evaluate(ServiceComplexity complexity)
     {
         if (Status != ServiceStatus.Created)
-            throw new DomainException("Service request must be in Created state.");
+            throw new ServiceRequestException.InvalidStateTransitionException(Status.ToString(), "Created");
 
         Complexity = complexity;
         Status = ServiceStatus.PendingReview;
@@ -100,7 +100,7 @@ public class ServiceRequest : IAggregateRoot
     public void AssignProvider(Guid providerId, Money estimatedCost)
     {
         if (Status != ServiceStatus.PendingReview)
-            throw new DomainException("Service request must be evaluated first.");
+            throw new ServiceRequestException.InvalidStateTransitionException(Status.ToString(), "PendingReview");
 
         AssignedProviderId = providerId;
         EstimatedCost = estimatedCost;
@@ -110,7 +110,7 @@ public class ServiceRequest : IAggregateRoot
     public void Start()
     {
         if (Status != ServiceStatus.Assigned)
-            throw new DomainException("Service request must be assigned.");
+            throw new ServiceRequestException.InvalidStateTransitionException(Status.ToString(), "Assigned");
 
         Status = ServiceStatus.InProgress;
     }
@@ -118,7 +118,7 @@ public class ServiceRequest : IAggregateRoot
     public void Complete()
     {
         if (Status != ServiceStatus.InProgress)
-            throw new DomainException("Service request must be in progress.");
+            throw new ServiceRequestException.InvalidStateTransitionException(Status.ToString(), "InProgress");
 
         Status = ServiceStatus.Completed;
     }

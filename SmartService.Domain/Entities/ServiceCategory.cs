@@ -32,7 +32,7 @@ public class ServiceCategory
     public static ServiceCategory Create(string name, string description)
     {
         if (string.IsNullOrWhiteSpace(name))
-            throw new DomainException("Category name is required.");
+            throw new ServiceCategoryException.NameRequiredException();
 
         return new ServiceCategory(Guid.NewGuid(), name, description);
     }

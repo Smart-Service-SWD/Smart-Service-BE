@@ -1,0 +1,54 @@
+name: SmartService CI (No Tests)
+
+on:
+  push:
+    branches: 
+      - master
+      - develop
+      - feature/*
+      - hotfix/*
+  pull_request:
+    branches: 
+      - master
+      - develop
+
+env:
+  DOTNET_VERSION: '8.0.x'
+  BUILD_CONFIGURATION: 'Release'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. Checkout
+    - name: Checkout source
+      uses: actions/checkout@v4
+
+    # 2. Setup .NET
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    # 3. Cache NuGet
+    - name: Cache NuGet packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
+
+    # 4. Restore
+    - name: Restore dependencies
+      run: dotnet restore SmartService.sln
+
+    # 5. Build
+    - name: Build solution
+      run: dotnet build SmartService.sln -c ${{ env.BUILD_CONFIGURATION }} --no-restore
+
+    # 6. Publish WebAPI
+    - name: Publish WebAPI
+      run: dotnet publish SmartService.WebAPI/SmartService.WebAPI.csproj -c ${{ env.BUILD_CONFIGURATION }} -o publish

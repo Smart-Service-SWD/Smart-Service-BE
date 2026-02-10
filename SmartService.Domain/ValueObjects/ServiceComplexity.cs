@@ -26,7 +26,7 @@ namespace SmartService.Domain.ValueObjects
         private ServiceComplexity(int level)
         {
             if (level < 1 || level > 5)
-                throw new DomainException("Service complexity must be between 1 and 5.");
+                throw new ServiceComplexityException.InvalidComplexityLevelException(level);
 
             Level = level;
         }

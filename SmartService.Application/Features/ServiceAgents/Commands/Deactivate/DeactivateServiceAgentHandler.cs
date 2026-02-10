@@ -22,7 +22,7 @@ public class DeactivateServiceAgentHandler : IRequestHandler<DeactivateServiceAg
             cancellationToken: cancellationToken);
 
         if (agent == null)
-            throw new DomainException("Service agent not found.");
+            throw new ServiceAgentException.AgentNameRequiredException();
 
         agent.Deactivate();
 
