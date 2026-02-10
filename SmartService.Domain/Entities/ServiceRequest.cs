@@ -81,7 +81,7 @@ public class ServiceRequest : IAggregateRoot
     public void MarkAsAnalyzed(int urgencyLevel)
     {
         if (Status != ServiceStatus.AwaitingAnalysis)
-            throw new DomainException("Service request must be in AwaitingAnalysis state.");
+            throw new ServiceRequestException.InvalidStatusForOperationException("MarkAsAnalyzed", "AwaitingAnalysis");
         
         Status = urgencyLevel >= 4 ? ServiceStatus.UrgentDispatch : ServiceStatus.Created;
     }

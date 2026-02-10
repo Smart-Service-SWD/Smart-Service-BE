@@ -199,6 +199,12 @@ namespace SmartService.Domain.Exceptions
             public MissingAssignedProviderException()
                 : base("An AssignedProvider must be specified before marking the ServiceRequest as In Progress.") { }
         }
+
+        public class InvalidStatusForOperationException : ServiceRequestException
+        {
+            public InvalidStatusForOperationException(string operation, string requiredStatus)
+                : base($"Operation '{operation}' requires status to be '{requiredStatus}'.") { }
+        }
     }
 
     // ====================== VALUE OBJECT MONEY DOMAIN EXCEPTIONS ====================
