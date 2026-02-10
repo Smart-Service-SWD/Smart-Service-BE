@@ -38,14 +38,14 @@ public class AuthService : IAuthService
     {
         var existingAuth = await _authRepository.GetByEmailAsync(request.Email, cancellationToken);
         if (existingAuth != null)
-            throw new DomainException("Email already registered.");
+            throw new AuthException.EmailAlreadyRegisteredException();
 
         var user = request.Role switch
         {
             UserRole.Customer => User.CreateCustomer(request.FullName, request.Email, request.PhoneNumber),
             UserRole.Staff => User.CreateStaff(request.FullName, request.Email, request.PhoneNumber),
             UserRole.Agent => User.CreateAgent(request.FullName, request.Email, request.PhoneNumber),
-            _ => throw new DomainException("Invalid user role.")
+            _ => throw new AuthException.InvalidRoleException()
         };
 
         var passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
@@ -68,13 +68,13 @@ public class AuthService : IAuthService
     public async Task<AuthResult> LoginAsync(LoginRequest request, CancellationToken cancellationToken = default)
     {
         var authData = await _authRepository.GetByEmailAsync(request.Email, cancellationToken)
-            ?? throw new DomainException("Invalid email or password.");
+            ?? throw new AuthException.InvalidCredentialsException();
 
         if (!BCrypt.Net.BCrypt.Verify(request.Password, authData.PasswordHash))
-            throw new DomainException("Invalid email or password.");
+            throw new AuthException.InvalidCredentialsException();
 
         var user = await _context.Users.FindAsync(new object[] { authData.UserId }, cancellationToken)
-            ?? throw new DomainException("User not found.");
+            ?? throw new AuthException.UserNotFoundException();
 
         return await GenerateTokensAsync(user, cancellationToken);
     }
@@ -85,10 +85,10 @@ public class AuthService : IAuthService
         var authData = await _authRepository.GetByRefreshTokenAsync(encryptedToken, cancellationToken);
         
         if (authData == null || authData.RefreshTokenExpiresAt < DateTime.UtcNow)
-            throw new DomainException("Invalid or expired refresh token.");
+            throw new AuthException.InvalidRefreshTokenException();
 
         var user = await _context.Users.FindAsync(new object[] { authData.UserId }, cancellationToken)
-            ?? throw new DomainException("User not found.");
+            ?? throw new AuthException.UserNotFoundException();
 
         return await GenerateTokensAsync(user, cancellationToken);
     }
