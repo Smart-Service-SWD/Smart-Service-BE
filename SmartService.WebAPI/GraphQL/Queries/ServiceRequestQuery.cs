@@ -19,7 +19,7 @@ public class ServiceRequestQuery
     /// </summary>
     [GraphQLName("getServiceRequests")]
     [GraphQLDescription("Lấy danh sách tất cả yêu cầu dịch vụ trong hệ thống, sắp xếp theo thời gian tạo mới nhất. Yêu cầu quyền: Staff hoặc Admin.")]
-    [Authorize(Roles = new[] { UserRoleConstants.Staff, UserRoleConstants.Admin })]
+    [Authorize(Roles = new[] { UserRoleConstants.Staff, UserRoleConstants.Admin, UserRoleConstants.Agent })]
     public async Task<List<ServiceRequest>> GetServiceRequests(
         [Service] IDbContextFactory<AppDbContext> factory)
     {
