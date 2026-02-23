@@ -6,6 +6,7 @@ using SmartService.API.GraphQL;
 using SmartService.Domain.Entities;
 using SmartService.Domain.ValueObjects;
 using SmartService.Infrastructure.Persistence;
+using System.Security.Claims;
 
 namespace SmartService.API.GraphQL.Queries;
 
@@ -108,5 +109,31 @@ public class ServiceFeedbackQuery
             .ToListAsync();
 
         return feedbacks.Count > 0 ? (decimal)feedbacks.Average(x => x.Rating) : 0;
+    }
+
+    /// <summary>
+    /// Lấy danh sách phản hồi/đánh giá do chính người dùng hiện tại tạo,
+    /// sắp xếp theo thời gian tạo mới nhất. Yêu cầu: Đã đăng nhập.
+    /// </summary>
+    [GraphQLName("getMyServiceFeedbacks")]
+    [GraphQLDescription("Lấy danh sách phản hồi/đánh giá do chính người dùng hiện tại tạo, sắp xếp theo thời gian tạo mới nhất. Yêu cầu: Đã đăng nhập.")]
+    [Authorize]
+    public async Task<List<ServiceFeedback>> GetMyServiceFeedbacks(
+        [Service] IDbContextFactory<AppDbContext> factory,
+        ClaimsPrincipal claimsPrincipal)
+    {
+        var userId = claimsPrincipal.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (!Guid.TryParse(userId, out var userIdGuid))
+        {
+            return new List<ServiceFeedback>();
+        }
+
+        using var db = await factory.CreateDbContextAsync();
+
+        return await db.ServiceFeedbacks
+            .AsNoTracking()
+            .Where(x => x.CreatedByUserId == userIdGuid)
+            .OrderByDescending(x => x.CreatedAt)
+            .ToListAsync();
     }
 }

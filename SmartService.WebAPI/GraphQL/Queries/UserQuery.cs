@@ -6,6 +6,7 @@ using SmartService.API.GraphQL;
 using SmartService.Domain.Entities;
 using SmartService.Domain.ValueObjects;
 using SmartService.Infrastructure.Persistence;
+using System.Security.Claims;
 
 namespace SmartService.API.GraphQL.Queries;
 
@@ -64,5 +65,29 @@ public class UserQuery
             .AsNoTracking()
             .Where(x => x.Role == role)
             .ToListAsync();
+    }
+
+    /// <summary>
+    /// Lấy thông tin tài khoản của chính người dùng hiện tại (dựa trên access token).
+    /// Yêu cầu: Đã đăng nhập.
+    /// </summary>
+    [GraphQLName("me")]
+    [GraphQLDescription("Lấy thông tin tài khoản của chính người dùng hiện tại (dựa trên access token). Yêu cầu: Đã đăng nhập.")]
+    [Authorize]
+    public async Task<User?> GetCurrentUser(
+        ClaimsPrincipal claimsPrincipal,
+        [Service] IDbContextFactory<AppDbContext> factory)
+    {
+        var userId = claimsPrincipal.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (!Guid.TryParse(userId, out var userIdGuid))
+        {
+            return null;
+        }
+
+        using var db = await factory.CreateDbContextAsync();
+
+        return await db.Users
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Id == userIdGuid);
     }
 }

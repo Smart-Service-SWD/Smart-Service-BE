@@ -116,4 +116,38 @@ public class ServiceRequestQuery
             .OrderByDescending(x => x.CreatedAt)
             .ToListAsync();
     }
+
+    /// <summary>
+    /// Lấy danh sách yêu cầu dịch vụ của chính người dùng hiện tại (customer),
+    /// sắp xếp theo thời gian tạo mới nhất. Yêu cầu: Đã đăng nhập.
+    /// </summary>
+    [GraphQLName("getMyServiceRequests")]
+    [GraphQLDescription("Lấy danh sách yêu cầu dịch vụ của chính người dùng hiện tại (customer), sắp xếp theo thời gian tạo mới nhất. Yêu cầu: Đã đăng nhập.")]
+    [Authorize]
+    public async Task<List<ServiceRequest>> GetMyServiceRequests(
+        [GraphQLDescription("Trạng thái cần lọc (tuỳ chọn). Nếu không truyền sẽ trả về tất cả trạng thái.")] ServiceStatus? status,
+        [Service] IDbContextFactory<AppDbContext> factory,
+        ClaimsPrincipal claimsPrincipal)
+    {
+        var userId = claimsPrincipal.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (!Guid.TryParse(userId, out var userIdGuid))
+        {
+            return new List<ServiceRequest>();
+        }
+
+        using var db = await factory.CreateDbContextAsync();
+
+        var query = db.ServiceRequests
+            .AsNoTracking()
+            .Where(x => x.CustomerId == userIdGuid);
+
+        if (status.HasValue)
+        {
+            query = query.Where(x => x.Status == status.Value);
+        }
+
+        return await query
+            .OrderByDescending(x => x.CreatedAt)
+            .ToListAsync();
+    }
 }
