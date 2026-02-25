@@ -17,7 +17,10 @@ public class ServiceAttachmentQuery
     /// Yêu cầu quyền: Staff hoặc Admin.
     /// </summary>
     [GraphQLName("getServiceAttachments")]
-    [GraphQLDescription("Lấy danh sách tất cả các tệp đính kèm dịch vụ trong hệ thống. Yêu cầu quyền: Staff hoặc Admin.")]
+    [GraphQLDescription(
+        "Lấy danh sách tất cả các tệp đính kèm dịch vụ trong hệ thống.\n" +
+        "Yêu cầu quyền: Staff hoặc Admin.\n" +
+        "Tags: Admin Dashboard, File Management")]
     [Authorize(Roles = new[] { UserRoleConstants.Staff, UserRoleConstants.Admin })]
     public async Task<List<ServiceAttachment>> GetServiceAttachments(
         [Service] IDbContextFactory<AppDbContext> factory)
@@ -34,7 +37,10 @@ public class ServiceAttachmentQuery
     /// Yêu cầu: Đã đăng nhập.
     /// </summary>
     [GraphQLName("getServiceAttachmentById")]
-    [GraphQLDescription("Lấy thông tin chi tiết của một tệp đính kèm dịch vụ theo ID. Yêu cầu: Đã đăng nhập.")]
+    [GraphQLDescription(
+        "Lấy thông tin chi tiết của một tệp đính kèm dịch vụ theo ID (tên tệp, đường dẫn, loại tệp).\n" +
+        "Yêu cầu quyền: Đã đăng nhập.\n" +
+        "Tags: File Management, Detail View")]
     [Authorize]
     public async Task<ServiceAttachment?> GetServiceAttachmentById(
         [GraphQLDescription("ID của tệp đính kèm dịch vụ cần lấy thông tin")] Guid id,
@@ -52,7 +58,10 @@ public class ServiceAttachmentQuery
     /// Yêu cầu: Đã đăng nhập.
     /// </summary>
     [GraphQLName("getAttachmentsByServiceRequestId")]
-    [GraphQLDescription("Lấy danh sách các tệp đính kèm của một yêu cầu dịch vụ cụ thể, sắp xếp theo thời gian tải lên mới nhất. Yêu cầu: Đã đăng nhập.")]
+    [GraphQLDescription(
+        "Lấy danh sách các tệp đính kèm của một yêu cầu dịch vụ cụ thể, sắp xếp theo thời gian tải lên mới nhất.\n" +
+        "Yêu cầu quyền: Đã đăng nhập.\n" +
+        "Tags: Service Request Detail, File Management")]
     [Authorize]
     public async Task<List<ServiceAttachment>> GetAttachmentsByServiceRequestId(
         [GraphQLDescription("ID của yêu cầu dịch vụ cần lấy danh sách tệp đính kèm")] Guid serviceRequestId,

@@ -15,7 +15,10 @@ public class ServiceCategoryQuery
     /// Public query - không cần đăng nhập.
     /// </summary>
     [GraphQLName("getServiceCategories")]
-    [GraphQLDescription("Lấy danh sách tất cả các danh mục dịch vụ trong hệ thống. Public query - không cần đăng nhập.")]
+    [GraphQLDescription(
+        "Lấy danh sách tất cả các danh mục dịch vụ trong hệ thống (ví dụ: Pháp lý, Bất động sản, Kỹ thuật).\n" +
+        "Yêu cầu quyền: Không yêu cầu đăng nhập (Public).\n" +
+        "Tags: Home Screen, Service Browsing, Admin Dashboard")]
     public async Task<List<ServiceCategory>> GetServiceCategories(
         [Service] IDbContextFactory<AppDbContext> factory)
     {
@@ -31,7 +34,10 @@ public class ServiceCategoryQuery
     /// Public query - không cần đăng nhập.
     /// </summary>
     [GraphQLName("getServiceCategoryById")]
-    [GraphQLDescription("Lấy thông tin chi tiết của một danh mục dịch vụ theo ID. Public query - không cần đăng nhập.")]
+    [GraphQLDescription(
+        "Lấy thông tin chi tiết của một danh mục dịch vụ theo ID (tên, mô tả).\n" +
+        "Yêu cầu quyền: Không yêu cầu đăng nhập (Public).\n" +
+        "Tags: Service Browsing, Category Detail")]
     public async Task<ServiceCategory?> GetServiceCategoryById(
         [GraphQLDescription("ID của danh mục dịch vụ cần lấy thông tin")] Guid id,
         [Service] IDbContextFactory<AppDbContext> factory)

@@ -18,7 +18,10 @@ public class ServiceRequestQuery
     /// Yêu cầu quyền: Staff hoặc Admin.
     /// </summary>
     [GraphQLName("getServiceRequests")]
-    [GraphQLDescription("Lấy danh sách tất cả yêu cầu dịch vụ trong hệ thống, sắp xếp theo thời gian tạo mới nhất. Yêu cầu quyền: Staff hoặc Admin.")]
+    [GraphQLDescription(
+        "Lấy danh sách tất cả yêu cầu dịch vụ trong hệ thống, sắp xếp theo thời gian tạo mới nhất.\n" +
+        "Yêu cầu quyền: Staff, Admin hoặc Agent.\n" +
+        "Tags: Admin Dashboard, Request Management, Staff Workflow")]
     [Authorize(Roles = new[] { UserRoleConstants.Staff, UserRoleConstants.Admin, UserRoleConstants.Agent })]
     public async Task<List<ServiceRequest>> GetServiceRequests(
         [Service] IDbContextFactory<AppDbContext> factory)
@@ -37,7 +40,10 @@ public class ServiceRequestQuery
     /// Lưu ý: Khách hàng chỉ xem được yêu cầu của chính mình, Staff/Admin xem được tất cả.
     /// </summary>
     [GraphQLName("getServiceRequestById")]
-    [GraphQLDescription("Lấy thông tin chi tiết của một yêu cầu dịch vụ theo ID. Khách hàng chỉ xem được yêu cầu của chính mình, Staff/Admin xem được tất cả. Yêu cầu: Đã đăng nhập.")]
+    [GraphQLDescription(
+        "Lấy thông tin chi tiết của một yêu cầu dịch vụ theo ID (mô tả, độ phức tạp, trạng thái, chi phí ước tính). Khách hàng chỉ xem được yêu cầu của chính mình.\n" +
+        "Yêu cầu quyền: Đã đăng nhập.\n" +
+        "Tags: Service Request Detail, Customer Dashboard")]
     [Authorize]
     public async Task<ServiceRequest?> GetServiceRequestById(
         [GraphQLDescription("ID của yêu cầu dịch vụ cần lấy thông tin")] Guid id,
@@ -72,7 +78,10 @@ public class ServiceRequestQuery
     /// Lưu ý: Khách hàng chỉ xem được yêu cầu của chính mình, Staff/Admin xem được tất cả.
     /// </summary>
     [GraphQLName("getServiceRequestsByCustomerId")]
-    [GraphQLDescription("Lấy danh sách yêu cầu dịch vụ của một khách hàng cụ thể. Khách hàng chỉ xem được yêu cầu của chính mình, Staff/Admin xem được tất cả. Yêu cầu: Đã đăng nhập.")]
+    [GraphQLDescription(
+        "Lấy danh sách yêu cầu dịch vụ của một khách hàng cụ thể. Khách hàng chỉ xem được yêu cầu của chính mình.\n" +
+        "Yêu cầu quyền: Đã đăng nhập.\n" +
+        "Tags: Customer Dashboard, Request History")]
     [Authorize]
     public async Task<List<ServiceRequest>> GetServiceRequestsByCustomerId(
         [GraphQLDescription("ID của khách hàng cần lấy danh sách yêu cầu")] Guid customerId,
@@ -102,7 +111,10 @@ public class ServiceRequestQuery
     /// Yêu cầu quyền: Staff hoặc Admin.
     /// </summary>
     [GraphQLName("getServiceRequestsByStatus")]
-    [GraphQLDescription("Lấy danh sách yêu cầu dịch vụ theo trạng thái (PENDING, PENDING_REVIEW, IN_PROGRESS, COMPLETED, CANCELLED). Yêu cầu quyền: Staff hoặc Admin.")]
+    [GraphQLDescription(
+        "Lấy danh sách yêu cầu dịch vụ theo trạng thái (PENDING, PENDING_REVIEW, IN_PROGRESS, COMPLETED, CANCELLED).\n" +
+        "Yêu cầu quyền: Staff hoặc Admin.\n" +
+        "Tags: Admin Dashboard, Request Management, Status Filter")]
     [Authorize(Roles = new[] { UserRoleConstants.Staff, UserRoleConstants.Admin })]
     public async Task<List<ServiceRequest>> GetServiceRequestsByStatus(
         [GraphQLDescription("Trạng thái cần lọc (PENDING, PENDING_REVIEW, IN_PROGRESS, COMPLETED, CANCELLED)")] ServiceStatus status,
@@ -122,7 +134,10 @@ public class ServiceRequestQuery
     /// sắp xếp theo thời gian tạo mới nhất. Yêu cầu: Đã đăng nhập.
     /// </summary>
     [GraphQLName("getMyServiceRequests")]
-    [GraphQLDescription("Lấy danh sách yêu cầu dịch vụ của chính người dùng hiện tại (customer), sắp xếp theo thời gian tạo mới nhất. Yêu cầu: Đã đăng nhập.")]
+    [GraphQLDescription(
+        "Lấy danh sách yêu cầu dịch vụ của chính người dùng hiện tại (customer), sắp xếp theo thời gian tạo mới nhất.\n" +
+        "Yêu cầu quyền: Đã đăng nhập.\n" +
+        "Tags: Customer Dashboard, My Requests")]
     [Authorize]
     public async Task<List<ServiceRequest>> GetMyServiceRequests(
         [GraphQLDescription("Trạng thái cần lọc (tuỳ chọn). Nếu không truyền sẽ trả về tất cả trạng thái.")] ServiceStatus? status,

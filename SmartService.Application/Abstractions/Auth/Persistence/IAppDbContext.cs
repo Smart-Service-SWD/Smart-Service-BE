@@ -24,6 +24,7 @@ public interface IAppDbContext
     DbSet<ActivityLog> ActivityLogs { get; }
     DbSet<AgentCapability> AgentCapabilities { get; }
     DbSet<ServiceAnalysis> ServiceAnalyses { get; }
+    DbSet<ServiceDefinition> ServiceDefinitions { get; }
 
     /// <summary>
     /// Saves all changes made to the database asynchronously.

@@ -25,6 +25,7 @@ public class AppDbContext : DbContext, IAppDbContext
     public DbSet<ActivityLog> ActivityLogs => Set<ActivityLog>();
     public DbSet<AgentCapability> AgentCapabilities => Set<AgentCapability>();
     public DbSet<ServiceAnalysis> ServiceAnalyses => Set<ServiceAnalysis>();
+    public DbSet<ServiceDefinition> ServiceDefinitions => Set<ServiceDefinition>();
     public DbSet<AuthData> AuthData => Set<AuthData>();
 
     public AppDbContext(DbContextOptions<AppDbContext> options)
@@ -211,6 +212,26 @@ public class AppDbContext : DbContext, IAppDbContext
             entity.Property(x => x.SafetyAdvice).HasMaxLength(1000);
             entity.Property(x => x.Summary).HasMaxLength(2000);
             entity.HasIndex(x => x.ServiceRequestId).IsUnique();
+        });
+
+        // ==========================
+        // SERVICE DEFINITION
+        // ==========================
+        modelBuilder.Entity<ServiceDefinition>(entity =>
+        {
+            entity.HasKey(x => x.Id);
+            entity.Property(x => x.Name).IsRequired().HasMaxLength(200);
+            entity.Property(x => x.Description).HasMaxLength(1000);
+            entity.Property(x => x.BasePrice).HasPrecision(18, 2).IsRequired();
+            entity.Property(x => x.EstimatedDuration).IsRequired();
+            entity.Property(x => x.IsActive).IsRequired();
+            entity.Property(x => x.CreatedAt).IsRequired();
+            entity.Property(x => x.UpdatedAt).IsRequired();
+
+            entity.HasOne<ServiceCategory>()
+                  .WithMany()
+                  .HasForeignKey(x => x.CategoryId)
+                  .OnDelete(DeleteBehavior.Restrict);
         });
 
         // ==========================

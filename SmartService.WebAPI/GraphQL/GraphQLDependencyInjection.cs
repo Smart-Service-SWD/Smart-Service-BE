@@ -22,6 +22,8 @@ public static class GraphQLDependencyInjection
             .AddType<ServiceAttachmentQuery>()
             .AddType<ActivityLogQuery>()
             .AddType<ServiceFeedbackQuery>()
+            .AddType<DashboardQuery>()
+            .AddType<ServiceDefinitionQuery>()
             .AddAuthorization() // Enable authorization directive
             .AddHttpRequestInterceptor<HttpRequestInterceptor>() // Ensure HttpContext.User is available
             .ModifyRequestOptions(opt =>

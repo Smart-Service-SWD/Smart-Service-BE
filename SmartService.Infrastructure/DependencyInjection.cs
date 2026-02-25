@@ -3,10 +3,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SmartService.Application.Abstractions.AI;
 using SmartService.Application.Abstractions.Auth;
+using SmartService.Application.Abstractions.KnowledgeBase;
 using SmartService.Application.Abstractions.Persistence;
 using SmartService.Infrastructure.AI.Ollama;
 using SmartService.Infrastructure.Auth;
 using SmartService.Infrastructure.KnowledgeBase.Complexity;
+using SmartService.Infrastructure.KnowledgeBase.Sync;
 using SmartService.Infrastructure.Persistence;
 
 namespace SmartService.Infrastructure;
@@ -38,6 +40,10 @@ public static class DependencyInjection
         services.AddSingleton<ComplexityRuleProvider>();
         services.AddSingleton<SimpleComplexityMatcher>();
         services.AddScoped<IAiAnalyzer, OllamaAiAnalyzer>();
+
+        // Register KnowledgeBase sync services (DB → JSON)
+        services.AddScoped<IKnowledgeBaseSyncService, KnowledgeBaseSyncService>();
+        services.AddHostedService<KnowledgeBaseSyncBackgroundService>();
 
         // Register Authentication services
         // Configure TokenConfiguration from appsettings.json
