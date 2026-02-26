@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using SmartService.Application.UseCases.AnalyzeServiceRequest;
+using SmartService.Domain.Exceptions;
 
 namespace SmartService.API.Controllers;
 
@@ -18,7 +19,7 @@ public class ServiceAnalysisController : ControllerBase
 public async Task<IActionResult> Analyze([FromBody] AnalysisRequest request)
 {
     if (string.IsNullOrEmpty(request.Description))
-        return BadRequest();
+        throw new BusinessRuleException.RequiredFieldException(nameof(request.Description));
 
     // Kết quả bây giờ bao gồm cả contextDescription và dispatchPolicy
     var result = await _handler.HandleAsync(request.Description);

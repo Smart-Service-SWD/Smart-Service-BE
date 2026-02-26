@@ -22,7 +22,7 @@ public class EvaluateServiceComplexityHandler : IRequestHandler<EvaluateServiceC
             cancellationToken: cancellationToken);
 
         if (serviceRequest == null)
-            throw new ServiceRequestException.InvalidDescriptionException();
+            throw new KeyNotFoundException($"ServiceRequest with ID '{request.ServiceRequestId}' not found.");
 
         serviceRequest.Evaluate(request.Complexity);
         

@@ -22,7 +22,7 @@ public class AssignProviderHandler : IRequestHandler<AssignProviderCommand, Unit
             cancellationToken: cancellationToken);
 
         if (serviceRequest == null)
-            throw new ServiceRequestException.InvalidDescriptionException();
+            throw new KeyNotFoundException($"ServiceRequest with ID '{request.ServiceRequestId}' not found.");
 
         serviceRequest.AssignProvider(request.ProviderId, request.EstimatedCost);
         
