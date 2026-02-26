@@ -18,7 +18,10 @@ public class ServiceFeedbackQuery
     /// Yêu cầu quyền: Staff hoặc Admin.
     /// </summary>
     [GraphQLName("getServiceFeedbacks")]
-    [GraphQLDescription("Lấy danh sách tất cả phản hồi/đánh giá dịch vụ trong hệ thống, sắp xếp theo thời gian tạo mới nhất. Yêu cầu quyền: Staff hoặc Admin.")]
+    [GraphQLDescription(
+        "Lấy danh sách tất cả phản hồi/đánh giá dịch vụ trong hệ thống, sắp xếp theo thời gian tạo mới nhất.\n" +
+        "Yêu cầu quyền: Staff hoặc Admin.\n" +
+        "Tags: Admin Dashboard, Feedback Management, Quality Monitoring")]
     [Authorize(Roles = new[] { UserRoleConstants.Staff, UserRoleConstants.Admin })]
     public async Task<List<ServiceFeedback>> GetServiceFeedbacks(
         [Service] IDbContextFactory<AppDbContext> factory)
@@ -36,7 +39,10 @@ public class ServiceFeedbackQuery
     /// Yêu cầu: Đã đăng nhập.
     /// </summary>
     [GraphQLName("getServiceFeedbackById")]
-    [GraphQLDescription("Lấy thông tin chi tiết của một phản hồi/đánh giá dịch vụ theo ID. Yêu cầu: Đã đăng nhập.")]
+    [GraphQLDescription(
+        "Lấy thông tin chi tiết của một phản hồi/đánh giá dịch vụ theo ID (điểm đánh giá, nhận xét).\n" +
+        "Yêu cầu quyền: Đã đăng nhập.\n" +
+        "Tags: Feedback Detail, Quality Monitoring")]
     [Authorize]
     public async Task<ServiceFeedback?> GetServiceFeedbackById(
         [GraphQLDescription("ID của phản hồi/đánh giá dịch vụ cần lấy thông tin")] Guid id,
@@ -54,7 +60,10 @@ public class ServiceFeedbackQuery
     /// Yêu cầu: Đã đăng nhập.
     /// </summary>
     [GraphQLName("getFeedbackByServiceRequestId")]
-    [GraphQLDescription("Lấy danh sách phản hồi/đánh giá của một yêu cầu dịch vụ cụ thể, sắp xếp theo thời gian tạo mới nhất. Yêu cầu: Đã đăng nhập.")]
+    [GraphQLDescription(
+        "Lấy danh sách phản hồi/đánh giá của một yêu cầu dịch vụ cụ thể, sắp xếp theo thời gian tạo mới nhất.\n" +
+        "Yêu cầu quyền: Đã đăng nhập.\n" +
+        "Tags: Service Request Detail, Feedback Management")]
     [Authorize]
     public async Task<List<ServiceFeedback>> GetFeedbackByServiceRequestId(
         [GraphQLDescription("ID của yêu cầu dịch vụ cần lấy danh sách phản hồi/đánh giá")] Guid serviceRequestId,
@@ -74,7 +83,10 @@ public class ServiceFeedbackQuery
     /// Yêu cầu: Đã đăng nhập.
     /// </summary>
     [GraphQLName("getFeedbackByUserId")]
-    [GraphQLDescription("Lấy danh sách phản hồi/đánh giá của một người dùng cụ thể, sắp xếp theo thời gian tạo mới nhất. Yêu cầu: Đã đăng nhập.")]
+    [GraphQLDescription(
+        "Lấy danh sách phản hồi/đánh giá của một người dùng cụ thể, sắp xếp theo thời gian tạo mới nhất.\n" +
+        "Yêu cầu quyền: Đã đăng nhập.\n" +
+        "Tags: User Profile, Feedback Management")]
     [Authorize]
     public async Task<List<ServiceFeedback>> GetFeedbackByUserId(
         [GraphQLDescription("ID của người dùng cần lấy danh sách phản hồi/đánh giá")] Guid userId,
@@ -95,7 +107,10 @@ public class ServiceFeedbackQuery
     /// Yêu cầu: Đã đăng nhập.
     /// </summary>
     [GraphQLName("getAverageRatingByServiceRequestId")]
-    [GraphQLDescription("Tính điểm đánh giá trung bình của một yêu cầu dịch vụ cụ thể. Trả về 0 nếu không có phản hồi nào. Yêu cầu: Đã đăng nhập.")]
+    [GraphQLDescription(
+        "Tính điểm đánh giá trung bình của một yêu cầu dịch vụ cụ thể. Trả về 0 nếu không có phản hồi nào.\n" +
+        "Yêu cầu quyền: Đã đăng nhập.\n" +
+        "Tags: Service Request Detail, Quality Monitoring")]
     [Authorize]
     public async Task<decimal> GetAverageRatingByServiceRequestId(
         [GraphQLDescription("ID của yêu cầu dịch vụ cần tính điểm đánh giá trung bình")] Guid serviceRequestId,
@@ -116,7 +131,10 @@ public class ServiceFeedbackQuery
     /// sắp xếp theo thời gian tạo mới nhất. Yêu cầu: Đã đăng nhập.
     /// </summary>
     [GraphQLName("getMyServiceFeedbacks")]
-    [GraphQLDescription("Lấy danh sách phản hồi/đánh giá do chính người dùng hiện tại tạo, sắp xếp theo thời gian tạo mới nhất. Yêu cầu: Đã đăng nhập.")]
+    [GraphQLDescription(
+        "Lấy danh sách phản hồi/đánh giá do chính người dùng hiện tại tạo, sắp xếp theo thời gian tạo mới nhất.\n" +
+        "Yêu cầu quyền: Đã đăng nhập.\n" +
+        "Tags: Customer Dashboard, My Feedbacks")]
     [Authorize]
     public async Task<List<ServiceFeedback>> GetMyServiceFeedbacks(
         [Service] IDbContextFactory<AppDbContext> factory,

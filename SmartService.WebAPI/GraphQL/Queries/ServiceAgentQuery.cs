@@ -16,7 +16,10 @@ public class ServiceAgentQuery
     /// Yêu cầu: Đã đăng nhập.
     /// </summary>
     [GraphQLName("getServiceAgents")]
-    [GraphQLDescription("Lấy danh sách tất cả nhà cung cấp dịch vụ trong hệ thống (bao gồm cả active và inactive). Yêu cầu: Đã đăng nhập.")]
+    [GraphQLDescription(
+        "Lấy danh sách tất cả nhà cung cấp dịch vụ trong hệ thống (bao gồm cả active và inactive).\n" +
+        "Yêu cầu quyền: Đã đăng nhập.\n" +
+        "Tags: Admin Dashboard, Agent Management")]
     [Authorize]
     public async Task<List<ServiceAgent>> GetServiceAgents(
         [Service] IDbContextFactory<AppDbContext> factory)
@@ -33,7 +36,10 @@ public class ServiceAgentQuery
     /// Yêu cầu: Đã đăng nhập.
     /// </summary>
     [GraphQLName("getServiceAgentById")]
-    [GraphQLDescription("Lấy thông tin chi tiết của một nhà cung cấp dịch vụ theo ID. Yêu cầu: Đã đăng nhập.")]
+    [GraphQLDescription(
+        "Lấy thông tin chi tiết của một nhà cung cấp dịch vụ theo ID (thông tin liên hệ, trạng thái, khả năng).\n" +
+        "Yêu cầu quyền: Đã đăng nhập.\n" +
+        "Tags: Agent Management, Agent Detail")]
     [Authorize]
     public async Task<ServiceAgent?> GetServiceAgentById(
         [GraphQLDescription("ID của nhà cung cấp dịch vụ cần lấy thông tin")] Guid id,
@@ -51,7 +57,10 @@ public class ServiceAgentQuery
     /// Public query - không cần đăng nhập.
     /// </summary>
     [GraphQLName("getActiveServiceAgents")]
-    [GraphQLDescription("Lấy danh sách các nhà cung cấp dịch vụ đang hoạt động. Public query - không cần đăng nhập.")]
+    [GraphQLDescription(
+        "Lấy danh sách các nhà cung cấp dịch vụ đang hoạt động (isActive = true).\n" +
+        "Yêu cầu quyền: Không yêu cầu đăng nhập (Public).\n" +
+        "Tags: Home Screen, Service Booking")]
     public async Task<List<ServiceAgent>> GetActiveServiceAgents(
         [Service] IDbContextFactory<AppDbContext> factory)
     {

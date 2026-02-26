@@ -18,7 +18,10 @@ public class UserQuery
     /// Yêu cầu quyền: Staff hoặc Admin.
     /// </summary>
     [GraphQLName("getUsers")]
-    [GraphQLDescription("Lấy danh sách tất cả người dùng trong hệ thống. Yêu cầu quyền: Staff hoặc Admin.")]
+    [GraphQLDescription(
+        "Lấy danh sách tất cả người dùng trong hệ thống (khách hàng, nhân viên, nhà cung cấp, admin).\n" +
+        "Yêu cầu quyền: Staff hoặc Admin.\n" +
+        "Tags: Admin Dashboard, User Management")]
     [Authorize(Roles = new[] { UserRoleConstants.Staff, UserRoleConstants.Admin })]
     public async Task<List<User>> GetUsers(
         [Service] IDbContextFactory<AppDbContext> factory)
@@ -35,7 +38,10 @@ public class UserQuery
     /// Yêu cầu: Đã đăng nhập (authenticated).
     /// </summary>
     [GraphQLName("getUserById")]
-    [GraphQLDescription("Lấy thông tin chi tiết của một người dùng theo ID. Yêu cầu: Đã đăng nhập.")]
+    [GraphQLDescription(
+        "Lấy thông tin chi tiết của một người dùng theo ID (email, tên, số điện thoại, vai trò).\n" +
+        "Yêu cầu quyền: Đã đăng nhập.\n" +
+        "Tags: User Management, User Detail")]
     [Authorize]
     public async Task<User?> GetUserById(
         [GraphQLDescription("ID của người dùng cần lấy thông tin")] Guid id,
@@ -53,7 +59,10 @@ public class UserQuery
     /// Yêu cầu quyền: Staff hoặc Admin.
     /// </summary>
     [GraphQLName("getUsersByRole")]
-    [GraphQLDescription("Lấy danh sách người dùng theo vai trò (Customer, Staff, Agent, Admin). Yêu cầu quyền: Staff hoặc Admin.")]
+    [GraphQLDescription(
+        "Lấy danh sách người dùng theo vai trò (Customer, Staff, Agent, Admin).\n" +
+        "Yêu cầu quyền: Staff hoặc Admin.\n" +
+        "Tags: Admin Dashboard, User Management, Role Filter")]
     [Authorize(Roles = new[] { UserRoleConstants.Staff, UserRoleConstants.Admin })]
     public async Task<List<User>> GetUsersByRole(
         [GraphQLDescription("Vai trò cần lọc (CUSTOMER, STAFF, AGENT, ADMIN)")] UserRole role,
@@ -72,7 +81,10 @@ public class UserQuery
     /// Yêu cầu: Đã đăng nhập.
     /// </summary>
     [GraphQLName("me")]
-    [GraphQLDescription("Lấy thông tin tài khoản của chính người dùng hiện tại (dựa trên access token). Yêu cầu: Đã đăng nhập.")]
+    [GraphQLDescription(
+        "Lấy thông tin tài khoản của chính người dùng hiện tại (dựa trên access token).\n" +
+        "Yêu cầu quyền: Đã đăng nhập.\n" +
+        "Tags: My Profile, Authentication")]
     [Authorize]
     public async Task<User?> GetCurrentUser(
         ClaimsPrincipal claimsPrincipal,

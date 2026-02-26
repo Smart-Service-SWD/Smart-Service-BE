@@ -17,7 +17,10 @@ public class ActivityLogQuery
     /// Yêu cầu quyền: Staff hoặc Admin.
     /// </summary>
     [GraphQLName("getActivityLogs")]
-    [GraphQLDescription("Lấy danh sách tất cả nhật ký hoạt động trong hệ thống, sắp xếp theo thời gian tạo mới nhất. Yêu cầu quyền: Staff hoặc Admin.")]
+    [GraphQLDescription(
+        "Lấy danh sách tất cả nhật ký hoạt động trong hệ thống, sắp xếp theo thời gian tạo mới nhất.\n" +
+        "Yêu cầu quyền: Staff hoặc Admin.\n" +
+        "Tags: Admin Dashboard, Activity Monitoring, System Logs")]
     [Authorize(Roles = new[] { UserRoleConstants.Staff, UserRoleConstants.Admin })]
     public async Task<List<ActivityLog>> GetActivityLogs(
         [Service] IDbContextFactory<AppDbContext> factory)
@@ -35,7 +38,10 @@ public class ActivityLogQuery
     /// Yêu cầu: Đã đăng nhập.
     /// </summary>
     [GraphQLName("getActivityLogById")]
-    [GraphQLDescription("Lấy thông tin chi tiết của một nhật ký hoạt động theo ID. Yêu cầu: Đã đăng nhập.")]
+    [GraphQLDescription(
+        "Lấy thông tin chi tiết của một nhật ký hoạt động theo ID (hành động, thời gian, người thực hiện).\n" +
+        "Yêu cầu quyền: Đã đăng nhập.\n" +
+        "Tags: Activity Monitoring, Detail View")]
     [Authorize]
     public async Task<ActivityLog?> GetActivityLogById(
         [GraphQLDescription("ID của nhật ký hoạt động cần lấy thông tin")] Guid id,
@@ -53,7 +59,10 @@ public class ActivityLogQuery
     /// Yêu cầu: Đã đăng nhập.
     /// </summary>
     [GraphQLName("getActivityLogsByServiceRequestId")]
-    [GraphQLDescription("Lấy danh sách nhật ký hoạt động của một yêu cầu dịch vụ cụ thể, sắp xếp theo thời gian tạo mới nhất. Yêu cầu: Đã đăng nhập.")]
+    [GraphQLDescription(
+        "Lấy danh sách nhật ký hoạt động của một yêu cầu dịch vụ cụ thể, sắp xếp theo thời gian tạo mới nhất.\n" +
+        "Yêu cầu quyền: Đã đăng nhập.\n" +
+        "Tags: Service Request Detail, Activity Monitoring")]
     [Authorize]
     public async Task<List<ActivityLog>> GetActivityLogsByServiceRequestId(
         [GraphQLDescription("ID của yêu cầu dịch vụ cần lấy danh sách nhật ký hoạt động")] Guid serviceRequestId,
