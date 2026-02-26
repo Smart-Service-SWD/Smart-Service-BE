@@ -8,6 +8,7 @@ using SmartService.Application.Features.Auth.Commands.RefreshToken;
 using SmartService.Application.Features.Auth.Commands.Register;
 using SmartService.Application.Features.Auth.Commands.UpdateUserRole;
 using SmartService.Domain.Entities;
+using SmartService.Domain.Exceptions;
 using SmartService.Domain.ValueObjects;
 using System.Security.Claims;
 
@@ -173,44 +174,24 @@ public class AuthController : ControllerBase
         var roleClaim = User.FindFirst(ClaimTypes.Role)?.Value;
         if (string.IsNullOrWhiteSpace(roleClaim))
         {
-            return Forbid();
+            throw new UnauthorizedAccessException();
         }
 
         var currentUserRole = UserRoleExtensions.FromAuthorizationRole(roleClaim);
 
         if (currentUserRole is not (UserRole.Admin or UserRole.Staff))
         {
-            return Forbid();
+            throw new UnauthorizedAccessException();
         }
 
         if (!TryParseUserRole(request.Role, out var newRole))
         {
-            return BadRequest(new
-            {
-                errors = new
-                {
-                    Role = new[]
-                    {
-                        $"Invalid role '{request.Role}'. " +
-                        $"Valid values: '{UserRoleConstants.Customer}' (0), '{UserRoleConstants.Staff}' (1), " +
-                        $"'{UserRoleConstants.Agent}' (2), '{UserRoleConstants.Admin}' (3)"
-                    }
-                }
-            });
+            throw new AuthException.InvalidRoleException();
         }
 
         if (currentUserRole == UserRole.Staff && newRole != UserRole.Agent)
         {
-            return BadRequest(new
-            {
-                errors = new
-                {
-                    Role = new[]
-                    {
-                        "Staff is only allowed to update role to Agent."
-                    }
-                }
-            });
+            throw new BusinessRuleException.BusinessConstraintViolationException("Role", "Staff is only allowed to update role to Agent.");
         }
 
         var command = new UpdateUserRoleCommand(id, newRole);
@@ -218,7 +199,7 @@ public class AuthController : ControllerBase
 
         if (!success)
         {
-            return NotFound(new { message = $"User with id '{id}' not found." });
+            throw new AuthException.UserNotFoundException();
         }
 
         return Ok(true);

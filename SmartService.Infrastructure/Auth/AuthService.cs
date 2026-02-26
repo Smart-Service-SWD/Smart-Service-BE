@@ -74,7 +74,7 @@ public class AuthService : IAuthService
             throw new AuthException.InvalidCredentialsException();
 
         var user = await _context.Users.FindAsync(new object[] { authData.UserId }, cancellationToken)
-            ?? throw new AuthException.UserNotFoundException();
+            ?? throw new AuthException.InvalidCredentialsException();
 
         return await GenerateTokensAsync(user, cancellationToken);
     }

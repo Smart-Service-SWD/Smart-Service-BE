@@ -22,7 +22,7 @@ public class DeactivateServiceAgentHandler : IRequestHandler<DeactivateServiceAg
             cancellationToken: cancellationToken);
 
         if (agent == null)
-            throw new ServiceAgentException.AgentNameRequiredException();
+            throw new KeyNotFoundException($"ServiceAgent with ID '{request.AgentId}' not found.");
 
         agent.Deactivate();
 

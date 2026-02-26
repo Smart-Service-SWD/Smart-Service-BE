@@ -9,6 +9,7 @@ using SmartService.Infrastructure;
 using SmartService.Infrastructure.AI.Ollama;
 using SmartService.Infrastructure.KnowledgeBase.Complexity;
 using System.Text;
+using SmartService.API.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -131,6 +132,20 @@ builder.Services.AddScoped<SmartService.Application.Abstractions.Notifications.I
 builder.Services.AddHostedService<SmartService.Infrastructure.BackgroundServices.ServiceRequestAnalysisBackgroundService>();
 
 var app = builder.Build();
+
+app.Use(async (context, next) =>
+{
+    context.Response.Headers.Append("X-Content-Type-Options", "nosniff");
+    context.Response.Headers.Append("X-Frame-Options", "DENY");
+    context.Response.Headers.Append("X-XSS-Protection", "1; mode=block");
+    if (context.Request.IsHttps)
+    {
+        context.Response.Headers.Append("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+    }
+    await next();
+});
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 // HTTP pipeline
 if (app.Environment.IsDevelopment())
