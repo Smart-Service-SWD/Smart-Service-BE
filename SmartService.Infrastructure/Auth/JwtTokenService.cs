@@ -22,7 +22,7 @@ public class JwtTokenService
         _tokenHandler = new JwtSecurityTokenHandler();
     }
 
-    public string GenerateAccessToken(Guid userId, string email, string fullName, Domain.Entities.UserRole role)
+    public string GenerateAccessToken(Guid userId, string email, string fullName, Domain.Entities.UserRole role, string phoneNumber)
     {
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.SecretKey));
         var token = new JwtSecurityToken(
@@ -34,6 +34,7 @@ public class JwtTokenService
                 new Claim(ClaimTypes.Email, email),
                 new Claim(ClaimTypes.Name, fullName),
                 new Claim(ClaimTypes.Role, role.ToAuthorizationRole()),
+                new Claim(ClaimTypes.MobilePhone, phoneNumber ?? ""),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             },
             expires: DateTime.UtcNow.AddMinutes(_config.AccessTokenLifetimeMinutes),

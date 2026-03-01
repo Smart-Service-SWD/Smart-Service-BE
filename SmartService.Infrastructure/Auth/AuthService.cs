@@ -130,7 +130,7 @@ public class AuthService : IAuthService
 
     private async Task<AuthResult> GenerateTokensAsync(User user, CancellationToken cancellationToken)
     {
-        var accessToken = _jwtService.GenerateAccessToken(user.Id, user.Email, user.FullName, user.Role);
+        var accessToken = _jwtService.GenerateAccessToken(user.Id, user.Email, user.FullName, user.Role, user.PhoneNumber);
         var rawRefreshToken = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
         
         var authData = await _authRepository.GetByUserIdAsync(user.Id, cancellationToken);

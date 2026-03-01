@@ -45,6 +45,12 @@ public class User
     {
         Role = role;
     }
+
+    public void UpdateProfile(string fullName, string phoneNumber)
+    {
+        FullName = fullName;
+        PhoneNumber = phoneNumber;
+    }
 }
 
 public enum UserRole

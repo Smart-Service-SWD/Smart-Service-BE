@@ -9,7 +9,7 @@ public interface IAuthData
 {
     Guid Id { get; }
     Guid UserId { get; }
-    string Email { get; }
+    string Email { get; set; }
     string PasswordHash { get; }
     string? EncryptedRefreshToken { get; }
     DateTime? RefreshTokenExpiresAt { get; }
