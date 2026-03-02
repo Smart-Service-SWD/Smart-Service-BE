@@ -6,11 +6,13 @@ using SmartService.Application.Features.Auth.Commands.Login;
 using SmartService.Application.Features.Auth.Commands.Logout;
 using SmartService.Application.Features.Auth.Commands.RefreshToken;
 using SmartService.Application.Features.Auth.Commands.Register;
+using SmartService.Application.Features.Auth.Commands.UpdateProfile;
 using SmartService.Application.Features.Auth.Commands.UpdateUserRole;
 using SmartService.Domain.Entities;
 using SmartService.Domain.Exceptions;
 using SmartService.Domain.ValueObjects;
 using System.Security.Claims;
+
 
 namespace SmartService.API.Controllers;
 
@@ -205,6 +207,42 @@ public class AuthController : ControllerBase
         return Ok(true);
     }
 
+    /// <summary>
+    /// [PUT] Cập nhật hồ sơ cá nhân
+    /// </summary>
+    /// <param name="request">Thông tin cần cập nhật</param>
+    /// <param name="cancellationToken">Token hủy</param>
+    /// <returns>True nếu cập nhật thành công</returns>
+    [HttpPut("profile")]
+    [Authorize]
+    [SwaggerOperation(
+        Summary = "Cập nhật hồ sơ cá nhân",
+        Description = "Cập nhật họ tên, email, số điện thoại của người dùng đang đăng nhập",
+        OperationId = "UpdateProfile",
+        Tags = new[] { "0. Authentication - Xác thực người dùng" })]
+    [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> UpdateProfile(
+        [FromBody] UpdateProfileRequest request,
+        CancellationToken cancellationToken)
+    {
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrWhiteSpace(userIdClaim) || !Guid.TryParse(userIdClaim, out var userId))
+        {
+            throw new UnauthorizedAccessException();
+        }
+
+        var command = new UpdateProfileCommand(
+            UserId: userId,
+            FullName: request.FullName,
+            PhoneNumber: request.PhoneNumber
+        );
+
+        var result = await _mediator.Send(command, cancellationToken);
+        return Ok(result);
+    }
+
     private static bool TryParseUserRole(string roleInput, out UserRole role)
     {
         role = UserRole.Customer;
@@ -259,3 +297,10 @@ public record LogoutRequest(
 public record UpdateUserRoleRequest(
     [SwaggerParameter(Description = "Vai trò mới: 'Customer' hoặc 0, 'Staff' hoặc 1, 'Agent' hoặc 2, 'Admin' hoặc 3")]
     string Role);
+
+/// <summary>
+/// Request model cho cập nhật hồ sơ cá nhân.
+/// </summary>
+public record UpdateProfileRequest(
+    [SwaggerParameter(Description = "Họ và tên")] string FullName,
+    [SwaggerParameter(Description = "Số điện thoại")] string PhoneNumber);
