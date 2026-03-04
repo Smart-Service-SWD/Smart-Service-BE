@@ -61,7 +61,7 @@ public class ServiceRequestQuery
 
         // Check if user is Staff or Admin (can view all)
         var role = claimsPrincipal.FindFirstValue(ClaimTypes.Role);
-        if (role == "Staff" || role == "Admin")
+        if (role == "Staff" || role == "Admin" || role == "Agent")
             return request;
 
         // Customer can only view their own requests
