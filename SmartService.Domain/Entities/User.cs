@@ -20,6 +20,7 @@ public class User
     public string Email { get; private set; }
     public string PhoneNumber { get; private set; }
     public UserRole Role { get; private set; }
+    public bool IsLocked { get; private set; }
 
     private User() { }
 
@@ -30,6 +31,7 @@ public class User
         Email = email;
         PhoneNumber = phoneNumber;
         Role = role;
+        IsLocked = false;
     }
 
     public static User CreateCustomer(string fullName, string email, string phone)
@@ -50,6 +52,25 @@ public class User
     {
         FullName = fullName;
         PhoneNumber = phoneNumber;
+    }
+
+    /// <summary>
+    /// Locks the account. Only applicable to Staff and Agent roles.
+    /// </summary>
+    public void Lock()
+    {
+        if (Role != UserRole.Staff && Role != UserRole.Agent)
+            throw new SmartService.Domain.Exceptions.BusinessRuleException.BusinessConstraintViolationException(
+                "Role", "Only Staff or Agent accounts can be locked.");
+        IsLocked = true;
+    }
+
+    /// <summary>
+    /// Unlocks a previously locked account.
+    /// </summary>
+    public void Unlock()
+    {
+        IsLocked = false;
     }
 }
 

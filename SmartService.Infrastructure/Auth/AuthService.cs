@@ -76,6 +76,9 @@ public class AuthService : IAuthService
         var user = await _context.Users.FindAsync(new object[] { authData.UserId }, cancellationToken)
             ?? throw new AuthException.InvalidCredentialsException();
 
+        if (user.IsLocked)
+            throw new AuthException.AccountLockedException();
+
         return await GenerateTokensAsync(user, cancellationToken);
     }
 

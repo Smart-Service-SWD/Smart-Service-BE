@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using SmartService.Application.Features.Auth.Commands.ChangePassword;
 using SmartService.Application.Features.Auth.Commands.Login;
+using SmartService.Application.Features.Auth.Commands.LockUser;
 using SmartService.Application.Features.Auth.Commands.Logout;
 using SmartService.Application.Features.Auth.Commands.RefreshToken;
 using SmartService.Application.Features.Auth.Commands.Register;
@@ -209,6 +210,36 @@ public class AuthController : ControllerBase
     }
 
     /// <summary>
+    /// [PATCH] Khóa hoặc mở khóa tài khoản Staff/Agent (Admin only)
+    /// </summary>
+    /// <remarks>
+    /// - Chỉ Admin mới được phép thực hiện action này.<br/>
+    /// - Chỉ áp dụng cho tài khoản có vai trò Staff hoặc Agent.<br/>
+    /// - Khi tài khoản bị khóa, người dùng không thể đăng nhập.<br/>
+    /// - Truyền <c>isLocked: true</c> để khóa, <c>isLocked: false</c> để mở khóa.
+    /// </remarks>
+    [HttpPatch("users/{id:guid}/lock")]
+    [Authorize(Roles = UserRoleConstants.Admin)]
+    [SwaggerOperation(
+        Summary = "Khóa / mở khóa tài khoản",
+        Description = "Admin khóa hoặc mở khóa tài khoản Staff hoặc Agent. Tài khoản bị khóa sẽ không thể đăng nhập.",
+        OperationId = "LockUser",
+        Tags = new[] { "0. Authentication - Xác thực người dùng" })]
+    [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> LockUser(
+        [FromRoute] Guid id,
+        [FromBody] LockUserRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = new LockUserCommand(id, request.IsLocked);
+        await _mediator.Send(command, cancellationToken);
+        return Ok(true);
+    }
+
+    /// <summary>
     /// [PUT] Cập nhật hồ sơ cá nhân
     /// </summary>
     /// <param name="request">Thông tin cần cập nhật</param>
@@ -351,3 +382,9 @@ public record UpdateProfileRequest(
 public record ChangePasswordRequest(
     [SwaggerParameter(Description = "Mật khẩu hiện tại")] string CurrentPassword,
     [SwaggerParameter(Description = "Mật khẩu mới (tối thiểu 6 ký tự)")] string NewPassword);
+
+/// <summary>
+/// Request model cho khóa / mở khóa tài khoản.
+/// </summary>
+public record LockUserRequest(
+    [SwaggerParameter(Description = "true để khóa tài khoản, false để mở khóa")] bool IsLocked);
