@@ -128,6 +128,41 @@ public class AuthService : IAuthService
         }
     }
 
+    public async Task ChangePasswordAsync(Guid userId, string currentPassword, string newPassword, CancellationToken cancellationToken = default)
+    {
+        var authData = await _authRepository.GetByUserIdAsync(userId, cancellationToken)
+            ?? throw new AuthException.InvalidCredentialsException();
+
+        if (!BCrypt.Net.BCrypt.Verify(currentPassword, authData.PasswordHash))
+            throw new AuthException.InvalidCredentialsException();
+
+        ((AuthData)authData).PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
+        ((AuthData)authData).UpdatedAt = DateTime.UtcNow;
+        await _authRepository.UpdateAsync(authData, cancellationToken);
+    }
+
+    public async Task<string> CreateAuthDataAsync(Guid userId, string email, string password, CancellationToken cancellationToken = default)
+    {
+        // Check if AuthData already exists for this user
+        var existing = await _authRepository.GetByEmailAsync(email, cancellationToken);
+        if (existing != null)
+            throw new AuthException.EmailAlreadyRegisteredException();
+
+        var passwordHash = BCrypt.Net.BCrypt.HashPassword(password);
+
+        var authData = new AuthData
+        {
+            Id = Guid.NewGuid(),
+            UserId = userId,
+            Email = email,
+            PasswordHash = passwordHash,
+            CreatedAt = DateTime.UtcNow
+        };
+
+        await _authRepository.AddAsync(authData, cancellationToken);
+        return password;
+    }
+
     private async Task<AuthResult> GenerateTokensAsync(User user, CancellationToken cancellationToken)
     {
         var accessToken = _jwtService.GenerateAccessToken(user.Id, user.Email, user.FullName, user.Role, user.PhoneNumber);

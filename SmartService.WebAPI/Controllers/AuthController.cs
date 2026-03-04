@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using SmartService.Application.Features.Auth.Commands.ChangePassword;
 using SmartService.Application.Features.Auth.Commands.Login;
 using SmartService.Application.Features.Auth.Commands.Logout;
 using SmartService.Application.Features.Auth.Commands.RefreshToken;
@@ -243,6 +244,45 @@ public class AuthController : ControllerBase
         return Ok(result);
     }
 
+    /// <summary>
+    /// [POST] Đổi mật khẩu
+    /// </summary>
+    /// <param name="request">Mật khẩu hiện tại và mật khẩu mới</param>
+    /// <param name="cancellationToken">Token hủy</param>
+    /// <returns>True nếu đổi mật khẩu thành công</returns>
+    /// <response code="200">Đổi mật khẩu thành công</response>
+    /// <response code="400">Mật khẩu mới không hợp lệ</response>
+    /// <response code="401">Mật khẩu hiện tại không đúng hoặc chưa đăng nhập</response>
+    [HttpPost("change-password")]
+    [Authorize]
+    [SwaggerOperation(
+        Summary = "Đổi mật khẩu",
+        Description = "Đổi mật khẩu cho người dùng đang đăng nhập. Yêu cầu cung cấp mật khẩu hiện tại để xác nhận.",
+        OperationId = "ChangePassword",
+        Tags = new[] { "0. Authentication - Xác thực người dùng" })]
+    [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> ChangePassword(
+        [FromBody] ChangePasswordRequest request,
+        CancellationToken cancellationToken)
+    {
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrWhiteSpace(userIdClaim) || !Guid.TryParse(userIdClaim, out var userId))
+        {
+            throw new UnauthorizedAccessException();
+        }
+
+        var command = new ChangePasswordCommand(
+            UserId: userId,
+            CurrentPassword: request.CurrentPassword,
+            NewPassword: request.NewPassword
+        );
+
+        var result = await _mediator.Send(command, cancellationToken);
+        return Ok(result);
+    }
+
     private static bool TryParseUserRole(string roleInput, out UserRole role)
     {
         role = UserRole.Customer;
@@ -304,3 +344,10 @@ public record UpdateUserRoleRequest(
 public record UpdateProfileRequest(
     [SwaggerParameter(Description = "Họ và tên")] string FullName,
     [SwaggerParameter(Description = "Số điện thoại")] string PhoneNumber);
+
+/// <summary>
+/// Request model cho đổi mật khẩu.
+/// </summary>
+public record ChangePasswordRequest(
+    [SwaggerParameter(Description = "Mật khẩu hiện tại")] string CurrentPassword,
+    [SwaggerParameter(Description = "Mật khẩu mới (tối thiểu 6 ký tự)")] string NewPassword);
