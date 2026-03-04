@@ -4,9 +4,11 @@ using Microsoft.Extensions.DependencyInjection;
 using SmartService.Application.Abstractions.AI;
 using SmartService.Application.Abstractions.Auth;
 using SmartService.Application.Abstractions.KnowledgeBase;
+using SmartService.Application.Abstractions.Notifications;
 using SmartService.Application.Abstractions.Persistence;
 using SmartService.Infrastructure.AI.Ollama;
 using SmartService.Infrastructure.Auth;
+using SmartService.Infrastructure.Email;
 using SmartService.Infrastructure.KnowledgeBase.Complexity;
 using SmartService.Infrastructure.KnowledgeBase.Sync;
 using SmartService.Infrastructure.Persistence;
@@ -54,6 +56,10 @@ public static class DependencyInjection
         services.AddScoped<AesEncryptionService>();
         services.AddScoped<IAuthRepository, AuthRepository>();
         services.AddScoped<IAuthService, AuthService>();
+
+        // Register Email service (Gmail SMTP via MailKit)
+        services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
+        services.AddScoped<IEmailService, GmailEmailService>();
 
         // Register notification service (will be implemented in WebAPI layer with SignalR)
         // Note: IServiceRequestNotificationService implementation is registered in Program.cs

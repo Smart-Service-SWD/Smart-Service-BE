@@ -30,4 +30,16 @@ public interface IAuthService
     /// Verifies if a refresh token is valid.
     /// </summary>
     Task<bool> VerifyRefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Creates an AuthData entry for an existing user (used when admin creates accounts).
+    /// Returns the generated temporary (plain-text) password.
+    /// </summary>
+    Task<string> CreateAuthDataAsync(Guid userId, string email, string password, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Changes the password for an authenticated user.
+    /// Requires the current password to verify identity.
+    /// </summary>
+    Task ChangePasswordAsync(Guid userId, string currentPassword, string newPassword, CancellationToken cancellationToken = default);
 }
