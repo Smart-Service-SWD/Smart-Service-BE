@@ -38,5 +38,11 @@ namespace SmartService.Domain.Exceptions
             public InvalidRefreshTokenException()
                 : base("Invalid or expired refresh token.") { }
         }
+
+        public class AccountLockedException : AuthException
+        {
+            public AccountLockedException()
+                : base("This account has been locked by an administrator.") { }
+        }
     }
 }
