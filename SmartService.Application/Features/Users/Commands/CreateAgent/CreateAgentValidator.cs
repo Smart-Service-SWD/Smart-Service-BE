@@ -28,6 +28,25 @@ public class CreateAgentValidator : AbstractValidator<CreateAgentCommand>
             .WithMessage("Phone number is required.")
             .Matches(@"^\+?[0-9\s\-\(\)]{10,}$")
             .WithMessage("Phone number must be valid (at least 10 digits).");
+
+        RuleFor(v => v.Capabilities)
+            .NotEmpty()
+            .WithMessage("At least one agent capability is required.");
+
+        RuleForEach(v => v.Capabilities).ChildRules(cap =>
+        {
+            cap.RuleFor(c => c.CategoryId)
+                .NotEmpty()
+                .WithMessage("Category ID is required for each capability.");
+
+            cap.RuleFor(c => c.MaxComplexityLevel)
+                .InclusiveBetween(1, 5)
+                .WithMessage("Max complexity level must be between 1 and 5.");
+
+            cap.RuleFor(c => c.ServiceIds)
+                .NotEmpty()
+                .WithMessage("At least one service definition must be assigned per capability.");
+        });
     }
 }
 
