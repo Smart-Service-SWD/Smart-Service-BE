@@ -23,37 +23,66 @@ public class ServiceRequestsController : ControllerBase
     }
 
     /// <summary>
-    /// [CREATE] Tạo mới yêu cầu dịch vụ
+    /// [CREATE] Tạo mới yêu cầu dịch vụ (kèm OCR + AI phân tích tự động)
     /// </summary>
-    /// <param name="command">Thông tin yêu cầu dịch vụ cần tạo (bao gồm ComplexityLevel tùy chọn từ 1-5)</param>
-    /// <param name="cancellationToken">Token hủy</param>
-    /// <returns>ID của yêu cầu dịch vụ vừa tạo</returns>
-    /// <response code="201">Tạo yêu cầu dịch vụ thành công</response>
+    /// <remarks>
+    /// Nhận **multipart/form-data** với các field:
+    /// - `customerId` (Guid, bắt buộc)
+    /// - `categoryId` (Guid, bắt buộc)
+    /// - `description` (string, bắt buộc) – mô tả vấn đề
+    /// - `addressText` (string, tuỳ chọn)
+    /// - `complexityLevel` (int 1-5, tuỳ chọn) – nếu có sẽ override AI
+    /// - `image` (file, tuỳ chọn) – ảnh tài liệu/lỗi để OCR trích xuất text
+    ///
+    /// **Backend sẽ tự động:**
+    /// 1. OCR ảnh (nếu có) → trích xuất text
+    /// 2. Gộp text OCR + description → gửi AI phân tích
+    /// 3. Lưu ServiceRequest với complexity từ AI
+    /// 4. Lưu ServiceAttachment (nếu có ảnh)
+    /// 5. Trả về kết quả gồm cả AI analysis
+    /// </remarks>
+    /// <response code="201">Tạo yêu cầu thành công, kèm kết quả AI</response>
     /// <response code="400">Dữ liệu đầu vào không hợp lệ</response>
     [HttpPost]
     [SwaggerOperation(
-        Summary = "Tạo mới yêu cầu dịch vụ",
-        Description = "Tạo một yêu cầu dịch vụ mới trong hệ thống với thông tin khách hàng, danh mục, mô tả và mức độ phức tạp (ComplexityLevel tùy chọn từ 1-5). Nếu có ComplexityLevel, status sẽ là PendingReview, ngược lại là Created.",
+        Summary = "Tạo yêu cầu dịch vụ (OCR + AI tự động)",
+        Description = "Nhận multipart/form-data gồm description + ảnh tùy chọn. Backend tự OCR → AI → lưu DB trong 1 request.",
         OperationId = "CreateServiceRequest",
         Tags = new[] { "1. CREATE - Tạo mới" })]
-    [ProducesResponseType(typeof(Guid), StatusCodes.Status201Created)]
+    [Consumes("multipart/form-data")]
+    [ProducesResponseType(typeof(CreateServiceRequestResult), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Create([FromBody] CreateServiceRequestCommand command, CancellationToken cancellationToken)
+    public async Task<IActionResult> Create(
+        [FromForm] CreateServiceRequestFormInput input,
+        IFormFile? image,
+        CancellationToken cancellationToken)
     {
-        var serviceRequestId = await _mediator.Send(command, cancellationToken);
-        return CreatedAtAction(nameof(Create), new { id = serviceRequestId }, serviceRequestId);
+        Stream? imageStream = null;
+        if (image != null && image.Length > 0)
+        {
+            imageStream = image.OpenReadStream();
+        }
+
+        var command = new CreateServiceRequestCommand(
+            CustomerId: input.CustomerId,
+            CategoryId: input.CategoryId,
+            Description: input.Description,
+            AddressText: input.AddressText,
+            // ComplexityLevel intentionally omitted – AI sets it automatically
+            ImageStream: imageStream,
+            ImageFileName: image?.FileName);
+
+        var result = await _mediator.Send(command, cancellationToken);
+
+        // Dispose stream after use
+        if (imageStream != null) await imageStream.DisposeAsync();
+
+        return CreatedAtAction(nameof(Create), new { id = result.ServiceRequestId }, result);
     }
 
     /// <summary>
     /// [UPDATE] Gán nhà cung cấp cho yêu cầu dịch vụ
     /// </summary>
-    /// <param name="serviceRequestId">ID của yêu cầu dịch vụ</param>
-    /// <param name="request">Thông tin nhà cung cấp và chi phí ước tính</param>
-    /// <param name="cancellationToken">Token hủy</param>
-    /// <returns>Không có nội dung trả về</returns>
-    /// <response code="204">Gán nhà cung cấp thành công</response>
-    /// <response code="400">Dữ liệu đầu vào không hợp lệ</response>
-    /// <response code="404">Không tìm thấy yêu cầu dịch vụ</response>
     [HttpPatch("{serviceRequestId}/assign-provider")]
     [SwaggerOperation(
         Summary = "Gán nhà cung cấp cho yêu cầu dịch vụ",
@@ -80,13 +109,6 @@ public class ServiceRequestsController : ControllerBase
     /// <summary>
     /// [UPDATE] Đánh giá độ phức tạp của yêu cầu dịch vụ
     /// </summary>
-    /// <param name="serviceRequestId">ID của yêu cầu dịch vụ</param>
-    /// <param name="request">Thông tin độ phức tạp</param>
-    /// <param name="cancellationToken">Token hủy</param>
-    /// <returns>Không có nội dung trả về</returns>
-    /// <response code="204">Đánh giá độ phức tạp thành công</response>
-    /// <response code="400">Dữ liệu đầu vào không hợp lệ</response>
-    /// <response code="404">Không tìm thấy yêu cầu dịch vụ</response>
     [HttpPatch("{serviceRequestId}/evaluate-complexity")]
     [SwaggerOperation(
         Summary = "Đánh giá độ phức tạp của yêu cầu dịch vụ",
@@ -110,15 +132,21 @@ public class ServiceRequestsController : ControllerBase
     }
 }
 
-/// <summary>
-/// Model yêu cầu gán nhà cung cấp cho yêu cầu dịch vụ
-/// </summary>
+// ── Inline record models ──────────────────────────────────────────────────────
+
+/// <summary>Form input cho Create Service Request (multipart/form-data).
+/// ComplexityLevel không còn là input – AI tự phân tích và set.</summary>
+public record CreateServiceRequestFormInput(
+    Guid CustomerId,
+    Guid CategoryId,
+    string Description,
+    string? AddressText = null);
+
+/// <summary>Model yêu cầu gán nhà cung cấp cho yêu cầu dịch vụ.</summary>
 public record AssignProviderRequest(
     Guid ProviderId,
     SmartService.Domain.ValueObjects.Money EstimatedCost);
 
-/// <summary>
-/// Model yêu cầu đánh giá độ phức tạp của yêu cầu dịch vụ
-/// </summary>
+/// <summary>Model yêu cầu đánh giá độ phức tạp của yêu cầu dịch vụ.</summary>
 public record EvaluateComplexityRequest(
     SmartService.Domain.ValueObjects.ServiceComplexity Complexity);

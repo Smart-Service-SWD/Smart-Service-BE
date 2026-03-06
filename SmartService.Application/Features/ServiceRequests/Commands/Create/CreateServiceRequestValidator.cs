@@ -4,7 +4,7 @@ namespace SmartService.Application.Features.ServiceRequests.Commands.Create;
 
 /// <summary>
 /// Validator for CreateServiceRequestCommand.
-/// Ensures all required fields are valid before handler execution.
+/// ComplexityLevel is optional since AI will derive it automatically from description + OCR.
 /// </summary>
 public class CreateServiceRequestValidator : AbstractValidator<CreateServiceRequestCommand>
 {
@@ -23,11 +23,6 @@ public class CreateServiceRequestValidator : AbstractValidator<CreateServiceRequ
             .WithMessage("Description is required.")
             .MaximumLength(2000)
             .WithMessage("Description cannot exceed 2000 characters.");
-
-        RuleFor(v => v.ComplexityLevel)
-            .InclusiveBetween(1, 5)
-            .When(v => v.ComplexityLevel.HasValue)
-            .WithMessage("Complexity level must be between 1 and 5 if provided.");
+        // ComplexityLevel removed – AI sets it from description + OCR analysis
     }
 }
-

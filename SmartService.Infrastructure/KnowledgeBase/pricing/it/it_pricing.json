@@ -1,0 +1,14 @@
+{
+  "subCategoryId": "39132c37-7be9-4988-91d5-c932c6b78cd7",
+  "pricingByService": [
+    {
+      "serviceId": "e735e782-e12d-4779-b716-0405ff0ed29c",
+      "serviceName": "Gia dung",
+      "basePrice": {
+        "amount": 200000.00,
+        "currency": "VND"
+      },
+      "estimatedDuration": 60
+    }
+  ]
+}
