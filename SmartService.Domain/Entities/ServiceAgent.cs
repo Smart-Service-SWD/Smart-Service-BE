@@ -19,6 +19,7 @@ namespace SmartService.Domain.Entities;
 public class ServiceAgent
 {
     public Guid Id { get; private set; }
+    public Guid? UserId { get; private set; }
     public string FullName { get; private set; }
     public bool IsActive { get; private set; }
 
@@ -27,11 +28,12 @@ public class ServiceAgent
 
     private ServiceAgent() { }
 
-    private ServiceAgent(Guid id, string fullName)
+    private ServiceAgent(Guid id, string fullName, Guid? userId = null)
     {
         Id = id;
         FullName = fullName;
         IsActive = true;
+        UserId = userId;
     }
 
     public static ServiceAgent Create(string fullName)
@@ -40,6 +42,14 @@ public class ServiceAgent
             throw new ServiceAgentException.AgentNameRequiredException();
 
         return new ServiceAgent(Guid.NewGuid(), fullName);
+    }
+
+    public static ServiceAgent CreateForUser(string fullName, Guid userId)
+    {
+        if (string.IsNullOrWhiteSpace(fullName))
+            throw new ServiceAgentException.AgentNameRequiredException();
+
+        return new ServiceAgent(Guid.NewGuid(), fullName, userId);
     }
 
     public void AddCapability(AgentCapability capability)

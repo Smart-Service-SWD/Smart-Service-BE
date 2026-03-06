@@ -52,6 +52,8 @@ public class AppDbContext : DbContext, IAppDbContext
         {
             entity.HasKey(x => x.Id);
 
+            entity.Property(x => x.UserId).IsRequired(false);
+
             entity.HasMany(x => x.Capabilities)
                   .WithOne()
                   .HasForeignKey("ServiceAgentId")
@@ -68,6 +70,9 @@ public class AppDbContext : DbContext, IAppDbContext
                           .HasColumnName("MaxComplexityLevel")
                           .IsRequired();
             });
+
+            entity.Property(x => x.ServiceIds)
+                  .HasColumnType("uuid[]");
         });
 
         // ==========================
