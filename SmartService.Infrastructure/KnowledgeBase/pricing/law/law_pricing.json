@@ -1,0 +1,14 @@
+{
+  "subCategoryId": "7d04ff13-6e0c-482d-bee1-bbf9be2ae98a",
+  "pricingByService": [
+    {
+      "serviceId": "fa538793-bfc7-4495-9cbe-35ef2cbaf130",
+      "serviceName": "S\u1EEDa \u1ED1ng n\u01B0\u1EDBc",
+      "basePrice": {
+        "amount": 150000.00,
+        "currency": "VND"
+      },
+      "estimatedDuration": 30
+    }
+  ]
+}

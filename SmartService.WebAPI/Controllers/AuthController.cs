@@ -3,11 +3,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using SmartService.Application.Features.Auth.Commands.ChangePassword;
+using SmartService.Application.Features.Auth.Commands.ForgotPassword;
 using SmartService.Application.Features.Auth.Commands.Login;
 using SmartService.Application.Features.Auth.Commands.LockUser;
 using SmartService.Application.Features.Auth.Commands.Logout;
 using SmartService.Application.Features.Auth.Commands.RefreshToken;
 using SmartService.Application.Features.Auth.Commands.Register;
+using SmartService.Application.Features.Auth.Commands.ResetPassword;
 using SmartService.Application.Features.Auth.Commands.UpdateProfile;
 using SmartService.Application.Features.Auth.Commands.UpdateUserRole;
 using SmartService.Domain.Entities;
@@ -276,7 +278,7 @@ public class AuthController : ControllerBase
     }
 
     /// <summary>
-    /// [POST] Đổi mật khẩu
+    /// [PUT] Đổi mật khẩu
     /// </summary>
     /// <param name="request">Mật khẩu hiện tại và mật khẩu mới</param>
     /// <param name="cancellationToken">Token hủy</param>
@@ -284,7 +286,7 @@ public class AuthController : ControllerBase
     /// <response code="200">Đổi mật khẩu thành công</response>
     /// <response code="400">Mật khẩu mới không hợp lệ</response>
     /// <response code="401">Mật khẩu hiện tại không đúng hoặc chưa đăng nhập</response>
-    [HttpPost("change-password")]
+    [HttpPut("change-password")]
     [Authorize]
     [SwaggerOperation(
         Summary = "Đổi mật khẩu",
@@ -312,6 +314,55 @@ public class AuthController : ControllerBase
 
         var result = await _mediator.Send(command, cancellationToken);
         return Ok(result);
+    }
+
+    /// <summary>
+    /// [POST] Quên mật khẩu - Gửi OTP về email
+    /// </summary>
+    /// <remarks>
+    /// - Nhập địa chỉ email tài khoản.<br/>
+    /// - Hệ thống sẽ gửi mã OTP 6 chữ số về Gmail đăng ký.<br/>
+    /// - Mã OTP có thời hạn <strong>15 phút</strong>.<br/>
+    /// - Nếu email không tồn tại trong hệ thống, API vẫn trả về 200 (không lộ thông tin).
+    /// </remarks>
+    [HttpPost("forgot-password")]
+    [SwaggerOperation(
+        Summary = "Quên mật khẩu",
+        Description = "Gửi mã OTP 6 chữ số về Gmail đăng ký để xác nhận đặt lại mật khẩu. OTP có hiệu lực 15 phút.",
+        OperationId = "ForgotPassword",
+        Tags = new[] { "0. Authentication - Xác thực người dùng" })]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> ForgotPassword(
+        [FromBody] ForgotPasswordRequest request,
+        CancellationToken cancellationToken)
+    {
+        await _mediator.Send(new ForgotPasswordCommand(request.Email), cancellationToken);
+        return Ok(new { message = "Nếu email tồn tại trong hệ thống, mã OTP đã được gửi về Gmail của bạn." });
+    }
+
+    /// <summary>
+    /// [POST] Đặt lại mật khẩu bằng OTP
+    /// </summary>
+    /// <remarks>
+    /// - Nhập email, mã OTP đã nhận qua Gmail và mật khẩu mới.<br/>
+    /// - Mã OTP chỉ sử dụng được <strong>1 lần</strong> và hết hạn sau 15 phút.<br/>
+    /// - Sau khi đặt lại thành công, OTP sẽ bị xóa.
+    /// </remarks>
+    [HttpPost("reset-password")]
+    [SwaggerOperation(
+        Summary = "Đặt lại mật khẩu",
+        Description = "Sử dụng mã OTP được gửi qua Gmail để đặt lại mật khẩu mới.",
+        OperationId = "ResetPassword",
+        Tags = new[] { "0. Authentication - Xác thực người dùng" })]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> ResetPassword(
+        [FromBody] ResetPasswordRequest request,
+        CancellationToken cancellationToken)
+    {
+        await _mediator.Send(new ResetPasswordCommand(request.Email, request.Otp, request.NewPassword), cancellationToken);
+        return Ok(new { message = "Mật khẩu đã được đặt lại thành công. Vui lòng đăng nhập lại." });
     }
 
     private static bool TryParseUserRole(string roleInput, out UserRole role)
@@ -388,3 +439,17 @@ public record ChangePasswordRequest(
 /// </summary>
 public record LockUserRequest(
     [SwaggerParameter(Description = "true để khóa tài khoản, false để mở khóa")] bool IsLocked);
+
+/// <summary>
+/// Request model cho quên mật khẩu.
+/// </summary>
+public record ForgotPasswordRequest(
+    [SwaggerParameter(Description = "Email đăng ký của tài khoản")] string Email);
+
+/// <summary>
+/// Request model cho đặt lại mật khẩu.
+/// </summary>
+public record ResetPasswordRequest(
+    [SwaggerParameter(Description = "Email đăng ký của tài khoản")] string Email,
+    [SwaggerParameter(Description = "Mã OTP 6 chữ số nhận qua Gmail")] string Otp,
+    [SwaggerParameter(Description = "Mật khẩu mới (tối thiểu 6 ký tự)")] string NewPassword);

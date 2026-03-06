@@ -44,5 +44,11 @@ namespace SmartService.Domain.Exceptions
             public AccountLockedException()
                 : base("This account has been locked by an administrator.") { }
         }
+
+        public class InvalidOrExpiredOtpException : AuthException
+        {
+            public InvalidOrExpiredOtpException()
+                : base("The OTP is invalid or has expired. Please request a new one.") { }
+        }
     }
 }
