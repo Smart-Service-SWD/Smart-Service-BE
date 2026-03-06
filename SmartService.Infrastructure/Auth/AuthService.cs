@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using SmartService.Application.Abstractions.Auth;
+using SmartService.Application.Abstractions.Notifications;
 using SmartService.Application.Abstractions.Persistence;
 using SmartService.Domain.Entities;
 using SmartService.Domain.Exceptions;
@@ -19,19 +20,22 @@ public class AuthService : IAuthService
     private readonly JwtTokenService _jwtService;
     private readonly AesEncryptionService _encryptionService;
     private readonly TokenConfiguration _config;
+    private readonly IEmailService _emailService;
 
     public AuthService(
         IAppDbContext context,
         IAuthRepository authRepository,
         JwtTokenService jwtService,
         AesEncryptionService encryptionService,
-        IOptions<TokenConfiguration> config)
+        IOptions<TokenConfiguration> config,
+        IEmailService emailService)
     {
         _context = context;
         _authRepository = authRepository;
         _jwtService = jwtService;
         _encryptionService = encryptionService;
         _config = config.Value;
+        _emailService = emailService;
     }
 
     public async Task<AuthResult> RegisterAsync(RegisterRequest request, CancellationToken cancellationToken = default)
@@ -164,6 +168,51 @@ public class AuthService : IAuthService
 
         await _authRepository.AddAsync(authData, cancellationToken);
         return password;
+    }
+
+    public async Task ForgotPasswordAsync(string email, CancellationToken cancellationToken = default)
+    {
+        var authData = await _authRepository.GetByEmailAsync(email, cancellationToken);
+        if (authData == null)
+            return; // Silent — do not reveal whether email exists
+
+        var user = await _context.Users.FindAsync(new object[] { authData.UserId }, cancellationToken);
+        if (user == null)
+            return;
+
+        // Generate 6-digit numeric OTP
+        var otp = Random.Shared.Next(100_000, 999_999).ToString();
+
+        // Store SHA-256 hash of OTP and expiry (15 minutes)
+        var otpHash = Convert.ToHexString(SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(otp)));
+        ((AuthData)authData).PasswordResetToken = otpHash;
+        ((AuthData)authData).PasswordResetTokenExpiresAt = DateTime.UtcNow.AddMinutes(15);
+        ((AuthData)authData).UpdatedAt = DateTime.UtcNow;
+        await _authRepository.UpdateAsync(authData, cancellationToken);
+
+        await _emailService.SendPasswordResetEmailAsync(email, user.FullName, otp, cancellationToken);
+    }
+
+    public async Task ResetPasswordAsync(string email, string otp, string newPassword, CancellationToken cancellationToken = default)
+    {
+        var authData = await _authRepository.GetByEmailAsync(email, cancellationToken)
+            ?? throw new AuthException.InvalidCredentialsException();
+
+        if (authData.PasswordResetToken == null || authData.PasswordResetTokenExpiresAt == null)
+            throw new AuthException.InvalidOrExpiredOtpException();
+
+        if (DateTime.UtcNow > authData.PasswordResetTokenExpiresAt)
+            throw new AuthException.InvalidOrExpiredOtpException();
+
+        var otpHash = Convert.ToHexString(SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(otp)));
+        if (!string.Equals(authData.PasswordResetToken, otpHash, StringComparison.OrdinalIgnoreCase))
+            throw new AuthException.InvalidOrExpiredOtpException();
+
+        ((AuthData)authData).PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
+        ((AuthData)authData).PasswordResetToken = null;
+        ((AuthData)authData).PasswordResetTokenExpiresAt = null;
+        ((AuthData)authData).UpdatedAt = DateTime.UtcNow;
+        await _authRepository.UpdateAsync(authData, cancellationToken);
     }
 
     private async Task<AuthResult> GenerateTokensAsync(User user, CancellationToken cancellationToken)

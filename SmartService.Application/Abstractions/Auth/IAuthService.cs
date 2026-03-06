@@ -42,4 +42,15 @@ public interface IAuthService
     /// Requires the current password to verify identity.
     /// </summary>
     Task ChangePasswordAsync(Guid userId, string currentPassword, string newPassword, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Generates a 6-digit OTP and sends a password reset email to the user.
+    /// Always returns successfully (does not reveal whether the email exists).
+    /// </summary>
+    Task ForgotPasswordAsync(string email, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Resets the user's password using the OTP received via email.
+    /// </summary>
+    Task ResetPasswordAsync(string email, string otp, string newPassword, CancellationToken cancellationToken = default);
 }

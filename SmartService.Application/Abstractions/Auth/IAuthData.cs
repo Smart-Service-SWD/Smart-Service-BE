@@ -15,4 +15,6 @@ public interface IAuthData
     DateTime? RefreshTokenExpiresAt { get; }
     DateTime CreatedAt { get; }
     DateTime? UpdatedAt { get; }
+    string? PasswordResetToken { get; }
+    DateTime? PasswordResetTokenExpiresAt { get; }
 }
