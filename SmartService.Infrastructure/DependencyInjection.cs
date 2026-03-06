@@ -7,6 +7,7 @@ using SmartService.Application.Abstractions.KnowledgeBase;
 using SmartService.Application.Abstractions.Notifications;
 using SmartService.Application.Abstractions.Persistence;
 using SmartService.Infrastructure.AI.Ollama;
+using SmartService.Infrastructure.AI.Tesseract;
 using SmartService.Infrastructure.Auth;
 using SmartService.Infrastructure.Email;
 using SmartService.Infrastructure.KnowledgeBase.Complexity;
@@ -42,6 +43,10 @@ public static class DependencyInjection
         services.AddSingleton<ComplexityRuleProvider>();
         services.AddSingleton<SimpleComplexityMatcher>();
         services.AddScoped<IAiAnalyzer, OllamaAiAnalyzer>();
+
+        // Register OCR service (Tesseract)
+        services.Configure<TesseractSettings>(configuration.GetSection("TesseractSettings"));
+        services.AddScoped<IOcrService, TesseractOcrService>();
 
         // Register KnowledgeBase sync services (DB → JSON)
         services.AddScoped<IKnowledgeBaseSyncService, KnowledgeBaseSyncService>();
