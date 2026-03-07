@@ -27,7 +27,9 @@ public class CreateServiceDefinitionHandler : IRequestHandler<CreateServiceDefin
             request.Name,
             request.Description,
             request.BasePrice,
-            request.EstimatedDuration);
+            request.EstimatedDuration,
+            request.ComplexityRange,
+            request.IsDangerous);
 
         _context.ServiceDefinitions.Add(definition);
         await _context.SaveChangesAsync(cancellationToken);
@@ -38,3 +40,4 @@ public class CreateServiceDefinitionHandler : IRequestHandler<CreateServiceDefin
         return definition.Id;
     }
 }
+

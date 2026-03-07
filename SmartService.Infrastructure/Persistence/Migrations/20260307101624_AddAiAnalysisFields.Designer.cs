@@ -3,18 +3,21 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SmartService.Infrastructure.Persistence;
 
 #nullable disable
 
-namespace SmartService.Infrastructure.Migrations
+namespace SmartService.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260307101624_AddAiAnalysisFields")]
+    partial class AddAiAnalysisFields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -149,10 +152,6 @@ namespace SmartService.Infrastructure.Migrations
 
                     b.Property<int>("ComplexityLevel")
                         .HasColumnType("integer");
-
-                    b.Property<string>("ProblemDiagnosis")
-                        .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)");
 
                     b.Property<string>("RiskExplanation")
                         .HasMaxLength(1000)

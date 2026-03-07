@@ -27,6 +27,18 @@ public class ServiceDefinition
     public DateTime CreatedAt { get; private set; }
     public DateTime UpdatedAt { get; private set; }
 
+    /// <summary>
+    /// Complexity range [min, max] (1–5 scale). Used by AI as baseline.
+    /// Example: [1, 3] means this service is normally low-to-medium complexity.
+    /// </summary>
+    public int[] ComplexityRange { get; private set; } = [1, 3];
+
+    /// <summary>
+    /// Marks whether this service type is inherently dangerous by default.
+    /// When true, AI will always flag isDangerFlagged = true for requests of this type.
+    /// </summary>
+    public bool IsDangerous { get; private set; } = false;
+
     private ServiceDefinition() { }
 
     private ServiceDefinition(
@@ -35,7 +47,9 @@ public class ServiceDefinition
         string name,
         string? description,
         decimal basePrice,
-        int estimatedDuration)
+        int estimatedDuration,
+        int[]? complexityRange = null,
+        bool isDangerous = false)
     {
         Id = id;
         CategoryId = categoryId;
@@ -43,6 +57,8 @@ public class ServiceDefinition
         Description = description;
         BasePrice = basePrice;
         EstimatedDuration = estimatedDuration;
+        ComplexityRange = complexityRange ?? [1, 3];
+        IsDangerous = isDangerous;
         IsActive = true;
         CreatedAt = DateTime.UtcNow;
         UpdatedAt = DateTime.UtcNow;
@@ -53,7 +69,9 @@ public class ServiceDefinition
         string name,
         string? description,
         decimal basePrice,
-        int estimatedDuration)
+        int estimatedDuration,
+        int[]? complexityRange = null,
+        bool isDangerous = false)
     {
         if (string.IsNullOrWhiteSpace(name))
             throw new ArgumentException("Service name is required.", nameof(name));
@@ -70,7 +88,9 @@ public class ServiceDefinition
             name,
             description,
             basePrice,
-            estimatedDuration);
+            estimatedDuration,
+            complexityRange,
+            isDangerous);
     }
 
     public void Update(
@@ -78,7 +98,9 @@ public class ServiceDefinition
         string? description,
         decimal basePrice,
         int estimatedDuration,
-        bool isActive)
+        bool isActive,
+        int[]? complexityRange = null,
+        bool? isDangerous = null)
     {
         if (string.IsNullOrWhiteSpace(name))
             throw new ArgumentException("Service name is required.", nameof(name));
@@ -94,6 +116,8 @@ public class ServiceDefinition
         BasePrice = basePrice;
         EstimatedDuration = estimatedDuration;
         IsActive = isActive;
+        if (complexityRange is not null) ComplexityRange = complexityRange;
+        if (isDangerous.HasValue) IsDangerous = isDangerous.Value;
         UpdatedAt = DateTime.UtcNow;
     }
 

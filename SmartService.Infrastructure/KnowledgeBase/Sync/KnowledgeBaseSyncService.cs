@@ -92,7 +92,9 @@ public class KnowledgeBaseSyncService : IKnowledgeBaseSyncService
                     {
                         caseId = d.Id.ToString(),
                         name = d.Name,
-                        description = d.Description
+                        description = d.Description,
+                        complexityRange = d.ComplexityRange,
+                        isDangerous = d.IsDangerous
                     })
                 };
 

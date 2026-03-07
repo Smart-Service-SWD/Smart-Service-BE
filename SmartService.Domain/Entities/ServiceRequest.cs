@@ -32,10 +32,19 @@ public class ServiceRequest : IAggregateRoot
     public DateTime CreatedAt { get; private set; }
     
     public string? AddressText { get; private set; }
-    
-    // Skeleton for future location features (commented out to avoid runtime errors)
-    // public double? Latitude { get; set; }
-    // public double? Longitude { get; set; }
+
+    // ── AI Analysis results ──────────────────────────────────────────
+    /// <summary>AI-estimated price range. Example: "2.000.000 – 5.000.000 VNĐ"</summary>
+    public string? EstimatedPrice { get; private set; }
+
+    /// <summary>AI-estimated duration range. Example: "4 – 8 giờ"</summary>
+    public string? EstimatedDuration { get; private set; }
+
+    /// <summary>Text extracted from the uploaded image via OCR.</summary>
+    public string? OcrExtractedText { get; private set; }
+
+    /// <summary>True when this request was processed by the AI analysis pipeline.</summary>
+    public bool WasAnalyzedByAI { get; private set; }
 
     private readonly List<ServiceAttachment> _attachments = new();
     public IReadOnlyCollection<ServiceAttachment> Attachments => _attachments.AsReadOnly();
@@ -84,6 +93,18 @@ public class ServiceRequest : IAggregateRoot
             throw new ServiceRequestException.InvalidStatusForOperationException("MarkAsAnalyzed", "AwaitingAnalysis");
         
         Status = urgencyLevel >= 4 ? ServiceStatus.UrgentDispatch : ServiceStatus.Created;
+    }
+
+    /// <summary>
+    /// Stores AI analysis estimates on the request.
+    /// Called during the create flow after AI responds.
+    /// </summary>
+    public void SetAiEstimates(string? estimatedPrice, string? estimatedDuration, string? ocrExtractedText)
+    {
+        EstimatedPrice = estimatedPrice;
+        EstimatedDuration = estimatedDuration;
+        OcrExtractedText = ocrExtractedText;
+        WasAnalyzedByAI = true;
     }
 
     // Domain Behaviors
