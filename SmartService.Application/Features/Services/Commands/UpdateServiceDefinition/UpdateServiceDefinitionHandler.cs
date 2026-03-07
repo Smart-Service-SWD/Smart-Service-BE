@@ -31,10 +31,13 @@ public class UpdateServiceDefinitionHandler : IRequestHandler<UpdateServiceDefin
             request.Description,
             request.BasePrice,
             request.EstimatedDuration,
-            request.IsActive);
+            request.IsActive,
+            request.ComplexityRange,
+            request.IsDangerous);
 
         await _context.SaveChangesAsync(cancellationToken);
 
         await _mediator.Publish(new ServiceDefinitionChangedNotification(), cancellationToken);
     }
 }
+

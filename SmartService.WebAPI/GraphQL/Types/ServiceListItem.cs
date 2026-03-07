@@ -16,4 +16,11 @@ public class ServiceListItem
     public int BookingCount { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
+
+    /// <summary>Complexity range [min, max] (1–5 scale). AI uses this as baseline for analysis.</summary>
+    public int[] ComplexityRange { get; set; } = [1, 3];
+
+    /// <summary>True if this service type is inherently dangerous (e.g. electrical, gas).</summary>
+    public bool IsDangerous { get; set; }
 }
+

@@ -1,12 +1,87 @@
 {
   "serviceGroup": "LAW",
-  "subCategoryId": "7d04ff13-6e0c-482d-bee1-bbf9be2ae98a",
+  "subCategoryId": "a2000000-0000-0000-0000-000000000002",
   "name": "Law",
   "cases": [
     {
-      "caseId": "fa538793-bfc7-4495-9cbe-35ef2cbaf130",
-      "name": "S\u1EEDa \u1ED1ng n\u01B0\u1EDBc",
-      "description": "S\u1EEDa \u1ED1ng n\u01B0\u1EDBc"
+      "caseId": "b2010000-0000-0000-0000-000000000001",
+      "name": "T\u01B0 v\u1EA5n ph\u00E1p lu\u1EADt c\u01A1 b\u1EA3n",
+      "description": "Gi\u1EA3i \u0111\u00E1p th\u1EAFc m\u1EAFc ph\u00E1p l\u00FD th\u00F4ng th\u01B0\u1EDDng, h\u01B0\u1EDBng d\u1EABn quy tr\u00ECnh th\u1EE7 t\u1EE5c h\u00E0nh ch\u00EDnh",
+      "complexityRange": [
+        1,
+        2
+      ],
+      "isDangerous": false
+    },
+    {
+      "caseId": "b2020000-0000-0000-0000-000000000002",
+      "name": "So\u1EA1n th\u1EA3o h\u1EE3p \u0111\u1ED3ng",
+      "description": "So\u1EA1n th\u1EA3o h\u1EE3p \u0111\u1ED3ng mua b\u00E1n, thu\u00EA m\u01B0\u1EDBn, h\u1EE3p t\u00E1c kinh doanh, d\u1ECBch v\u1EE5",
+      "complexityRange": [
+        2,
+        3
+      ],
+      "isDangerous": false
+    },
+    {
+      "caseId": "b2030000-0000-0000-0000-000000000003",
+      "name": "T\u01B0 v\u1EA5n tranh ch\u1EA5p lao \u0111\u1ED9ng",
+      "description": "T\u01B0 v\u1EA5n gi\u1EA3i quy\u1EBFt tranh ch\u1EA5p gi\u1EEFa ng\u01B0\u1EDDi lao \u0111\u1ED9ng v\u00E0 doanh nghi\u1EC7p, sa th\u1EA3i, l\u01B0\u01A1ng th\u01B0\u1EDFng",
+      "complexityRange": [
+        2,
+        4
+      ],
+      "isDangerous": false
+    },
+    {
+      "caseId": "b2040000-0000-0000-0000-000000000004",
+      "name": "T\u01B0 v\u1EA5n h\u00F4n nh\u00E2n \u0026 gia \u0111\u00ECnh",
+      "description": "T\u01B0 v\u1EA5n ly h\u00F4n, ph\u00E2n chia t\u00E0i s\u1EA3n chung, quy\u1EC1n nu\u00F4i con, c\u1EA5p d\u01B0\u1EE1ng",
+      "complexityRange": [
+        2,
+        4
+      ],
+      "isDangerous": false
+    },
+    {
+      "caseId": "b2050000-0000-0000-0000-000000000005",
+      "name": "\u0110\u1EA1i di\u1EC7n t\u1ED1 t\u1EE5ng d\u00E2n s\u1EF1",
+      "description": "\u0110\u1EA1i di\u1EC7n kh\u00E1ch h\u00E0ng t\u1EA1i t\u00F2a \u00E1n trong c\u00E1c v\u1EE5 ki\u1EC7n d\u00E2n s\u1EF1, tranh ch\u1EA5p t\u00E0i s\u1EA3n",
+      "complexityRange": [
+        4,
+        5
+      ],
+      "isDangerous": false
+    },
+    {
+      "caseId": "b2060000-0000-0000-0000-000000000006",
+      "name": "T\u01B0 v\u1EA5n ph\u00E1p l\u00FD doanh nghi\u1EC7p",
+      "description": "T\u01B0 v\u1EA5n th\u00E0nh l\u1EADp c\u00F4ng ty, c\u01A1 c\u1EA5u ph\u00E1p l\u00FD, tu\u00E2n th\u1EE7 quy \u0111\u1ECBnh ph\u00E1p lu\u1EADt doanh nghi\u1EC7p",
+      "complexityRange": [
+        3,
+        5
+      ],
+      "isDangerous": false
+    },
+    {
+      "caseId": "b2070000-0000-0000-0000-000000000007",
+      "name": "T\u01B0 v\u1EA5n s\u1EDF h\u1EEFu tr\u00ED tu\u1EC7",
+      "description": "\u0110\u0103ng k\u00FD nh\u00E3n hi\u1EC7u, b\u1EA3n quy\u1EC1n, s\u00E1ng ch\u1EBF, x\u1EED l\u00FD vi ph\u1EA1m s\u1EDF h\u1EEFu tr\u00ED tu\u1EC7",
+      "complexityRange": [
+        2,
+        4
+      ],
+      "isDangerous": false
+    },
+    {
+      "caseId": "b2080000-0000-0000-0000-000000000008",
+      "name": "R\u00E0 so\u00E1t h\u1EE3p \u0111\u1ED3ng",
+      "description": "Ki\u1EC3m tra, ph\u00E2n t\u00EDch r\u1EE7i ro ph\u00E1p l\u00FD trong h\u1EE3p \u0111\u1ED3ng tr\u01B0\u1EDBc khi k\u00FD k\u1EBFt",
+      "complexityRange": [
+        2,
+        3
+      ],
+      "isDangerous": false
     }
   ]
 }

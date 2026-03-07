@@ -11,4 +11,7 @@ public record UpdateServiceDefinitionCommand(
     string? Description,
     decimal BasePrice,
     int EstimatedDuration,
-    bool IsActive) : IRequest;
+    bool IsActive,
+    int[]? ComplexityRange = null,
+    bool? IsDangerous = null) : IRequest;
+

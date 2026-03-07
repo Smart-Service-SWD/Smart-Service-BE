@@ -10,4 +10,7 @@ public record CreateServiceDefinitionCommand(
     string Name,
     string? Description,
     decimal BasePrice,
-    int EstimatedDuration) : IRequest<Guid>;
+    int EstimatedDuration,
+    int[]? ComplexityRange = null,
+    bool IsDangerous = false) : IRequest<Guid>;
+

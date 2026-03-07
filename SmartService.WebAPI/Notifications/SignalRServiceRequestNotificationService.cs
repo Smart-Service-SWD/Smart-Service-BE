@@ -29,4 +29,23 @@ public class SignalRServiceRequestNotificationService : IServiceRequestNotificat
                 IsCritical = urgencyLevel >= 4
             }, cancellationToken);
     }
+
+    /// <summary>
+    /// Broadcasts to the "supervisors" group so staff can act immediately.
+    /// </summary>
+    public async Task NotifyDangerFlaggedAsync(
+        Guid serviceRequestId,
+        string? riskExplanation,
+        CancellationToken cancellationToken = default)
+    {
+        await _hubContext.Clients
+            .Group("supervisors")
+            .SendAsync("DangerFlaggedAlert", new
+            {
+                ServiceRequestId = serviceRequestId,
+                RiskExplanation  = riskExplanation,
+                FlaggedAt        = DateTime.UtcNow
+            }, cancellationToken);
+    }
 }
+

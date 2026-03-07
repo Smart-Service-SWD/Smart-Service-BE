@@ -13,6 +13,19 @@ public class ServiceAnalysis
     public int UrgencyLevel { get; private set; }
     public string? SafetyAdvice { get; private set; }
     public string? Summary { get; private set; }
+
+    /// <summary>
+    /// AI explanation of why this request is flagged as risky/dangerous.
+    /// Null when isDangerFlagged = false.
+    /// </summary>
+    public string? RiskExplanation { get; private set; }
+
+    /// <summary>
+    /// AI technical diagnosis: what specific problem the customer is experiencing.
+    /// Always populated regardless of danger flag.
+    /// Example: "BSOD do driver lỗi hoặc RAM hỏng, mã 0x0E."
+    /// </summary>
+    public string? ProblemDiagnosis { get; private set; }
     
     public bool IsCritical => UrgencyLevel >= 4;
     
@@ -26,7 +39,9 @@ public class ServiceAnalysis
         int complexityLevel,
         int urgencyLevel,
         string? safetyAdvice,
-        string? summary)
+        string? summary,
+        string? riskExplanation,
+        string? problemDiagnosis)
     {
         Id = id;
         ServiceRequestId = serviceRequestId;
@@ -34,6 +49,8 @@ public class ServiceAnalysis
         UrgencyLevel = urgencyLevel;
         SafetyAdvice = safetyAdvice;
         Summary = summary;
+        RiskExplanation = riskExplanation;
+        ProblemDiagnosis = problemDiagnosis;
         AnalyzedAt = DateTime.UtcNow;
     }
 
@@ -42,7 +59,9 @@ public class ServiceAnalysis
         int complexityLevel,
         int urgencyLevel,
         string? safetyAdvice = null,
-        string? summary = null)
+        string? summary = null,
+        string? riskExplanation = null,
+        string? problemDiagnosis = null)
     {
         return new ServiceAnalysis(
             Guid.NewGuid(),
@@ -50,6 +69,8 @@ public class ServiceAnalysis
             complexityLevel,
             urgencyLevel,
             safetyAdvice,
-            summary);
+            summary,
+            riskExplanation,
+            problemDiagnosis);
     }
 }

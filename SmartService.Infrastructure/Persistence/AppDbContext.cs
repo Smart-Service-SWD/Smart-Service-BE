@@ -130,6 +130,12 @@ public class AppDbContext : DbContext, IAppDbContext
                 .HasForeignKey(x => x.ServiceRequestId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            // ---- AI estimate columns
+            entity.Property(x => x.EstimatedPrice).HasMaxLength(255);
+            entity.Property(x => x.EstimatedDuration).HasMaxLength(255);
+            entity.Property(x => x.OcrExtractedText).HasColumnType("text");
+            entity.Property(x => x.WasAnalyzedByAI).IsRequired().HasDefaultValue(false);
+
         });
 
         // ==========================
@@ -216,6 +222,8 @@ public class AppDbContext : DbContext, IAppDbContext
             entity.Property(x => x.UrgencyLevel).IsRequired();
             entity.Property(x => x.SafetyAdvice).HasMaxLength(1000);
             entity.Property(x => x.Summary).HasMaxLength(2000);
+            entity.Property(x => x.RiskExplanation).HasMaxLength(1000);
+            entity.Property(x => x.ProblemDiagnosis).HasMaxLength(2000);
             entity.HasIndex(x => x.ServiceRequestId).IsUnique();
         });
 
@@ -232,6 +240,13 @@ public class AppDbContext : DbContext, IAppDbContext
             entity.Property(x => x.IsActive).IsRequired();
             entity.Property(x => x.CreatedAt).IsRequired();
             entity.Property(x => x.UpdatedAt).IsRequired();
+
+            // ---- AI fields
+            entity.Property(x => x.ComplexityRange)
+                  .HasColumnType("integer[]")
+                  .IsRequired()
+                  .HasDefaultValueSql("ARRAY[1,3]");
+            entity.Property(x => x.IsDangerous).IsRequired().HasDefaultValue(false);
 
             entity.HasOne<ServiceCategory>()
                   .WithMany()

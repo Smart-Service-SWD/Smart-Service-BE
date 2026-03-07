@@ -10,4 +10,14 @@ public interface IServiceRequestNotificationService
         string safetyAdvice,
         int urgencyLevel,
         CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Sends a danger alert to supervisors when a service request is flagged as dangerous.
+    /// Called after SaveChanges so the request is already persisted.
+    /// </summary>
+    Task NotifyDangerFlaggedAsync(
+        Guid serviceRequestId,
+        string? riskExplanation,
+        CancellationToken cancellationToken = default);
 }
+

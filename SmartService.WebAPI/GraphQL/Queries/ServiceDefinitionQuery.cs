@@ -44,7 +44,9 @@ public class ServiceDefinitionQuery
                 IsActive = sd.IsActive,
                 BookingCount = db.ServiceRequests.Count(r => r.CategoryId == sd.CategoryId),
                 CreatedAt = sd.CreatedAt,
-                UpdatedAt = sd.UpdatedAt
+                UpdatedAt = sd.UpdatedAt,
+                ComplexityRange = sd.ComplexityRange,
+                IsDangerous = sd.IsDangerous
             }).ToListAsync();
 
         return result;
@@ -81,7 +83,9 @@ public class ServiceDefinitionQuery
                 IsActive = sd.IsActive,
                 BookingCount = db.ServiceRequests.Count(r => r.CategoryId == sd.CategoryId),
                 CreatedAt = sd.CreatedAt,
-                UpdatedAt = sd.UpdatedAt
+                UpdatedAt = sd.UpdatedAt,
+                ComplexityRange = sd.ComplexityRange,
+                IsDangerous = sd.IsDangerous
             }).FirstOrDefaultAsync();
 
         return result;
@@ -118,7 +122,9 @@ public class ServiceDefinitionQuery
                 IsActive = sd.IsActive,
                 BookingCount = db.ServiceRequests.Count(r => r.CategoryId == sd.CategoryId),
                 CreatedAt = sd.CreatedAt,
-                UpdatedAt = sd.UpdatedAt
+                UpdatedAt = sd.UpdatedAt,
+                ComplexityRange = sd.ComplexityRange,
+                IsDangerous = sd.IsDangerous
             }).ToListAsync();
 
         return result;

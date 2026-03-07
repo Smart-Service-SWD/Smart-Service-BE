@@ -1,14 +1,77 @@
 {
-  "subCategoryId": "7d04ff13-6e0c-482d-bee1-bbf9be2ae98a",
+  "subCategoryId": "a2000000-0000-0000-0000-000000000002",
   "pricingByService": [
     {
-      "serviceId": "fa538793-bfc7-4495-9cbe-35ef2cbaf130",
-      "serviceName": "S\u1EEDa \u1ED1ng n\u01B0\u1EDBc",
+      "serviceId": "b2010000-0000-0000-0000-000000000001",
+      "serviceName": "T\u01B0 v\u1EA5n ph\u00E1p lu\u1EADt c\u01A1 b\u1EA3n",
       "basePrice": {
-        "amount": 150000.00,
+        "amount": 300000.00,
         "currency": "VND"
       },
-      "estimatedDuration": 30
+      "estimatedDuration": 60
+    },
+    {
+      "serviceId": "b2020000-0000-0000-0000-000000000002",
+      "serviceName": "So\u1EA1n th\u1EA3o h\u1EE3p \u0111\u1ED3ng",
+      "basePrice": {
+        "amount": 1000000.00,
+        "currency": "VND"
+      },
+      "estimatedDuration": 180
+    },
+    {
+      "serviceId": "b2030000-0000-0000-0000-000000000003",
+      "serviceName": "T\u01B0 v\u1EA5n tranh ch\u1EA5p lao \u0111\u1ED9ng",
+      "basePrice": {
+        "amount": 1500000.00,
+        "currency": "VND"
+      },
+      "estimatedDuration": 120
+    },
+    {
+      "serviceId": "b2040000-0000-0000-0000-000000000004",
+      "serviceName": "T\u01B0 v\u1EA5n h\u00F4n nh\u00E2n \u0026 gia \u0111\u00ECnh",
+      "basePrice": {
+        "amount": 1500000.00,
+        "currency": "VND"
+      },
+      "estimatedDuration": 120
+    },
+    {
+      "serviceId": "b2050000-0000-0000-0000-000000000005",
+      "serviceName": "\u0110\u1EA1i di\u1EC7n t\u1ED1 t\u1EE5ng d\u00E2n s\u1EF1",
+      "basePrice": {
+        "amount": 5000000.00,
+        "currency": "VND"
+      },
+      "estimatedDuration": 2880
+    },
+    {
+      "serviceId": "b2060000-0000-0000-0000-000000000006",
+      "serviceName": "T\u01B0 v\u1EA5n ph\u00E1p l\u00FD doanh nghi\u1EC7p",
+      "basePrice": {
+        "amount": 3000000.00,
+        "currency": "VND"
+      },
+      "estimatedDuration": 240
+    },
+    {
+      "serviceId": "b2070000-0000-0000-0000-000000000007",
+      "serviceName": "T\u01B0 v\u1EA5n s\u1EDF h\u1EEFu tr\u00ED tu\u1EC7",
+      "basePrice": {
+        "amount": 2000000.00,
+        "currency": "VND"
+      },
+      "estimatedDuration": 180
+    },
+    {
+      "serviceId": "b2080000-0000-0000-0000-000000000008",
+      "serviceName": "R\u00E0 so\u00E1t h\u1EE3p \u0111\u1ED3ng",
+      "basePrice": {
+        "amount": 800000.00,
+        "currency": "VND"
+      },
+      "estimatedDuration": 120
     }
   ]
 }
