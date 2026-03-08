@@ -18,6 +18,10 @@ public class CreateServiceRequestValidator : AbstractValidator<CreateServiceRequ
             .NotEmpty()
             .WithMessage("Category ID cannot be empty.");
 
+        RuleFor(v => v.ServiceDefinitionId)
+            .NotEmpty()
+            .WithMessage("Service Definition ID cannot be empty.");
+
         RuleFor(v => v.Description)
             .NotEmpty()
             .WithMessage("Description is required.")

@@ -29,9 +29,9 @@ public class ServiceRequestsController : ControllerBase
     /// Nhận **multipart/form-data** với các field:
     /// - `customerId` (Guid, bắt buộc)
     /// - `categoryId` (Guid, bắt buộc)
+    /// - `serviceDefinitionId` (Guid, bắt buộc) – dịch vụ cụ thể mà khách chọn
     /// - `description` (string, bắt buộc) – mô tả vấn đề
     /// - `addressText` (string, tuỳ chọn)
-    /// - `complexityLevel` (int 1-5, tuỳ chọn) – nếu có sẽ override AI
     /// - `image` (file, tuỳ chọn) – ảnh tài liệu/lỗi để OCR trích xuất text
     ///
     /// **Backend sẽ tự động:**
@@ -66,6 +66,7 @@ public class ServiceRequestsController : ControllerBase
         var command = new CreateServiceRequestCommand(
             CustomerId: input.CustomerId,
             CategoryId: input.CategoryId,
+            ServiceDefinitionId: input.ServiceDefinitionId,
             Description: input.Description,
             AddressText: input.AddressText,
             // ComplexityLevel intentionally omitted – AI sets it automatically
@@ -115,7 +116,7 @@ public class ServiceRequestsController : ControllerBase
         Description = "Cập nhật mức độ phức tạp của yêu cầu dịch vụ (Low, Medium, High)",
         OperationId = "EvaluateComplexity",
         Tags = new[] { "2. UPDATE - Cập nhật (PATCH)" })]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(EvaluateServiceComplexityResult), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> EvaluateComplexity(
@@ -123,12 +124,14 @@ public class ServiceRequestsController : ControllerBase
         [FromBody] EvaluateComplexityRequest request,
         CancellationToken cancellationToken)
     {
+        var complexity = SmartService.Domain.ValueObjects.ServiceComplexity.From(request.Complexity.Level);
+
         var command = new EvaluateServiceComplexityCommand(
             serviceRequestId,
-            request.Complexity);
+            complexity);
 
-        await _mediator.Send(command, cancellationToken);
-        return NoContent();
+        var result = await _mediator.Send(command, cancellationToken);
+        return Ok(result);
     }
 }
 
@@ -139,6 +142,7 @@ public class ServiceRequestsController : ControllerBase
 public record CreateServiceRequestFormInput(
     Guid CustomerId,
     Guid CategoryId,
+    Guid ServiceDefinitionId,
     string Description,
     string? AddressText = null);
 
@@ -149,4 +153,8 @@ public record AssignProviderRequest(
 
 /// <summary>Model yêu cầu đánh giá độ phức tạp của yêu cầu dịch vụ.</summary>
 public record EvaluateComplexityRequest(
-    SmartService.Domain.ValueObjects.ServiceComplexity Complexity);
+    EvaluateComplexityRequest.ServiceComplexityInput Complexity)
+{
+    /// <summary>Input đơn giản cho ServiceComplexity (1–5).</summary>
+    public record ServiceComplexityInput(int Level);
+}
