@@ -24,6 +24,12 @@ public class ServiceRequest : IAggregateRoot
     public Guid CustomerId { get; private set; }
     public Guid CategoryId { get; private set; }
 
+        /// <summary>
+        /// Optional reference to the primary ServiceDefinition this request is associated with.
+        /// Helps analytics & reporting without needing to re-run AI matching.
+        /// </summary>
+        public Guid? ServiceDefinitionId { get; private set; }
+
     public string? Description { get; private set; }
     public ServiceComplexity Complexity { get; private set; } = null;
     public ServiceStatus Status { get; private set; }
@@ -55,7 +61,14 @@ public class ServiceRequest : IAggregateRoot
     // EF Core
     private ServiceRequest() { }
 
-    private ServiceRequest(Guid id, Guid customerId, Guid categoryId, string description, string? addressText = null, ServiceComplexity? complexity = null)
+    private ServiceRequest(
+        Guid id,
+        Guid customerId,
+        Guid categoryId,
+        string description,
+        string? addressText = null,
+        ServiceComplexity? complexity = null,
+        Guid? serviceDefinitionId = null)
     {
         Id = id;
         CustomerId = customerId;
@@ -63,6 +76,7 @@ public class ServiceRequest : IAggregateRoot
         Description = description;
         AddressText = addressText;
         Complexity = complexity;
+        ServiceDefinitionId = serviceDefinitionId;
         Status = ServiceStatus.AwaitingAnalysis;
         CreatedAt = DateTime.UtcNow;
     }
@@ -73,7 +87,8 @@ public class ServiceRequest : IAggregateRoot
         Guid categoryId,
         string description,
         string? addressText = null,
-        ServiceComplexity? complexity = null)
+        ServiceComplexity? complexity = null,
+        Guid? serviceDefinitionId = null)
     {
         if (string.IsNullOrWhiteSpace(description))
             throw new ServiceRequestException.InvalidDescriptionException();
@@ -84,7 +99,8 @@ public class ServiceRequest : IAggregateRoot
             categoryId,
             description,
             addressText,
-            complexity);
+            complexity,
+            serviceDefinitionId);
     }
     
     public void MarkAsAnalyzed(int urgencyLevel)
@@ -111,11 +127,18 @@ public class ServiceRequest : IAggregateRoot
 
     public void Evaluate(ServiceComplexity complexity)
     {
-        if (Status != ServiceStatus.Created)
-            throw new ServiceRequestException.InvalidStateTransitionException(Status.ToString(), "Created");
+        // Cho phép staff đánh giá lần đầu (từ Created) hoặc đánh giá lại (khi đã ở PendingReview)
+        if (Status != ServiceStatus.Created && Status != ServiceStatus.PendingReview)
+            throw new ServiceRequestException.InvalidStatusForOperationException("Evaluate", "Created or PendingReview");
 
         Complexity = complexity;
-        Status = ServiceStatus.PendingReview;
+
+        // Nếu đang ở trạng thái Created thì chuyển sang PendingReview.
+        // Nếu đã PendingReview rồi thì giữ nguyên trạng thái.
+        if (Status == ServiceStatus.Created)
+        {
+            Status = ServiceStatus.PendingReview;
+        }
     }
 
     public void AssignProvider(Guid providerId, Money estimatedCost)

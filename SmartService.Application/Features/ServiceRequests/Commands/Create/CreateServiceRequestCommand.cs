@@ -16,6 +16,7 @@ namespace SmartService.Application.Features.ServiceRequests.Commands.Create;
 public record CreateServiceRequestCommand(
     Guid CustomerId,
     Guid CategoryId,
+    Guid ServiceDefinitionId,
     string Description,
     string? AddressText = null,
     Stream? ImageStream = null,

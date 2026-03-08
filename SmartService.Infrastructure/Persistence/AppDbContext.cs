@@ -94,6 +94,15 @@ public class AppDbContext : DbContext, IAppDbContext
             entity.Property(x => x.Description)
                   .HasMaxLength(1000);
 
+            // Optional FK to primary ServiceDefinition for this request
+            entity.Property(x => x.ServiceDefinitionId)
+                  .IsRequired(false);
+
+            entity.HasOne<ServiceDefinition>()
+                  .WithMany()
+                  .HasForeignKey(x => x.ServiceDefinitionId)
+                  .OnDelete(DeleteBehavior.SetNull);
+
             // ---- Value Object: ServiceComplexity (nullable - only set after Evaluate)
             entity.OwnsOne(x => x.Complexity, complexity =>
             {

@@ -105,7 +105,8 @@ public class CreateServiceRequestHandler : IRequestHandler<CreateServiceRequestC
             request.CategoryId,
             request.Description,
             request.AddressText,
-            complexity);
+            complexity,
+            request.ServiceDefinitionId);
 
         serviceRequest.MarkAsAnalyzed(urgencyLevel);
 
