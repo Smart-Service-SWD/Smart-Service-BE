@@ -1,7 +1,9 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using SmartService.API.Contracts;
 using SmartService.Application.Features.Assignments.Commands.Create;
+using SmartService.Domain.ValueObjects;
 
 namespace SmartService.API.Controllers;
 
@@ -23,7 +25,7 @@ public class AssignmentsController : ControllerBase
     /// <summary>
     /// [CREATE] Tạo mới phân công
     /// </summary>
-    /// <param name="command">Thông tin phân công cần tạo</param>
+    /// <param name="request">Thông tin phân công cần tạo</param>
     /// <param name="cancellationToken">Token hủy</param>
     /// <returns>ID của phân công vừa tạo</returns>
     /// <response code="201">Tạo phân công thành công</response>
@@ -36,9 +38,21 @@ public class AssignmentsController : ControllerBase
         Tags = new[] { "1. CREATE - Tạo mới" })]
     [ProducesResponseType(typeof(Guid), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Create([FromBody] CreateAssignmentCommand command, CancellationToken cancellationToken)
+    public async Task<IActionResult> Create(
+        [FromBody] CreateAssignmentRequest request,
+        CancellationToken cancellationToken)
     {
+        var command = new CreateAssignmentCommand(
+            request.ServiceRequestId,
+            request.AgentId,
+            Money.Create(request.EstimatedCost.Amount, request.EstimatedCost.Currency));
+
         var assignmentId = await _mediator.Send(command, cancellationToken);
         return CreatedAtAction(nameof(Create), new { id = assignmentId }, assignmentId);
     }
 }
+
+public record CreateAssignmentRequest(
+    Guid ServiceRequestId,
+    Guid AgentId,
+    MoneyInput EstimatedCost);
