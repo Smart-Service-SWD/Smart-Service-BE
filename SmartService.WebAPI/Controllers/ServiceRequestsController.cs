@@ -1,9 +1,13 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using SmartService.API.Contracts;
+using SmartService.Application.Features.ServiceRequests.Commands.CompleteServiceRequest;
 using SmartService.Application.Features.ServiceRequests.Commands.AssignProvider;
 using SmartService.Application.Features.ServiceRequests.Commands.Create;
 using SmartService.Application.Features.ServiceRequests.Commands.EvaluateComplexity;
+using SmartService.Application.Features.ServiceRequests.Commands.StartServiceRequest;
+using SmartService.Domain.ValueObjects;
 
 namespace SmartService.API.Controllers;
 
@@ -101,7 +105,7 @@ public class ServiceRequestsController : ControllerBase
         var command = new AssignProviderCommand(
             serviceRequestId,
             request.ProviderId,
-            request.EstimatedCost);
+            Money.Create(request.EstimatedCost.Amount, request.EstimatedCost.Currency));
 
         await _mediator.Send(command, cancellationToken);
         return NoContent();
@@ -133,6 +137,52 @@ public class ServiceRequestsController : ControllerBase
         var result = await _mediator.Send(command, cancellationToken);
         return Ok(result);
     }
+
+    /// <summary>
+    /// [UPDATE] Bắt đầu xử lý yêu cầu dịch vụ đã được phân công.
+    /// </summary>
+    [HttpPatch("{serviceRequestId}/start")]
+    [SwaggerOperation(
+        Summary = "Bắt đầu xử lý yêu cầu dịch vụ",
+        Description = "Chuyển trạng thái yêu cầu từ Assigned sang InProgress",
+        OperationId = "StartServiceRequest",
+        Tags = new[] { "2. UPDATE - Cập nhật (PATCH)" })]
+    [ProducesResponseType(typeof(ServiceRequestStatusResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Start(
+        [FromRoute] Guid serviceRequestId,
+        CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(
+            new StartServiceRequestCommand(serviceRequestId),
+            cancellationToken);
+
+        return Ok(result);
+    }
+
+    /// <summary>
+    /// [UPDATE] Hoàn thành yêu cầu dịch vụ đang được xử lý.
+    /// </summary>
+    [HttpPatch("{serviceRequestId}/complete")]
+    [SwaggerOperation(
+        Summary = "Hoàn thành yêu cầu dịch vụ",
+        Description = "Chuyển trạng thái yêu cầu từ InProgress sang Completed",
+        OperationId = "CompleteServiceRequest",
+        Tags = new[] { "2. UPDATE - Cập nhật (PATCH)" })]
+    [ProducesResponseType(typeof(ServiceRequestStatusResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Complete(
+        [FromRoute] Guid serviceRequestId,
+        CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(
+            new CompleteServiceRequestCommand(serviceRequestId),
+            cancellationToken);
+
+        return Ok(result);
+    }
 }
 
 // ── Inline record models ──────────────────────────────────────────────────────
@@ -149,7 +199,7 @@ public record CreateServiceRequestFormInput(
 /// <summary>Model yêu cầu gán nhà cung cấp cho yêu cầu dịch vụ.</summary>
 public record AssignProviderRequest(
     Guid ProviderId,
-    SmartService.Domain.ValueObjects.Money EstimatedCost);
+    MoneyInput EstimatedCost);
 
 /// <summary>Model yêu cầu đánh giá độ phức tạp của yêu cầu dịch vụ.</summary>
 public record EvaluateComplexityRequest(

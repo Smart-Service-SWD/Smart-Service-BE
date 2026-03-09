@@ -28,6 +28,7 @@ public class ServiceAgentQuery
 
         return await db.ServiceAgents
             .AsNoTracking()
+            .Include(x => x.Capabilities)
             .ToListAsync();
     }
 
@@ -49,6 +50,7 @@ public class ServiceAgentQuery
 
         return await db.ServiceAgents
             .AsNoTracking()
+            .Include(x => x.Capabilities)
             .FirstOrDefaultAsync(x => x.Id == id);
     }
 
@@ -68,6 +70,7 @@ public class ServiceAgentQuery
 
         return await db.ServiceAgents
             .AsNoTracking()
+            .Include(x => x.Capabilities)
             .Where(x => x.IsActive)
             .ToListAsync();
     }

@@ -26,13 +26,9 @@ public class AgentCapabilityQuery
     {
         using var db = await factory.CreateDbContextAsync();
 
-        var agents = await db.ServiceAgents
+        return await db.AgentCapabilities
             .AsNoTracking()
             .ToListAsync();
-
-        return agents
-            .SelectMany(x => x.Capabilities)
-            .ToList();
     }
 
     /// <summary>
@@ -51,13 +47,9 @@ public class AgentCapabilityQuery
     {
         using var db = await factory.CreateDbContextAsync();
 
-        var agents = await db.ServiceAgents
+        return await db.AgentCapabilities
             .AsNoTracking()
-            .ToListAsync();
-
-        return agents
-            .SelectMany(x => x.Capabilities)
-            .FirstOrDefault(x => x.Id == id);
+            .FirstOrDefaultAsync(x => x.Id == id);
     }
 
     /// <summary>
@@ -78,6 +70,7 @@ public class AgentCapabilityQuery
 
         var agent = await db.ServiceAgents
             .AsNoTracking()
+            .Include(x => x.Capabilities)
             .FirstOrDefaultAsync(x => x.Id == agentId);
 
         if (agent == null)
@@ -102,13 +95,9 @@ public class AgentCapabilityQuery
     {
         using var db = await factory.CreateDbContextAsync();
 
-        var agents = await db.ServiceAgents
+        return await db.AgentCapabilities
             .AsNoTracking()
-            .ToListAsync();
-
-        return agents
-            .SelectMany(x => x.Capabilities)
             .Where(x => x.CategoryId == categoryId)
-            .ToList();
+            .ToListAsync();
     }
 }
