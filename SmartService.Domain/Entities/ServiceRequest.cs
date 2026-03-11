@@ -166,4 +166,19 @@ public class ServiceRequest : IAggregateRoot
 
         Status = ServiceStatus.Completed;
     }
+
+    public bool CanCustomerCancelBeforeStaffConfirmation()
+        => Status == ServiceStatus.AwaitingAnalysis
+            || Status == ServiceStatus.Created
+            || Status == ServiceStatus.UrgentDispatch;
+
+    public void CancelByCustomer()
+    {
+        if (!CanCustomerCancelBeforeStaffConfirmation())
+        {
+            throw new ServiceRequestException.CustomerCancellationNotAllowedException();
+        }
+
+        Status = ServiceStatus.Cancelled;
+    }
 }
