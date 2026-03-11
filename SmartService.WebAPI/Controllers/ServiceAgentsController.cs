@@ -1,8 +1,12 @@
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using SmartService.Application.Features.ServiceAgents.Commands.Create;
 using SmartService.Application.Features.ServiceAgents.Commands.Deactivate;
+using SmartService.Application.Features.ServiceAgents.Commands.SetActiveStatus;
+using SmartService.Domain.ValueObjects;
+using System.Security.Claims;
 
 namespace SmartService.API.Controllers;
 
@@ -43,6 +47,42 @@ public class ServiceAgentsController : ControllerBase
         return CreatedAtAction(nameof(Create), new { id = agentId }, agentId);
     }
 
+    [Authorize(Roles = $"{UserRoleConstants.Agent},{UserRoleConstants.Staff},{UserRoleConstants.Admin}")]
+    [HttpPatch("{agentId}/active-status")]
+    [SwaggerOperation(
+        Summary = "Cập nhật trạng thái hoạt động của thợ",
+        Description = "Cho phép thợ bật/tắt nhận việc mới. Staff/Admin cũng có thể cập nhật trạng thái cho thợ.",
+        OperationId = "SetServiceAgentActiveStatus",
+        Tags = new[] { "2. UPDATE - Cập nhật (PATCH)" })]
+    [ProducesResponseType(typeof(ServiceAgentActiveStatusResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> SetActiveStatus(
+        [FromRoute] Guid agentId,
+        [FromBody] UpdateServiceAgentActiveStatusRequest request,
+        CancellationToken cancellationToken)
+    {
+        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (!Guid.TryParse(userIdClaim, out var actorUserId))
+        {
+            throw new UnauthorizedAccessException();
+        }
+
+        var role = User.FindFirstValue(ClaimTypes.Role);
+        var canManageAnyAgent =
+            role == UserRoleConstants.Staff || role == UserRoleConstants.Admin;
+
+        var result = await _mediator.Send(
+            new SetServiceAgentActiveStatusCommand(
+                agentId,
+                actorUserId,
+                canManageAnyAgent,
+                request.IsActive),
+            cancellationToken);
+
+        return Ok(result);
+    }
+
     /// <summary>
     /// [DELETE] Vô hiệu hóa đại lý dịch vụ
     /// </summary>
@@ -68,3 +108,5 @@ public class ServiceAgentsController : ControllerBase
         return NoContent();
     }
 }
+
+public record UpdateServiceAgentActiveStatusRequest(bool IsActive);
