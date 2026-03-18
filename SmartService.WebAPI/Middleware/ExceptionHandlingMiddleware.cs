@@ -93,6 +93,14 @@ public class ExceptionHandlingMiddleware
             ),
 
             // Specific ServiceRequest exceptions
+            ServiceRequestException.CustomerCancellationNotAllowedException => (
+                HttpStatusCode.Conflict,
+                AppErrorCodes.BUSINESS_409_CONFLICT,
+                "Business",
+                exception.Message,
+                null
+            ),
+
             ServiceRequestException.InvalidStateTransitionException => (
                 HttpStatusCode.Conflict,
                 AppErrorCodes.BUSINESS_409_CONFLICT,

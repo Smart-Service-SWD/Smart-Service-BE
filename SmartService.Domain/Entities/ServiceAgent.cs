@@ -61,4 +61,9 @@ public class ServiceAgent
     {
         IsActive = false;
     }
+
+    public void Activate()
+    {
+        IsActive = true;
+    }
 }

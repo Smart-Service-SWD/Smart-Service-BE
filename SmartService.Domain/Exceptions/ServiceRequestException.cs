@@ -21,6 +21,12 @@ namespace SmartService.Domain.Exceptions
                 : base($"The transition from '{currentState}' to '{attemptedState}' is not allowed for this ServiceRequest.") { }
         }
 
+        public class CustomerCancellationNotAllowedException : ServiceRequestException
+        {
+            public CustomerCancellationNotAllowedException()
+                : base("The customer can only cancel a service request before staff confirms its complexity.") { }
+        }
+
         public class MissingAssignedProviderException : ServiceRequestException
         {
             public MissingAssignedProviderException()

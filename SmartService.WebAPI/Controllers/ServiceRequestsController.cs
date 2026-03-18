@@ -1,13 +1,16 @@
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using SmartService.API.Contracts;
+using SmartService.Application.Features.ServiceRequests.Commands.CancelServiceRequest;
 using SmartService.Application.Features.ServiceRequests.Commands.CompleteServiceRequest;
 using SmartService.Application.Features.ServiceRequests.Commands.AssignProvider;
 using SmartService.Application.Features.ServiceRequests.Commands.Create;
 using SmartService.Application.Features.ServiceRequests.Commands.EvaluateComplexity;
 using SmartService.Application.Features.ServiceRequests.Commands.StartServiceRequest;
 using SmartService.Domain.ValueObjects;
+using System.Security.Claims;
 
 namespace SmartService.API.Controllers;
 
@@ -179,6 +182,37 @@ public class ServiceRequestsController : ControllerBase
     {
         var result = await _mediator.Send(
             new CompleteServiceRequestCommand(serviceRequestId),
+            cancellationToken);
+
+        return Ok(result);
+    }
+
+    /// <summary>
+    /// [UPDATE] Khách hàng hủy yêu cầu khi staff chưa xác nhận độ phức tạp.
+    /// </summary>
+    [Authorize(Roles = UserRoleConstants.Customer)]
+    [HttpPatch("{serviceRequestId}/cancel")]
+    [SwaggerOperation(
+        Summary = "Khách hàng hủy yêu cầu dịch vụ",
+        Description = "Cho phép khách hàng hủy yêu cầu của chính mình khi staff chưa xác nhận độ phức tạp.",
+        OperationId = "CancelServiceRequest",
+        Tags = new[] { "2. UPDATE - Cập nhật (PATCH)" })]
+    [ProducesResponseType(typeof(ServiceRequestStatusResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Cancel(
+        [FromRoute] Guid serviceRequestId,
+        CancellationToken cancellationToken)
+    {
+        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (!Guid.TryParse(userIdClaim, out var customerId))
+        {
+            throw new UnauthorizedAccessException();
+        }
+
+        var result = await _mediator.Send(
+            new CancelServiceRequestCommand(serviceRequestId, customerId),
             cancellationToken);
 
         return Ok(result);
