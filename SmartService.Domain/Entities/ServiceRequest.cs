@@ -108,7 +108,7 @@ public class ServiceRequest : IAggregateRoot
         if (Status != ServiceStatus.AwaitingAnalysis)
             throw new ServiceRequestException.InvalidStatusForOperationException("MarkAsAnalyzed", "AwaitingAnalysis");
         
-        Status = urgencyLevel >= 4 ? ServiceStatus.UrgentDispatch : ServiceStatus.Created;
+        Status = ServiceStatus.Created;
     }
 
     /// <summary>
@@ -128,14 +128,14 @@ public class ServiceRequest : IAggregateRoot
     public void Evaluate(ServiceComplexity complexity)
     {
         // Cho phép staff đánh giá lần đầu (từ Created) hoặc đánh giá lại (khi đã ở PendingReview)
-        if (Status != ServiceStatus.Created && Status != ServiceStatus.PendingReview)
-            throw new ServiceRequestException.InvalidStatusForOperationException("Evaluate", "Created or PendingReview");
+        if (Status != ServiceStatus.Created && Status != ServiceStatus.PendingReview && Status != ServiceStatus.UrgentDispatch)
+            throw new ServiceRequestException.InvalidStatusForOperationException("Evaluate", "Created, UrgentDispatch or PendingReview");
 
         Complexity = complexity;
 
         // Nếu đang ở trạng thái Created thì chuyển sang PendingReview.
         // Nếu đã PendingReview rồi thì giữ nguyên trạng thái.
-        if (Status == ServiceStatus.Created)
+        if (Status == ServiceStatus.Created || Status == ServiceStatus.UrgentDispatch)
         {
             Status = ServiceStatus.PendingReview;
         }
@@ -182,3 +182,4 @@ public class ServiceRequest : IAggregateRoot
         Status = ServiceStatus.Cancelled;
     }
 }
+

@@ -65,7 +65,9 @@ public class ServicesController : ControllerBase
             request.Description,
             request.BasePrice,
             request.EstimatedDuration,
-            request.IsActive);
+            request.IsActive,
+            request.ComplexityRange,
+            request.IsDangerous);
 
         await _mediator.Send(command, cancellationToken);
         return NoContent();
@@ -99,4 +101,6 @@ public record UpdateServiceDefinitionRequest(
     string? Description,
     decimal BasePrice,
     int EstimatedDuration,
-    bool IsActive);
+    bool IsActive,
+    int[]? ComplexityRange = null,
+    bool? IsDangerous = null);
