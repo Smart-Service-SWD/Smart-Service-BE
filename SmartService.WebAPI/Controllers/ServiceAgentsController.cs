@@ -5,6 +5,7 @@ using Swashbuckle.AspNetCore.Annotations;
 using SmartService.Application.Features.ServiceAgents.Commands.Create;
 using SmartService.Application.Features.ServiceAgents.Commands.Deactivate;
 using SmartService.Application.Features.ServiceAgents.Commands.SetActiveStatus;
+using SmartService.Application.Features.ServiceAgents.Commands.UpdateCapabilities;
 using SmartService.Domain.ValueObjects;
 using System.Security.Claims;
 
@@ -83,6 +84,34 @@ public class ServiceAgentsController : ControllerBase
         return Ok(result);
     }
 
+    [Authorize(Roles = $"{UserRoleConstants.Staff},{UserRoleConstants.Admin}")]
+    [HttpPut("{agentId}/capabilities")]
+    [SwaggerOperation(
+        Summary = "Cập nhật hồ sơ nghề của thợ",
+        Description = "Cho phép Staff/Admin cập nhật lại danh mục, mức độ phức tạp tối đa và danh sách dịch vụ mà thợ có thể nhận.",
+        OperationId = "UpdateServiceAgentCapabilities",
+        Tags = new[] { "2. UPDATE - Cập nhật (PUT)" })]
+    [ProducesResponseType(typeof(UpdateServiceAgentCapabilitiesResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> UpdateCapabilities(
+        [FromRoute] Guid agentId,
+        [FromBody] UpdateServiceAgentCapabilitiesRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = new UpdateServiceAgentCapabilitiesCommand(
+            agentId,
+            request.Capabilities
+                .Select(capability => new CapabilityInput(
+                    capability.CategoryId,
+                    capability.MaxComplexityLevel,
+                    capability.ServiceIds))
+                .ToList());
+
+        var result = await _mediator.Send(command, cancellationToken);
+        return Ok(result);
+    }
+
     /// <summary>
     /// [DELETE] Vô hiệu hóa đại lý dịch vụ
     /// </summary>
@@ -110,3 +139,11 @@ public class ServiceAgentsController : ControllerBase
 }
 
 public record UpdateServiceAgentActiveStatusRequest(bool IsActive);
+
+public record UpdateServiceAgentCapabilitiesRequest(
+    IReadOnlyList<UpdateServiceAgentCapabilityItemRequest> Capabilities);
+
+public record UpdateServiceAgentCapabilityItemRequest(
+    Guid CategoryId,
+    int MaxComplexityLevel,
+    IReadOnlyList<Guid> ServiceIds);

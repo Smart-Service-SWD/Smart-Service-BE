@@ -19,6 +19,7 @@ namespace SmartService.Domain.Entities;
 public class AgentCapability
 {
     public Guid Id { get; private set; }
+    public Guid? ServiceAgentId { get; private set; }
     public Guid CategoryId { get; private set; }
     public ServiceComplexity MaxComplexity { get; private set; } = null;
 
@@ -40,4 +41,9 @@ public class AgentCapability
 
     public static AgentCapability Create(Guid categoryId, ServiceComplexity maxComplexity, IEnumerable<Guid> serviceIds)
         => new(categoryId, maxComplexity, serviceIds);
+
+    public void AssignToAgent(Guid serviceAgentId)
+    {
+        ServiceAgentId = serviceAgentId;
+    }
 }

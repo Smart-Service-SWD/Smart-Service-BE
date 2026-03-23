@@ -54,7 +54,17 @@ public class ServiceAgent
 
     public void AddCapability(AgentCapability capability)
     {
+        capability.AssignToAgent(Id);
         _capabilities.Add(capability);
+    }
+
+    public void ReplaceCapabilities(IEnumerable<AgentCapability> capabilities)
+    {
+        _capabilities.Clear();
+        foreach (var capability in capabilities)
+        {
+            AddCapability(capability);
+        }
     }
 
     public void Deactivate()
