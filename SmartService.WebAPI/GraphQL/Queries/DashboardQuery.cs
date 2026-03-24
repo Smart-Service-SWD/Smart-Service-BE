@@ -71,4 +71,22 @@ public class DashboardQuery
             MonthlyRevenue = monthlyRevenue
         };
     }
+
+    /// <summary>
+    /// Lấy danh sách 10 đơn yêu cầu dịch vụ mới nhất cho bảng "Recent Orders".
+    /// </summary>
+    [GraphQLName("getRecentRequests")]
+    [GraphQLDescription("Lấy danh sách 10 đơn yêu cầu dịch vụ mới nhất cho bảng Recent Orders.")]
+    [Authorize(Roles = new[] { "Staff", "Admin" })]
+    [UsePaging(IncludeTotalCount = true)]
+    [UseFiltering]
+    [UseSorting]
+    public async Task<IQueryable<ServiceRequest>> GetRecentRequests(
+        [Service] IDbContextFactory<AppDbContext> factory)
+    {
+        var db = await factory.CreateDbContextAsync();
+        return db.ServiceRequests
+            .OrderByDescending(r => r.CreatedAt)
+            .Take(10);
+    }
 }
