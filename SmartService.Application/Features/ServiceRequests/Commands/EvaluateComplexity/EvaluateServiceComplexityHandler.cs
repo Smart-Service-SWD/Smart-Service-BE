@@ -24,7 +24,7 @@ public class EvaluateServiceComplexityHandler : IRequestHandler<EvaluateServiceC
         if (serviceRequest == null)
             throw new KeyNotFoundException($"ServiceRequest with ID '{request.ServiceRequestId}' not found.");
 
-        serviceRequest.Evaluate(request.Complexity);
+        serviceRequest.Evaluate(request.Complexity, request.ServiceDefinitionId, request.EstimatedCost);
 
         await _context.SaveChangesAsync(cancellationToken);
 

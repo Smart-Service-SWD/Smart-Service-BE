@@ -26,6 +26,10 @@ public class AppDbContext : DbContext, IAppDbContext
     public DbSet<AgentCapability> AgentCapabilities => Set<AgentCapability>();
     public DbSet<ServiceAnalysis> ServiceAnalyses => Set<ServiceAnalysis>();
     public DbSet<ServiceDefinition> ServiceDefinitions => Set<ServiceDefinition>();
+    public DbSet<PriceAdjustmentRequest> PriceAdjustmentRequests => Set<PriceAdjustmentRequest>();
+    public DbSet<Payout> Payouts => Set<Payout>();
+    public DbSet<CommissionSettings> CommissionSettings => Set<CommissionSettings>();
+    public DbSet<CompletionEvidence> CompletionEvidences => Set<CompletionEvidence>();
     public DbSet<AuthData> AuthData => Set<AuthData>();
 
     public AppDbContext(DbContextOptions<AppDbContext> options)
@@ -128,6 +132,65 @@ public class AppDbContext : DbContext, IAppDbContext
                     .HasConversion<int>()
                             .IsRequired();
 
+
+            entity.OwnsOne(x => x.FinalPrice, money =>
+            {
+                money.Property(m => m.Amount)
+                     .HasColumnName("FinalPrice_Amount")
+                     .HasPrecision(18, 2);
+
+                money.Property(m => m.Currency)
+                     .HasColumnName("FinalPrice_Currency")
+                     .HasMaxLength(10);
+            });
+
+            entity.OwnsOne(x => x.DepositAmount, money =>
+            {
+                money.Property(m => m.Amount)
+                     .HasColumnName("DepositAmount_Amount")
+                     .HasPrecision(18, 2);
+
+                money.Property(m => m.Currency)
+                     .HasColumnName("DepositAmount_Currency")
+                     .HasMaxLength(10);
+            });
+
+            entity.Property(x => x.IsDepositPaid).IsRequired().HasDefaultValue(false);
+
+            entity.OwnsOne(x => x.FinalAmountPaid, money =>
+            {
+                money.Property(m => m.Amount)
+                     .HasColumnName("FinalAmountPaid_Amount")
+                     .HasPrecision(18, 2);
+
+                money.Property(m => m.Currency)
+                     .HasColumnName("FinalAmountPaid_Currency")
+                     .HasMaxLength(10);
+            });
+
+            entity.Property(x => x.CommissionRate).HasPrecision(5, 4);
+
+            entity.OwnsOne(x => x.CommissionAmount, money =>
+            {
+                money.Property(m => m.Amount)
+                     .HasColumnName("CommissionAmount_Amount")
+                     .HasPrecision(18, 2);
+
+                money.Property(m => m.Currency)
+                     .HasColumnName("CommissionAmount_Currency")
+                     .HasMaxLength(10);
+            });
+
+            entity.OwnsOne(x => x.WorkerAmount, money =>
+            {
+                money.Property(m => m.Amount)
+                     .HasColumnName("WorkerAmount_Amount")
+                     .HasPrecision(18, 2);
+
+                money.Property(m => m.Currency)
+                     .HasColumnName("WorkerAmount_Currency")
+                     .HasMaxLength(10);
+            });
 
             entity.HasMany<ServiceAttachment>()
                 .WithOne()
@@ -261,6 +324,85 @@ public class AppDbContext : DbContext, IAppDbContext
                   .WithMany()
                   .HasForeignKey(x => x.CategoryId)
                   .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // ==========================
+        // PRICE ADJUSTMENT REQUEST
+        // ==========================
+        modelBuilder.Entity<PriceAdjustmentRequest>(entity =>
+        {
+            entity.HasKey(x => x.Id);
+            entity.Property(x => x.Reason).HasMaxLength(1000).IsRequired();
+            
+            entity.OwnsOne(x => x.OldPrice, money =>
+            {
+                money.Property(m => m.Amount).HasColumnName("OldPrice_Amount").HasPrecision(18, 2);
+                money.Property(m => m.Currency).HasColumnName("OldPrice_Currency").HasMaxLength(10);
+            });
+
+            entity.OwnsOne(x => x.NewPrice, money =>
+            {
+                money.Property(m => m.Amount).HasColumnName("NewPrice_Amount").HasPrecision(18, 2);
+                money.Property(m => m.Currency).HasColumnName("NewPrice_Currency").HasMaxLength(10);
+            });
+        });
+
+        // ==========================
+        // PAYOUT
+        // ==========================
+        modelBuilder.Entity<Payout>(entity =>
+        {
+            entity.HasKey(x => x.Id);
+            entity.Property(x => x.CommissionPercent).HasPrecision(5, 2);
+            
+            entity.OwnsOne(x => x.TotalAmount, money =>
+            {
+                money.Property(m => m.Amount).HasColumnName("TotalAmount_Amount").HasPrecision(18, 2);
+                money.Property(m => m.Currency).HasColumnName("TotalAmount_Currency").HasMaxLength(10);
+            });
+
+            entity.OwnsOne(x => x.CommissionAmount, money =>
+            {
+                money.Property(m => m.Amount).HasColumnName("CommissionAmount_Amount").HasPrecision(18, 2);
+                money.Property(m => m.Currency).HasColumnName("CommissionAmount_Currency").HasMaxLength(10);
+            });
+
+            entity.OwnsOne(x => x.WorkerAmount, money =>
+            {
+                money.Property(m => m.Amount).HasColumnName("WorkerAmount_Amount").HasPrecision(18, 2);
+                money.Property(m => m.Currency).HasColumnName("WorkerAmount_Currency").HasMaxLength(10);
+            });
+        });
+
+        // ==========================
+        // COMMISSION SETTINGS
+        // ==========================
+        modelBuilder.Entity<CommissionSettings>(entity =>
+        {
+            entity.HasKey(x => x.Id);
+            entity.Property(x => x.CommissionPercent).HasPrecision(5, 2).IsRequired();
+            entity.Property(x => x.DepositPercent).HasPrecision(5, 2).IsRequired();
+            
+            entity.HasOne<ServiceDefinition>()
+                  .WithMany()
+                  .HasForeignKey(x => x.ServiceDefinitionId)
+                  .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // ==========================
+        // COMPLETION EVIDENCE
+        // ==========================
+        modelBuilder.Entity<CompletionEvidence>(entity =>
+        {
+            entity.HasKey(x => x.Id);
+            entity.Property(x => x.ImageUrl).IsRequired();
+            entity.Property(x => x.Type).HasConversion<int>().IsRequired();
+            entity.Property(x => x.Notes).HasMaxLength(1000);
+
+            entity.HasOne<ServiceRequest>()
+                  .WithMany(x => x.CompletionEvidences)
+                  .HasForeignKey(x => x.ServiceRequestId)
+                  .OnDelete(DeleteBehavior.Cascade);
         });
 
         // ==========================

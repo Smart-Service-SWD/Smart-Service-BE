@@ -8,10 +8,15 @@ public enum ServiceStatus
     AwaitingAnalysis = 0,
     Created = 1,
     PendingReview = 2,
-    Approved = 3,
-    Assigned = 4,
-    InProgress = 5,
-    Completed = 6,
-    Cancelled = 7,
-    UrgentDispatch = 8
+    AwaitingDeposit = 3,
+    DepositPaid = 4,
+    Assigned = 5,
+    InProgress = 6,
+    AwaitingCompletionReview = 7,
+    CompletionApproved = 8,
+    AwaitingFinalPayment = 9,
+    FinalPaymentPaid = 10,
+    PayoutCompleted = 11,
+    Cancelled = 12,
+    UrgentDispatch = 13
 }

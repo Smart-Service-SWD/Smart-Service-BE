@@ -8,7 +8,9 @@ namespace SmartService.Application.Features.ServiceRequests.Commands.EvaluateCom
 /// </summary>
 public record EvaluateServiceComplexityCommand(
     Guid ServiceRequestId,
-    ServiceComplexity Complexity) : IRequest<EvaluateServiceComplexityResult>;
+    ServiceComplexity Complexity,
+    Guid? ServiceDefinitionId = null,
+    Money? EstimatedCost = null) : IRequest<EvaluateServiceComplexityResult>;
 
 /// <summary>
 /// Result returned after evaluating service request complexity.

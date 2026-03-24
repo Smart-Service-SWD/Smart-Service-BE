@@ -41,20 +41,20 @@ public class DashboardQuery
         var totalServices = await db.ServiceDefinitions.CountAsync(s => s.IsActive);
         var totalRequests = await db.ServiceRequests.CountAsync();
         var pendingRequests = await db.ServiceRequests.CountAsync(r => r.Status == ServiceStatus.PendingReview);
-        var completedRequests = await db.ServiceRequests.CountAsync(r => r.Status == ServiceStatus.Completed);
+        var completedRequests = await db.ServiceRequests.CountAsync(r => r.Status == ServiceStatus.PayoutCompleted);
 
         // Revenue from completed assignments
         var todayRevenue = await db.Assignments
             .Where(a => db.ServiceRequests.Any(r =>
                 r.Id == a.ServiceRequestId &&
-                r.Status == ServiceStatus.Completed &&
+                r.Status == ServiceStatus.PayoutCompleted &&
                 r.CreatedAt >= today))
             .SumAsync(a => a.EstimatedCost.Amount);
 
         var monthlyRevenue = await db.Assignments
             .Where(a => db.ServiceRequests.Any(r =>
                 r.Id == a.ServiceRequestId &&
-                r.Status == ServiceStatus.Completed &&
+                r.Status == ServiceStatus.PayoutCompleted &&
                 r.CreatedAt >= firstDayOfMonth))
             .SumAsync(a => a.EstimatedCost.Amount);
 
