@@ -5,6 +5,7 @@ using SmartService.Application.Features.PriceAdjustments.Commands.ApprovePriceAd
 using SmartService.Application.Features.PriceAdjustments.Commands.RejectPriceAdjustment;
 using SmartService.Application.Features.PriceAdjustments.Commands.CreatePriceAdjustmentRequest;
 using SmartService.Application.Features.PriceAdjustments.Queries.GetPendingPriceAdjustments;
+using SmartService.Application.Features.PriceAdjustments.Queries.GetPriceAdjustmentByServiceRequest;
 using SmartService.Domain.ValueObjects;
 using System.Security.Claims;
 
@@ -21,9 +22,35 @@ public class PriceAdjustmentsController : ControllerBase
 
     [Authorize(Roles = UserRoleConstants.Agent)]
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreatePriceAdjustmentRequestCommand command, CancellationToken cancellationToken)
+    [Consumes("multipart/form-data")]
+    public async Task<IActionResult> Create(
+        [FromForm] Guid serviceRequestId,
+        [FromForm] decimal newPriceAmount,
+        [FromForm] string newPriceCurrency,
+        [FromForm] string reason,
+        [FromForm] Guid createdBy,
+        IFormFile evidenceImage,
+        CancellationToken cancellationToken)
     {
+        if (evidenceImage == null || evidenceImage.Length == 0)
+            return BadRequest("Ảnh bằng chứng là bắt buộc.");
+
+        var imageStream = evidenceImage.OpenReadStream();
+
+        var command = new CreatePriceAdjustmentRequestCommand
+        {
+            ServiceRequestId = serviceRequestId,
+            NewPriceAmount = newPriceAmount,
+            NewPriceCurrency = newPriceCurrency ?? "VND",
+            Reason = reason,
+            CreatedBy = createdBy,
+            EvidenceImageStream = imageStream,
+            EvidenceImageFileName = evidenceImage.FileName
+        };
+
         var result = await _mediator.Send(command, cancellationToken);
+        
+        await imageStream.DisposeAsync();
         return Ok(result);
     }
 
@@ -32,6 +59,15 @@ public class PriceAdjustmentsController : ControllerBase
     public async Task<ActionResult<List<PriceAdjustmentDto>>> GetPending(CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(new GetPendingPriceAdjustmentsQuery(), cancellationToken);
+        return Ok(result);
+    }
+
+    [Authorize(Roles = $"{UserRoleConstants.Agent},{UserRoleConstants.Staff},{UserRoleConstants.Admin}")]
+    [HttpGet("service-request/{serviceRequestId}")]
+    public async Task<ActionResult<PriceAdjustmentDto>> GetByServiceRequestId([FromRoute] Guid serviceRequestId, CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(new GetPriceAdjustmentByServiceRequestQuery(serviceRequestId), cancellationToken);
+        if (result == null) return NotFound();
         return Ok(result);
     }
 

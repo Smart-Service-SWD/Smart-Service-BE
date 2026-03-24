@@ -24,9 +24,12 @@ public class GetPendingPriceAdjustmentsHandler : IRequestHandler<GetPendingPrice
             {
                 Id = x.Id,
                 ServiceRequestId = x.ServiceRequestId,
-                OldPrice = x.OldPrice,
-                NewPrice = x.NewPrice,
+                OldPriceAmount = x.OldPrice.Amount,
+                OldPriceCurrency = x.OldPrice.Currency,
+                NewPriceAmount = x.NewPrice.Amount,
+                NewPriceCurrency = x.NewPrice.Currency,
                 Reason = x.Reason,
+                EvidenceImageUrl = x.EvidenceImageUrl,
                 Status = x.Status,
                 CreatedAt = x.CreatedAt,
                 CreatedBy = x.CreatedBy

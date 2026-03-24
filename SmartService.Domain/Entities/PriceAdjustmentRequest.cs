@@ -16,6 +16,7 @@ public class PriceAdjustmentRequest
     public Money OldPrice { get; private set; }
     public Money NewPrice { get; private set; }
     public string Reason { get; private set; }
+    public string EvidenceImageUrl { get; private set; }
     public PriceAdjustmentStatus Status { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public Guid CreatedBy { get; private set; }
@@ -29,6 +30,7 @@ public class PriceAdjustmentRequest
         Money oldPrice,
         Money newPrice,
         string reason,
+        string evidenceImageUrl,
         Guid createdBy)
     {
         Id = Guid.NewGuid();
@@ -36,6 +38,7 @@ public class PriceAdjustmentRequest
         OldPrice = oldPrice;
         NewPrice = newPrice;
         Reason = reason;
+        EvidenceImageUrl = evidenceImageUrl;
         Status = PriceAdjustmentStatus.Pending;
         CreatedAt = DateTime.UtcNow;
         CreatedBy = createdBy;

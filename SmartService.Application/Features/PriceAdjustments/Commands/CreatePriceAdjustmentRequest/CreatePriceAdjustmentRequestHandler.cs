@@ -10,8 +10,11 @@ public class CreatePriceAdjustmentRequestHandler : IRequestHandler<CreatePriceAd
 {
     private readonly IAppDbContext _context;
 
-    public CreatePriceAdjustmentRequestHandler(IAppDbContext context)
-        => _context = context;
+    public CreatePriceAdjustmentRequestHandler(
+        IAppDbContext context)
+    {
+        _context = context;
+    }
 
     public async Task<Guid> Handle(CreatePriceAdjustmentRequestCommand request, CancellationToken cancellationToken)
     {
@@ -24,11 +27,17 @@ public class CreatePriceAdjustmentRequestHandler : IRequestHandler<CreatePriceAd
         if (serviceRequest.Status != ServiceStatus.InProgress)
             throw new InvalidOperationException("Chỉ có thể yêu cầu điều chỉnh giá khi đơn hàng đang thực hiện.");
 
+        if (request.EvidenceImageStream == null)
+            throw new InvalidOperationException("Ảnh bằng chứng phản hồi tăng giá là bắt buộc.");
+
+        var imageUrl = $"local://{request.EvidenceImageFileName}";
+
         var adjustmentRequest = new PriceAdjustmentRequest(
             request.ServiceRequestId,
             serviceRequest.EstimatedCost ?? Money.Create(0),
-            request.NewPrice,
+            Money.Create(request.NewPriceAmount, request.NewPriceCurrency),
             request.Reason,
+            imageUrl,
             request.CreatedBy);
 
         _context.PriceAdjustmentRequests.Add(adjustmentRequest);

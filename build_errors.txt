@@ -1,0 +1,16 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  SmartService.Domain -> D:\Ky_4\SWD\System_Smart-Service-master\Smart-Service\Service_BE\SmartService.Domain\bin\Debug\net8.0\SmartService.Domain.dll
+D:\Ky_4\SWD\System_Smart-Service-master\Smart-Service\Service_BE\SmartService.Application\Features\PriceAdjustments\Commands\CreatePriceAdjustmentRequest\CreatePriceAdjustmentRequestHandler.cs(3,45): error CS0234: The type or namespace name 'Storage' does not exist in the namespace 'SmartService.Application.Abstractions' (are you missing an assembly reference?) [D:\Ky_4\SWD\System_Smart-Service-master\Smart-Service\Service_BE\SmartService.Application\SmartService.Application.csproj]
+D:\Ky_4\SWD\System_Smart-Service-master\Smart-Service\Service_BE\SmartService.Application\Features\PriceAdjustments\Commands\CreatePriceAdjustmentRequest\CreatePriceAdjustmentRequestHandler.cs(13,22): error CS0246: The type or namespace name 'ICloudinaryService' could not be found (are you missing a using directive or an assembly reference?) [D:\Ky_4\SWD\System_Smart-Service-master\Smart-Service\Service_BE\SmartService.Application\SmartService.Application.csproj]
+D:\Ky_4\SWD\System_Smart-Service-master\Smart-Service\Service_BE\SmartService.Application\Features\PriceAdjustments\Commands\CreatePriceAdjustmentRequest\CreatePriceAdjustmentRequestHandler.cs(17,9): error CS0246: The type or namespace name 'ICloudinaryService' could not be found (are you missing a using directive or an assembly reference?) [D:\Ky_4\SWD\System_Smart-Service-master\Smart-Service\Service_BE\SmartService.Application\SmartService.Application.csproj]
+
+Build FAILED.
+
+D:\Ky_4\SWD\System_Smart-Service-master\Smart-Service\Service_BE\SmartService.Application\Features\PriceAdjustments\Commands\CreatePriceAdjustmentRequest\CreatePriceAdjustmentRequestHandler.cs(3,45): error CS0234: The type or namespace name 'Storage' does not exist in the namespace 'SmartService.Application.Abstractions' (are you missing an assembly reference?) [D:\Ky_4\SWD\System_Smart-Service-master\Smart-Service\Service_BE\SmartService.Application\SmartService.Application.csproj]
+D:\Ky_4\SWD\System_Smart-Service-master\Smart-Service\Service_BE\SmartService.Application\Features\PriceAdjustments\Commands\CreatePriceAdjustmentRequest\CreatePriceAdjustmentRequestHandler.cs(13,22): error CS0246: The type or namespace name 'ICloudinaryService' could not be found (are you missing a using directive or an assembly reference?) [D:\Ky_4\SWD\System_Smart-Service-master\Smart-Service\Service_BE\SmartService.Application\SmartService.Application.csproj]
+D:\Ky_4\SWD\System_Smart-Service-master\Smart-Service\Service_BE\SmartService.Application\Features\PriceAdjustments\Commands\CreatePriceAdjustmentRequest\CreatePriceAdjustmentRequestHandler.cs(17,9): error CS0246: The type or namespace name 'ICloudinaryService' could not be found (are you missing a using directive or an assembly reference?) [D:\Ky_4\SWD\System_Smart-Service-master\Smart-Service\Service_BE\SmartService.Application\SmartService.Application.csproj]
+    0 Warning(s)
+    3 Error(s)
+
+Time Elapsed 00:00:00.90
