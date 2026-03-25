@@ -6,7 +6,7 @@ namespace SmartService.Application.Features.ServiceRequests.Commands.RequestComp
 public record RequestCompletionCommand(
     Guid ServiceRequestId,
     List<CompletionEvidenceDto> Evidences,
-    System.IO.Stream? ImageStream = null,
-    string? ImageFileName = null) : IRequest<Unit>;
+    string? UploadedImageUrl = null,
+    string? Notes = null) : IRequest<Unit>;
 
 public record CompletionEvidenceDto(string? ImageUrl, EvidenceType Type, string? Notes);

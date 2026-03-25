@@ -1,0 +1,8 @@
+{
+  "subCategoryId": "RE_VALUATION",
+  "levels": [
+    { "level": 1, "criteria": ["Nhà phổ thông"] },
+    { "level": 3, "criteria": ["Tài sản giá trị cao"] },
+    { "level": 5, "criteria": ["Tài sản đặc thù"] }
+  ]
+}

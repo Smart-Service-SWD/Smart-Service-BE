@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.StaticFiles;
 using Swashbuckle.AspNetCore.Annotations;
 using SmartService.API.Contracts;
 using SmartService.Application.Features.ServiceRequests.Commands.CancelServiceRequest;
@@ -29,10 +30,23 @@ namespace SmartService.API.Controllers;
 public class ServiceRequestsController : ControllerBase
 {
     private readonly IMediator _mediator;
+    private readonly IWebHostEnvironment _environment;
 
-    public ServiceRequestsController(IMediator mediator)
+    private static readonly HashSet<string> AllowedImageExtensions = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ".jpg",
+        ".jpeg",
+        ".png",
+        ".webp",
+        ".gif",
+        ".heic",
+        ".heif"
+    };
+
+    public ServiceRequestsController(IMediator mediator, IWebHostEnvironment environment)
     {
         _mediator = mediator;
+        _environment = environment;
     }
 
     /// <summary>
@@ -209,23 +223,77 @@ public class ServiceRequestsController : ControllerBase
         IFormFile? image,
         CancellationToken cancellationToken)
     {
-        Stream? imageStream = null;
+        string? uploadedImageUrl = null;
         if (image != null && image.Length > 0)
         {
-            imageStream = image.OpenReadStream();
+            var extension = System.IO.Path.GetExtension(image.FileName);
+            if (string.IsNullOrWhiteSpace(extension) || !AllowedImageExtensions.Contains(extension))
+            {
+                extension = ".jpg";
+            }
+
+            var webRootPath = _environment.WebRootPath;
+            if (string.IsNullOrWhiteSpace(webRootPath))
+            {
+                webRootPath = System.IO.Path.Combine(_environment.ContentRootPath, "wwwroot");
+            }
+
+            var uploadDirectory = System.IO.Path.Combine(webRootPath, "uploads", "completion-evidences");
+            System.IO.Directory.CreateDirectory(uploadDirectory);
+
+            var storedFileName = $"{Guid.NewGuid():N}{extension.ToLowerInvariant()}";
+            var filePath = System.IO.Path.Combine(uploadDirectory, storedFileName);
+
+            await using (var fileStream = new System.IO.FileStream(filePath, System.IO.FileMode.Create, System.IO.FileAccess.Write, System.IO.FileShare.None))
+            {
+                await image.CopyToAsync(fileStream, cancellationToken);
+            }
+
+            uploadedImageUrl = $"/uploads/completion-evidences/{storedFileName}";
         }
 
         var command = new RequestCompletionCommand(
             serviceRequestId,
             new List<CompletionEvidenceDto>(), // URL-based list empty for simple flow
-            imageStream,
-            image?.FileName);
+            uploadedImageUrl,
+            notes);
 
         await _mediator.Send(command, cancellationToken);
-        
-        if (imageStream != null) await imageStream.DisposeAsync();
-        
+
         return NoContent();
+    }
+
+    [AllowAnonymous]
+    [HttpGet("/uploads/completion-evidences/{fileName}")]
+    public IActionResult GetCompletionEvidenceImage([FromRoute] string fileName)
+    {
+        if (string.IsNullOrWhiteSpace(fileName) ||
+            fileName.Contains("..", StringComparison.Ordinal) ||
+            fileName.Contains('/') ||
+            fileName.Contains('\\'))
+        {
+            return BadRequest("Tên tệp không hợp lệ.");
+        }
+
+        var webRootPath = _environment.WebRootPath;
+        if (string.IsNullOrWhiteSpace(webRootPath))
+        {
+            webRootPath = System.IO.Path.Combine(_environment.ContentRootPath, "wwwroot");
+        }
+
+        var filePath = System.IO.Path.Combine(webRootPath, "uploads", "completion-evidences", fileName);
+        if (!System.IO.File.Exists(filePath))
+        {
+            return NotFound();
+        }
+
+        var contentTypeProvider = new FileExtensionContentTypeProvider();
+        if (!contentTypeProvider.TryGetContentType(filePath, out var contentType))
+        {
+            contentType = "application/octet-stream";
+        }
+
+        return PhysicalFile(filePath, contentType);
     }
 
     /// <summary>
@@ -248,10 +316,10 @@ public class ServiceRequestsController : ControllerBase
     [SwaggerOperation(Summary = "Staff từ chối hoàn tất", OperationId = "RejectCompletion")]
     public async Task<IActionResult> RejectCompletion(
         [FromRoute] Guid serviceRequestId,
-        [FromBody] RejectCompletionRequest request,
+        [FromBody] RejectCompletionRequest? request,
         CancellationToken cancellationToken)
     {
-        await _mediator.Send(new RejectCompletionCommand(serviceRequestId, request.Reason), cancellationToken);
+        await _mediator.Send(new RejectCompletionCommand(serviceRequestId, request?.Reason), cancellationToken);
         return NoContent();
     }
 

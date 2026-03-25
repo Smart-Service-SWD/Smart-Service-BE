@@ -1,0 +1,8 @@
+{
+  "subCategoryId": "RE_BROKERAGE",
+  "levels": [
+    { "level": 1, "criteria": ["Giao dịch đơn giản"] },
+    { "level": 3, "criteria": ["Nhiều bên tham gia"] },
+    { "level": 5, "criteria": ["Tranh chấp"] }
+  ]
+}

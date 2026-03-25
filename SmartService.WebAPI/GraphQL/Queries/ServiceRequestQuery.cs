@@ -30,6 +30,7 @@ public class ServiceRequestQuery
 
         return await db.ServiceRequests
             .AsNoTracking()
+            .Include(x => x.CompletionEvidences)
             .OrderByDescending(x => x.CreatedAt)
             .ToListAsync();
     }
@@ -54,6 +55,7 @@ public class ServiceRequestQuery
 
         var request = await db.ServiceRequests
             .AsNoTracking()
+            .Include(x => x.CompletionEvidences)
             .FirstOrDefaultAsync(x => x.Id == id);
 
         if (request == null)
@@ -101,6 +103,7 @@ public class ServiceRequestQuery
 
         return await db.ServiceRequests
             .AsNoTracking()
+            .Include(x => x.CompletionEvidences)
             .Where(x => x.CustomerId == customerId)
             .OrderByDescending(x => x.CreatedAt)
             .ToListAsync();
@@ -124,6 +127,7 @@ public class ServiceRequestQuery
 
         return await db.ServiceRequests
             .AsNoTracking()
+            .Include(x => x.CompletionEvidences)
             .Where(x => x.Status == status)
             .OrderByDescending(x => x.CreatedAt)
             .ToListAsync();
@@ -154,6 +158,7 @@ public class ServiceRequestQuery
 
         var query = db.ServiceRequests
             .AsNoTracking()
+            .Include(x => x.CompletionEvidences)
             .Where(x => x.CustomerId == userIdGuid);
 
         if (status.HasValue)

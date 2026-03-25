@@ -23,15 +23,24 @@ public class RequestCompletionHandler : IRequestHandler<RequestCompletionCommand
 
         serviceRequest.RequestCompletion();
 
-        // Handle File Uploaded Evidence (if any)
-        if (request.ImageStream != null && !string.IsNullOrWhiteSpace(request.ImageFileName))
+        // Replace previous completion evidence set so staff sees the latest submission only.
+        var existingEvidences = await _context.CompletionEvidences
+            .Where(x => x.ServiceRequestId == request.ServiceRequestId)
+            .ToListAsync(cancellationToken);
+        if (existingEvidences.Count > 0)
+        {
+            _context.CompletionEvidences.RemoveRange(existingEvidences);
+        }
+
+        // Handle uploaded evidence image
+        if (!string.IsNullOrWhiteSpace(request.UploadedImageUrl))
         {
             var uploadedEvidence = new CompletionEvidence(
                 serviceRequest.Id,
                 serviceRequest.AssignedProviderId ?? Guid.Empty,
-                $"local://{request.ImageFileName}", // Mock URL
+                request.UploadedImageUrl.Trim(),
                 EvidenceType.After,
-                "Ảnh bằng chứng tải lên từ thợ.");
+                string.IsNullOrWhiteSpace(request.Notes) ? null : request.Notes.Trim());
 
             _context.CompletionEvidences.Add(uploadedEvidence);
         }
@@ -39,10 +48,15 @@ public class RequestCompletionHandler : IRequestHandler<RequestCompletionCommand
         // Add URL-based evidences (legacy or additional)
         foreach (var ev in request.Evidences)
         {
+            if (string.IsNullOrWhiteSpace(ev.ImageUrl))
+            {
+                continue;
+            }
+
             var evidence = new CompletionEvidence(
                 serviceRequest.Id,
                 serviceRequest.AssignedProviderId ?? Guid.Empty,
-                ev.ImageUrl ?? "local://placeholder.png",
+                ev.ImageUrl.Trim(),
                 ev.Type,
                 ev.Notes);
             

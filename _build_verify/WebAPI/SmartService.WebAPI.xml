@@ -1,0 +1,931 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SmartService.WebAPI</name>
+    </assembly>
+    <members>
+        <member name="T:SmartService.API.Contracts.MoneyInput">
+            <summary>
+            Simple JSON input model for money values.
+            The API layer maps this DTO into the domain Money value object.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.Contracts.MoneyInput.#ctor(System.Decimal,System.String)">
+            <summary>
+            Simple JSON input model for money values.
+            The API layer maps this DTO into the domain Money value object.
+            </summary>
+        </member>
+        <member name="T:SmartService.API.Controllers.ActivityLogsController">
+            <summary>
+            Controller quản lý nhật ký hoạt động (Activity Logs)
+            </summary>
+        </member>
+        <member name="M:SmartService.API.Controllers.ActivityLogsController.Create(SmartService.Application.Features.ActivityLogs.Commands.Create.CreateActivityLogCommand,System.Threading.CancellationToken)">
+            <summary>
+            [CREATE] Tạo mới nhật ký hoạt động
+            </summary>
+            <param name="command">Thông tin nhật ký hoạt động cần tạo</param>
+            <param name="cancellationToken">Token hủy</param>
+            <returns>ID của nhật ký hoạt động vừa tạo</returns>
+            <response code="201">Tạo nhật ký hoạt động thành công</response>
+            <response code="400">Dữ liệu đầu vào không hợp lệ</response>
+        </member>
+        <member name="T:SmartService.API.Controllers.AgentCapabilitiesController">
+            <summary>
+            Controller quản lý khả năng đại lý (Agent Capabilities)
+            </summary>
+        </member>
+        <member name="M:SmartService.API.Controllers.AgentCapabilitiesController.Create(SmartService.Application.Features.AgentCapabilities.Commands.Create.CreateAgentCapabilityCommand,System.Threading.CancellationToken)">
+            <summary>
+            [CREATE] Tạo mới khả năng đại lý
+            </summary>
+            <param name="command">Thông tin khả năng đại lý cần tạo</param>
+            <param name="cancellationToken">Token hủy</param>
+            <returns>ID của khả năng đại lý vừa tạo</returns>
+            <response code="201">Tạo khả năng đại lý thành công</response>
+            <response code="400">Dữ liệu đầu vào không hợp lệ</response>
+        </member>
+        <member name="T:SmartService.API.Controllers.AssignmentsController">
+            <summary>
+            Controller quản lý phân công (Assignments)
+            </summary>
+        </member>
+        <member name="M:SmartService.API.Controllers.AssignmentsController.Create(SmartService.API.Controllers.CreateAssignmentRequest,System.Threading.CancellationToken)">
+            <summary>
+            [CREATE] Tạo mới phân công
+            </summary>
+            <param name="request">Thông tin phân công cần tạo</param>
+            <param name="cancellationToken">Token hủy</param>
+            <returns>ID của phân công vừa tạo</returns>
+            <response code="201">Tạo phân công thành công</response>
+            <response code="400">Dữ liệu đầu vào không hợp lệ</response>
+        </member>
+        <member name="T:SmartService.API.Controllers.AuthController">
+            <summary>
+            Controller quản lý authentication (Đăng ký, Đăng nhập, Refresh Token, Đăng xuất)
+            </summary>
+        </member>
+        <member name="M:SmartService.API.Controllers.AuthController.Register(SmartService.API.Controllers.RegisterRequest,System.Threading.CancellationToken)">
+            <summary>
+            [POST] Đăng ký tài khoản mới
+            </summary>
+            <param name="request">Thông tin đăng ký</param>
+            <param name="cancellationToken">Token hủy</param>
+            <returns>Kết quả authentication với access token và refresh token</returns>
+            <response code="200">Đăng ký thành công</response>
+            <response code="400">Dữ liệu đầu vào không hợp lệ hoặc email đã tồn tại</response>
+        </member>
+        <member name="M:SmartService.API.Controllers.AuthController.Login(SmartService.API.Controllers.LoginRequest,System.Threading.CancellationToken)">
+            <summary>
+            [POST] Đăng nhập
+            </summary>
+            <param name="request">Thông tin đăng nhập</param>
+            <param name="cancellationToken">Token hủy</param>
+            <returns>Kết quả authentication với access token và refresh token</returns>
+            <response code="200">Đăng nhập thành công</response>
+            <response code="400">Dữ liệu đầu vào không hợp lệ</response>
+            <response code="401">Email hoặc mật khẩu không đúng</response>
+        </member>
+        <member name="M:SmartService.API.Controllers.AuthController.RefreshToken(SmartService.API.Controllers.RefreshTokenRequest,System.Threading.CancellationToken)">
+            <summary>
+            [POST] Làm mới access token
+            </summary>
+            <param name="request">Refresh token</param>
+            <param name="cancellationToken">Token hủy</param>
+            <returns>Access token và refresh token mới</returns>
+            <response code="200">Refresh token thành công</response>
+            <response code="400">Refresh token không hợp lệ hoặc đã hết hạn</response>
+        </member>
+        <member name="M:SmartService.API.Controllers.AuthController.Logout(SmartService.API.Controllers.LogoutRequest,System.Threading.CancellationToken)">
+            <summary>
+            [POST] Đăng xuất
+            </summary>
+            <param name="request">Refresh token cần revoke</param>
+            <param name="cancellationToken">Token hủy</param>
+            <returns>Kết quả đăng xuất</returns>
+            <response code="200">Đăng xuất thành công</response>
+            <response code="400">Refresh token không hợp lệ</response>
+        </member>
+        <member name="M:SmartService.API.Controllers.AuthController.UpdateUserRole(System.Guid,SmartService.API.Controllers.UpdateUserRoleRequest,System.Threading.CancellationToken)">
+            <summary>
+            [PATCH] Cập nhật vai trò (role) của tài khoản người dùng.
+            </summary>
+            <remarks>
+            - Admin có thể cập nhật sang bất kỳ role nào (Customer, Staff, Agent, Admin).<br/>
+            - Staff chỉ được phép cập nhật role của user khác sang Agent.<br/>
+            - Dùng để nâng cấp tài khoản Customer thành Staff/Agent/Admin theo phân quyền.
+            </remarks>
+        </member>
+        <member name="M:SmartService.API.Controllers.AuthController.LockUser(System.Guid,SmartService.API.Controllers.LockUserRequest,System.Threading.CancellationToken)">
+            <summary>
+            [PATCH] Khóa hoặc mở khóa tài khoản Staff/Agent (Admin only)
+            </summary>
+            <remarks>
+            - Chỉ Admin mới được phép thực hiện action này.<br/>
+            - Chỉ áp dụng cho tài khoản có vai trò Staff hoặc Agent.<br/>
+            - Khi tài khoản bị khóa, người dùng không thể đăng nhập.<br/>
+            - Truyền <c>isLocked: true</c> để khóa, <c>isLocked: false</c> để mở khóa.
+            </remarks>
+        </member>
+        <member name="M:SmartService.API.Controllers.AuthController.UpdateProfile(SmartService.API.Controllers.UpdateProfileRequest,System.Threading.CancellationToken)">
+            <summary>
+            [PUT] Cập nhật hồ sơ cá nhân
+            </summary>
+            <param name="request">Thông tin cần cập nhật</param>
+            <param name="cancellationToken">Token hủy</param>
+            <returns>True nếu cập nhật thành công</returns>
+        </member>
+        <member name="M:SmartService.API.Controllers.AuthController.ChangePassword(SmartService.API.Controllers.ChangePasswordRequest,System.Threading.CancellationToken)">
+            <summary>
+            [PUT] Đổi mật khẩu
+            </summary>
+            <param name="request">Mật khẩu hiện tại và mật khẩu mới</param>
+            <param name="cancellationToken">Token hủy</param>
+            <returns>True nếu đổi mật khẩu thành công</returns>
+            <response code="200">Đổi mật khẩu thành công</response>
+            <response code="400">Mật khẩu mới không hợp lệ</response>
+            <response code="401">Mật khẩu hiện tại không đúng hoặc chưa đăng nhập</response>
+        </member>
+        <member name="M:SmartService.API.Controllers.AuthController.ForgotPassword(SmartService.API.Controllers.ForgotPasswordRequest,System.Threading.CancellationToken)">
+            <summary>
+            [POST] Quên mật khẩu - Gửi OTP về email
+            </summary>
+            <remarks>
+            - Nhập địa chỉ email tài khoản.<br/>
+            - Hệ thống sẽ gửi mã OTP 6 chữ số về Gmail đăng ký.<br/>
+            - Mã OTP có thời hạn <strong>15 phút</strong>.<br/>
+            - Nếu email không tồn tại trong hệ thống, API vẫn trả về 200 (không lộ thông tin).
+            </remarks>
+        </member>
+        <member name="M:SmartService.API.Controllers.AuthController.ResetPassword(SmartService.API.Controllers.ResetPasswordRequest,System.Threading.CancellationToken)">
+            <summary>
+            [POST] Đặt lại mật khẩu bằng OTP
+            </summary>
+            <remarks>
+            - Nhập email, mã OTP đã nhận qua Gmail và mật khẩu mới.<br/>
+            - Mã OTP chỉ sử dụng được <strong>1 lần</strong> và hết hạn sau 15 phút.<br/>
+            - Sau khi đặt lại thành công, OTP sẽ bị xóa.
+            </remarks>
+        </member>
+        <member name="T:SmartService.API.Controllers.RegisterRequest">
+            <summary>
+            Request model cho đăng ký
+            </summary>
+            <param name="Email">Email của người dùng</param>
+            <param name="Password">Mật khẩu (tối thiểu 6 ký tự)</param>
+            <param name="FullName">Họ và tên</param>
+            <param name="PhoneNumber">Số điện thoại</param>
+        </member>
+        <member name="M:SmartService.API.Controllers.RegisterRequest.#ctor(System.String,System.String,System.String,System.String)">
+            <summary>
+            Request model cho đăng ký
+            </summary>
+            <param name="Email">Email của người dùng</param>
+            <param name="Password">Mật khẩu (tối thiểu 6 ký tự)</param>
+            <param name="FullName">Họ và tên</param>
+            <param name="PhoneNumber">Số điện thoại</param>
+        </member>
+        <member name="P:SmartService.API.Controllers.RegisterRequest.Email">
+            <summary>Email của người dùng</summary>
+        </member>
+        <member name="P:SmartService.API.Controllers.RegisterRequest.Password">
+            <summary>Mật khẩu (tối thiểu 6 ký tự)</summary>
+        </member>
+        <member name="P:SmartService.API.Controllers.RegisterRequest.FullName">
+            <summary>Họ và tên</summary>
+        </member>
+        <member name="P:SmartService.API.Controllers.RegisterRequest.PhoneNumber">
+            <summary>Số điện thoại</summary>
+        </member>
+        <member name="T:SmartService.API.Controllers.LoginRequest">
+            <summary>
+            Request model cho đăng nhập
+            </summary>
+        </member>
+        <member name="M:SmartService.API.Controllers.LoginRequest.#ctor(System.String,System.String)">
+            <summary>
+            Request model cho đăng nhập
+            </summary>
+        </member>
+        <member name="T:SmartService.API.Controllers.RefreshTokenRequest">
+            <summary>
+            Request model cho refresh token
+            </summary>
+        </member>
+        <member name="M:SmartService.API.Controllers.RefreshTokenRequest.#ctor(System.String)">
+            <summary>
+            Request model cho refresh token
+            </summary>
+        </member>
+        <member name="T:SmartService.API.Controllers.LogoutRequest">
+            <summary>
+            Request model cho logout
+            </summary>
+        </member>
+        <member name="M:SmartService.API.Controllers.LogoutRequest.#ctor(System.String)">
+            <summary>
+            Request model cho logout
+            </summary>
+        </member>
+        <member name="T:SmartService.API.Controllers.UpdateUserRoleRequest">
+            <summary>
+            Request model cho cập nhật vai trò tài khoản.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.Controllers.UpdateUserRoleRequest.#ctor(System.String)">
+            <summary>
+            Request model cho cập nhật vai trò tài khoản.
+            </summary>
+        </member>
+        <member name="T:SmartService.API.Controllers.UpdateProfileRequest">
+            <summary>
+            Request model cho cập nhật hồ sơ cá nhân.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.Controllers.UpdateProfileRequest.#ctor(System.String,System.String)">
+            <summary>
+            Request model cho cập nhật hồ sơ cá nhân.
+            </summary>
+        </member>
+        <member name="T:SmartService.API.Controllers.ChangePasswordRequest">
+            <summary>
+            Request model cho đổi mật khẩu.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.Controllers.ChangePasswordRequest.#ctor(System.String,System.String)">
+            <summary>
+            Request model cho đổi mật khẩu.
+            </summary>
+        </member>
+        <member name="T:SmartService.API.Controllers.LockUserRequest">
+            <summary>
+            Request model cho khóa / mở khóa tài khoản.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.Controllers.LockUserRequest.#ctor(System.Boolean)">
+            <summary>
+            Request model cho khóa / mở khóa tài khoản.
+            </summary>
+        </member>
+        <member name="T:SmartService.API.Controllers.ForgotPasswordRequest">
+            <summary>
+            Request model cho quên mật khẩu.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.Controllers.ForgotPasswordRequest.#ctor(System.String)">
+            <summary>
+            Request model cho quên mật khẩu.
+            </summary>
+        </member>
+        <member name="T:SmartService.API.Controllers.ResetPasswordRequest">
+            <summary>
+            Request model cho đặt lại mật khẩu.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.Controllers.ResetPasswordRequest.#ctor(System.String,System.String,System.String)">
+            <summary>
+            Request model cho đặt lại mật khẩu.
+            </summary>
+        </member>
+        <member name="T:SmartService.API.Controllers.MatchingResultsController">
+            <summary>
+            Controller quản lý kết quả khớp (Matching Results)
+            </summary>
+        </member>
+        <member name="M:SmartService.API.Controllers.MatchingResultsController.Create(SmartService.Application.Features.MatchingResults.Commands.Create.CreateMatchingResultCommand,System.Threading.CancellationToken)">
+            <summary>
+            [CREATE] Tạo mới kết quả khớp
+            </summary>
+            <param name="command">Thông tin kết quả khớp cần tạo</param>
+            <param name="cancellationToken">Token hủy</param>
+            <returns>ID của kết quả khớp vừa tạo</returns>
+            <response code="201">Tạo kết quả khớp thành công</response>
+            <response code="400">Dữ liệu đầu vào không hợp lệ</response>
+        </member>
+        <member name="T:SmartService.API.Controllers.OcrController">
+            <summary>
+            Controller cung cấp chức năng OCR (trích xuất văn bản từ ảnh) sử dụng Tesseract.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.Controllers.OcrController.Scan(Microsoft.AspNetCore.Http.IFormFile,System.Threading.CancellationToken)">
+            <summary>
+            [OCR] Trích xuất văn bản từ ảnh
+            </summary>
+            <param name="file">File ảnh cần quét (JPEG, PNG, BMP,...)</param>
+            <param name="cancellationToken">Token hủy</param>
+            <returns>Văn bản được trích xuất từ ảnh</returns>
+            <response code="200">Trích xuất văn bản thành công</response>
+            <response code="400">File không hợp lệ hoặc không có file</response>
+        </member>
+        <member name="T:SmartService.API.Controllers.OcrScanResponse">
+            <summary>Kết quả OCR trả về cho client.</summary>
+        </member>
+        <member name="M:SmartService.API.Controllers.OcrScanResponse.#ctor(System.Boolean,System.String,System.Int32)">
+            <summary>Kết quả OCR trả về cho client.</summary>
+        </member>
+        <member name="T:SmartService.API.Controllers.ServiceAgentsController">
+            <summary>
+            Controller quản lý đại lý dịch vụ (Service Agents)
+            </summary>
+        </member>
+        <member name="M:SmartService.API.Controllers.ServiceAgentsController.Create(SmartService.Application.Features.ServiceAgents.Commands.Create.CreateServiceAgentCommand,System.Threading.CancellationToken)">
+            <summary>
+            [CREATE] Tạo mới đại lý dịch vụ
+            </summary>
+            <param name="command">Thông tin đại lý dịch vụ cần tạo</param>
+            <param name="cancellationToken">Token hủy</param>
+            <returns>ID của đại lý dịch vụ vừa tạo</returns>
+        </member>
+        <member name="M:SmartService.API.Controllers.ServiceAgentsController.Search(System.Nullable{System.Guid},System.Nullable{System.Guid},System.Nullable{System.Int32},System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            [SEARCH] Tìm kiếm thợ với phân trang và sắp xếp theo score
+            </summary>
+        </member>
+        <member name="T:SmartService.API.Controllers.ServiceAnalysisController">
+            <summary>
+            Controller phân tích yêu cầu dịch vụ bằng AI (Ollama).
+            Hỗ trợ phân tích từ text thuần hoặc kết hợp với ảnh (OCR).
+            </summary>
+        </member>
+        <member name="M:SmartService.API.Controllers.ServiceAnalysisController.Analyze(SmartService.API.Controllers.AnalysisRequest)">
+            <summary>
+            [ANALYZE] Phân tích yêu cầu dịch vụ bằng AI (chỉ text)
+            </summary>
+            <param name="request">Mô tả yêu cầu dịch vụ</param>
+            <returns>Kết quả phân tích AI (độ phức tạp, rủi ro, tóm tắt)</returns>
+            <response code="200">Phân tích thành công</response>
+        </member>
+        <member name="M:SmartService.API.Controllers.ServiceAnalysisController.AnalyzeWithImage(System.String,Microsoft.AspNetCore.Http.IFormFile,System.Threading.CancellationToken)">
+             <summary>
+             [ANALYZE] Phân tích yêu cầu dịch vụ bằng AI kết hợp OCR ảnh
+             </summary>
+             <remarks>
+             Nhận multipart/form-data gồm:
+             - description (string, bắt buộc): mô tả vấn đề của user
+             - image (file, tùy chọn): ảnh tài liệu/ảnh chụp vấn đề để OCR trích xuất text
+            
+             Nếu có ảnh, backend sẽ OCR ảnh → kết hợp với description → gửi cho AI.
+             Dùng cho category IT và Law nơi user có thể đính kèm ảnh tài liệu.
+             </remarks>
+             <response code="200">Phân tích thành công</response>
+             <response code="400">Thiếu description</response>
+        </member>
+        <member name="T:SmartService.API.Controllers.AnalysisRequest">
+            <summary>Model yêu cầu phân tích AI (chỉ text).</summary>
+        </member>
+        <member name="M:SmartService.API.Controllers.AnalysisRequest.#ctor(System.String)">
+            <summary>Model yêu cầu phân tích AI (chỉ text).</summary>
+        </member>
+        <member name="T:SmartService.API.Controllers.ServiceAttachmentsController">
+            <summary>
+            Controller quản lý tệp đính kèm dịch vụ (Service Attachments)
+            </summary>
+        </member>
+        <member name="M:SmartService.API.Controllers.ServiceAttachmentsController.Create(SmartService.Application.Features.ServiceAttachments.Commands.Create.CreateServiceAttachmentCommand,System.Threading.CancellationToken)">
+            <summary>
+            [CREATE] Tạo mới tệp đính kèm dịch vụ
+            </summary>
+            <param name="command">Thông tin tệp đính kèm dịch vụ cần tạo</param>
+            <param name="cancellationToken">Token hủy</param>
+            <returns>ID của tệp đính kèm dịch vụ vừa tạo</returns>
+            <response code="201">Tạo tệp đính kèm dịch vụ thành công</response>
+            <response code="400">Dữ liệu đầu vào không hợp lệ</response>
+        </member>
+        <member name="T:SmartService.API.Controllers.ServiceCategoriesController">
+            <summary>
+            Controller quản lý danh mục dịch vụ (Service Categories)
+            </summary>
+        </member>
+        <member name="M:SmartService.API.Controllers.ServiceCategoriesController.Create(SmartService.Application.Features.ServiceCategories.Commands.Create.CreateServiceCategoryCommand,System.Threading.CancellationToken)">
+            <summary>
+            [CREATE] Tạo mới danh mục dịch vụ
+            </summary>
+            <param name="command">Thông tin danh mục dịch vụ cần tạo</param>
+            <param name="cancellationToken">Token hủy</param>
+            <returns>ID của danh mục dịch vụ vừa tạo</returns>
+            <response code="201">Tạo danh mục dịch vụ thành công</response>
+            <response code="400">Dữ liệu đầu vào không hợp lệ</response>
+        </member>
+        <member name="T:SmartService.API.Controllers.ServiceFeedbacksController">
+            <summary>
+            Controller quản lý phản hồi dịch vụ (Service Feedbacks)
+            </summary>
+        </member>
+        <member name="M:SmartService.API.Controllers.ServiceFeedbacksController.Create(SmartService.Application.Features.ServiceFeedbacks.Commands.Create.CreateServiceFeedbackCommand,System.Threading.CancellationToken)">
+            <summary>
+            [CREATE] Tạo mới phản hồi dịch vụ
+            </summary>
+            <param name="command">Thông tin phản hồi dịch vụ cần tạo</param>
+            <param name="cancellationToken">Token hủy</param>
+            <returns>ID của phản hồi dịch vụ vừa tạo</returns>
+            <response code="201">Tạo phản hồi dịch vụ thành công</response>
+            <response code="400">Dữ liệu đầu vào không hợp lệ</response>
+        </member>
+        <member name="T:SmartService.API.Controllers.ServiceRequestsController">
+            <summary>
+            Controller quản lý yêu cầu dịch vụ (Service Requests)
+            </summary>
+        </member>
+        <member name="M:SmartService.API.Controllers.ServiceRequestsController.Create(SmartService.API.Controllers.CreateServiceRequestFormInput,Microsoft.AspNetCore.Http.IFormFile,System.Threading.CancellationToken)">
+             <summary>
+             [CREATE] Tạo mới yêu cầu dịch vụ (kèm OCR + AI phân tích tự động)
+             </summary>
+             <remarks>
+             Nhận **multipart/form-data** với các field:
+             - `customerId` (Guid, bắt buộc)
+             - `categoryId` (Guid, bắt buộc)
+             - `serviceDefinitionId` (Guid, bắt buộc) – dịch vụ cụ thể mà khách chọn
+             - `description` (string, bắt buộc) – mô tả vấn đề
+             - `addressText` (string, tuỳ chọn)
+             - `image` (file, tuỳ chọn) – ảnh tài liệu/lỗi để OCR trích xuất text
+            
+             **Backend sẽ tự động:**
+             1. OCR ảnh (nếu có) → trích xuất text
+             2. Gộp text OCR + description → gửi AI phân tích
+             3. Lưu ServiceRequest với complexity từ AI
+             4. Lưu ServiceAttachment (nếu có ảnh)
+             5. Trả về kết quả gồm cả AI analysis
+             </remarks>
+             <response code="201">Tạo yêu cầu thành công, kèm kết quả AI</response>
+             <response code="400">Dữ liệu đầu vào không hợp lệ</response>
+        </member>
+        <member name="M:SmartService.API.Controllers.ServiceRequestsController.AssignProvider(System.Guid,SmartService.API.Controllers.AssignProviderRequest,System.Threading.CancellationToken)">
+            <summary>
+            [UPDATE] Gán nhà cung cấp cho yêu cầu dịch vụ
+            </summary>
+        </member>
+        <member name="M:SmartService.API.Controllers.ServiceRequestsController.EvaluateComplexity(System.Guid,SmartService.API.Controllers.EvaluateComplexityRequest,System.Threading.CancellationToken)">
+            <summary>
+            [UPDATE] Đánh giá độ phức tạp của yêu cầu dịch vụ
+            </summary>
+        </member>
+        <member name="M:SmartService.API.Controllers.ServiceRequestsController.RequestDeposit(System.Guid,SmartService.API.Controllers.RequestDepositInput,System.Threading.CancellationToken)">
+            <summary>
+            [UPDATE] Staff yêu cầu khách hàng đặt cọc
+            </summary>
+        </member>
+        <member name="M:SmartService.API.Controllers.ServiceRequestsController.Start(System.Guid,System.Threading.CancellationToken)">
+            <summary>
+            [UPDATE] Bắt đầu xử lý yêu cầu dịch vụ đã được phân công.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.Controllers.ServiceRequestsController.RequestCompletion(System.Guid,System.String,Microsoft.AspNetCore.Http.IFormFile,System.Threading.CancellationToken)">
+            <summary>
+            [UPDATE] Thợ nộp bằng chứng và yêu cầu hoàn tất công việc.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.Controllers.ServiceRequestsController.ApproveCompletion(System.Guid,System.Threading.CancellationToken)">
+            <summary>
+            [UPDATE] Staff duyệt hoàn tất công việc.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.Controllers.ServiceRequestsController.RejectCompletion(System.Guid,SmartService.API.Controllers.RejectCompletionRequest,System.Threading.CancellationToken)">
+            <summary>
+            [UPDATE] Staff từ chối hoàn tất công việc.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.Controllers.ServiceRequestsController.Cancel(System.Guid,System.Threading.CancellationToken)">
+            <summary>
+            [UPDATE] Khách hàng hủy yêu cầu khi staff chưa xác nhận độ phức tạp.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.Controllers.ServiceRequestsController.ConfirmPaid(System.Guid,System.Threading.CancellationToken)">
+            <summary>
+            [UPDATE] Staff xác nhận khách đã thanh toán (cọc hoặc trả nốt).
+            </summary>
+        </member>
+        <member name="M:SmartService.API.Controllers.ServiceRequestsController.RequestFinalPayment(System.Guid,System.Threading.CancellationToken)">
+            <summary>
+            [UPDATE] Staff yêu cầu khách thanh toán phần còn lại sau khi hoàn thành.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.Controllers.ServiceRequestsController.Payout(System.Guid,System.Threading.CancellationToken)">
+            <summary>
+            [POST] Staff tất toán tiền cho thợ.
+            </summary>
+        </member>
+        <member name="T:SmartService.API.Controllers.CreateServiceRequestFormInput">
+            <summary>Form input cho Create Service Request (multipart/form-data).
+            ComplexityLevel không còn là input – AI tự phân tích và set.</summary>
+        </member>
+        <member name="M:SmartService.API.Controllers.CreateServiceRequestFormInput.#ctor(System.Guid,System.Guid,System.Guid,System.String,System.String)">
+            <summary>Form input cho Create Service Request (multipart/form-data).
+            ComplexityLevel không còn là input – AI tự phân tích và set.</summary>
+        </member>
+        <member name="T:SmartService.API.Controllers.AssignProviderRequest">
+            <summary>Model yêu cầu gán nhà cung cấp cho yêu cầu dịch vụ.</summary>
+        </member>
+        <member name="M:SmartService.API.Controllers.AssignProviderRequest.#ctor(System.Guid,SmartService.API.Contracts.MoneyInput)">
+            <summary>Model yêu cầu gán nhà cung cấp cho yêu cầu dịch vụ.</summary>
+        </member>
+        <member name="T:SmartService.API.Controllers.EvaluateComplexityRequest">
+            <summary>Model yêu cầu đánh giá độ phức tạp của yêu cầu dịch vụ.</summary>
+        </member>
+        <member name="M:SmartService.API.Controllers.EvaluateComplexityRequest.#ctor(SmartService.API.Controllers.EvaluateComplexityRequest.ServiceComplexityInput,System.Nullable{System.Guid},SmartService.API.Contracts.MoneyInput)">
+            <summary>Model yêu cầu đánh giá độ phức tạp của yêu cầu dịch vụ.</summary>
+        </member>
+        <member name="T:SmartService.API.Controllers.EvaluateComplexityRequest.ServiceComplexityInput">
+            <summary>Input đơn giản cho ServiceComplexity (1–5).</summary>
+        </member>
+        <member name="M:SmartService.API.Controllers.EvaluateComplexityRequest.ServiceComplexityInput.#ctor(System.Int32)">
+            <summary>Input đơn giản cho ServiceComplexity (1–5).</summary>
+        </member>
+        <member name="T:SmartService.API.Controllers.ServicesController">
+            <summary>
+            Controller quản lý dịch vụ (Service Definitions) — chỉ dùng cho commands (Create/Update/Delete).
+            Queries dùng GraphQL: getServiceDefinitions, getServiceDefinitionById, getServiceDefinitionsByCategory.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.Controllers.ServicesController.Create(SmartService.Application.Features.Services.Commands.CreateServiceDefinition.CreateServiceDefinitionCommand,System.Threading.CancellationToken)">
+            <summary>
+            [CREATE] Tạo mới dịch vụ
+            </summary>
+        </member>
+        <member name="M:SmartService.API.Controllers.ServicesController.Update(System.Guid,SmartService.API.Controllers.UpdateServiceDefinitionRequest,System.Threading.CancellationToken)">
+            <summary>
+            [UPDATE] Cập nhật thông tin dịch vụ
+            </summary>
+        </member>
+        <member name="M:SmartService.API.Controllers.ServicesController.Delete(System.Guid,System.Threading.CancellationToken)">
+            <summary>
+            [DELETE] Xóa dịch vụ
+            </summary>
+        </member>
+        <member name="T:SmartService.API.Controllers.UpdateServiceDefinitionRequest">
+            <summary>
+            Model request cập nhật dịch vụ
+            </summary>
+        </member>
+        <member name="M:SmartService.API.Controllers.UpdateServiceDefinitionRequest.#ctor(System.String,System.String,System.Decimal,System.Int32,System.Boolean,System.Int32[],System.Nullable{System.Boolean})">
+            <summary>
+            Model request cập nhật dịch vụ
+            </summary>
+        </member>
+        <member name="T:SmartService.API.Controllers.UsersController">
+            <summary>
+            Controller quản lý người dùng (Users)
+            </summary>
+        </member>
+        <member name="M:SmartService.API.Controllers.UsersController.CreateCustomer(SmartService.Application.Features.Users.Commands.CreateCustomer.CreateCustomerCommand,System.Threading.CancellationToken)">
+            <summary>
+            [CREATE] Tạo mới khách hàng (Customer)
+            </summary>
+            <param name="command">Thông tin khách hàng cần tạo</param>
+            <param name="cancellationToken">Token hủy</param>
+            <returns>ID của khách hàng vừa tạo</returns>
+            <response code="201">Tạo khách hàng thành công</response>
+            <response code="400">Dữ liệu đầu vào không hợp lệ</response>
+        </member>
+        <member name="M:SmartService.API.Controllers.UsersController.CreateAgent(SmartService.Application.Features.Users.Commands.CreateAgent.CreateAgentCommand,System.Threading.CancellationToken)">
+            <summary>
+            [CREATE] Tạo mới đại lý (Agent)
+            </summary>
+            <param name="command">Thông tin đại lý cần tạo</param>
+            <param name="cancellationToken">Token hủy</param>
+            <returns>ID của đại lý vừa tạo</returns>
+            <response code="201">Tạo đại lý thành công</response>
+            <response code="400">Dữ liệu đầu vào không hợp lệ</response>
+        </member>
+        <member name="M:SmartService.API.Controllers.UsersController.CreateStaff(SmartService.Application.Features.Users.Commands.CreateStaff.CreateStaffCommand,System.Threading.CancellationToken)">
+            <summary>
+            [CREATE] Tạo mới nhân viên (Staff)
+            </summary>
+            <param name="command">Thông tin nhân viên cần tạo</param>
+            <param name="cancellationToken">Token hủy</param>
+            <returns>ID của nhân viên vừa tạo</returns>
+            <response code="201">Tạo nhân viên thành công</response>
+            <response code="400">Dữ liệu đầu vào không hợp lệ</response>
+        </member>
+        <member name="M:SmartService.API.GraphQL.Queries.ActivityLogQuery.GetActivityLogs(Microsoft.EntityFrameworkCore.IDbContextFactory{SmartService.Infrastructure.Persistence.AppDbContext})">
+            <summary>
+            Lấy danh sách tất cả nhật ký hoạt động trong hệ thống, sắp xếp theo thời gian tạo mới nhất.
+            Yêu cầu quyền: Staff hoặc Admin.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.GraphQL.Queries.ActivityLogQuery.GetActivityLogById(System.Guid,Microsoft.EntityFrameworkCore.IDbContextFactory{SmartService.Infrastructure.Persistence.AppDbContext})">
+            <summary>
+            Lấy thông tin chi tiết của một nhật ký hoạt động theo ID (hành động, thời gian, người thực hiện).
+            Yêu cầu: Đã đăng nhập.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.GraphQL.Queries.ActivityLogQuery.GetActivityLogsByServiceRequestId(System.Guid,Microsoft.EntityFrameworkCore.IDbContextFactory{SmartService.Infrastructure.Persistence.AppDbContext})">
+            <summary>
+            Lấy danh sách nhật ký hoạt động của một yêu cầu dịch vụ cụ thể, sắp xếp theo thời gian tạo mới nhất.
+            Yêu cầu: Đã đăng nhập.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.GraphQL.Queries.AgentCapabilityQuery.GetAgentCapabilities(Microsoft.EntityFrameworkCore.IDbContextFactory{SmartService.Infrastructure.Persistence.AppDbContext})">
+            <summary>
+            Lấy danh sách tất cả khả năng/năng lực của các nhà cung cấp dịch vụ trong hệ thống.
+            Yêu cầu: Đã đăng nhập.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.GraphQL.Queries.AgentCapabilityQuery.GetAgentCapabilityById(System.Guid,Microsoft.EntityFrameworkCore.IDbContextFactory{SmartService.Infrastructure.Persistence.AppDbContext})">
+            <summary>
+            Lấy thông tin chi tiết của một khả năng/năng lực của nhà cung cấp dịch vụ theo ID (danh mục, độ phức tạp hỗ trợ).
+            Yêu cầu: Đã đăng nhập.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.GraphQL.Queries.AgentCapabilityQuery.GetCapabilitiesByAgentId(System.Guid,Microsoft.EntityFrameworkCore.IDbContextFactory{SmartService.Infrastructure.Persistence.AppDbContext})">
+            <summary>
+            Lấy danh sách tất cả khả năng/năng lực của một nhà cung cấp dịch vụ cụ thể.
+            Yêu cầu: Đã đăng nhập.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.GraphQL.Queries.AgentCapabilityQuery.GetCapabilitiesByCategoryId(System.Guid,Microsoft.EntityFrameworkCore.IDbContextFactory{SmartService.Infrastructure.Persistence.AppDbContext})">
+            <summary>
+            Lấy danh sách tất cả khả năng/năng lực của các nhà cung cấp dịch vụ trong một danh mục dịch vụ cụ thể.
+            Yêu cầu: Đã đăng nhập.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.GraphQL.Queries.AssignmentQuery.GetAssignments(Microsoft.EntityFrameworkCore.IDbContextFactory{SmartService.Infrastructure.Persistence.AppDbContext})">
+            <summary>
+            Lấy danh sách tất cả các phân công dịch vụ trong hệ thống, sắp xếp theo thời gian phân công mới nhất.
+            Yêu cầu quyền: Staff hoặc Admin.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.GraphQL.Queries.AssignmentQuery.GetAssignmentById(System.Guid,Microsoft.EntityFrameworkCore.IDbContextFactory{SmartService.Infrastructure.Persistence.AppDbContext})">
+            <summary>
+            Lấy thông tin chi tiết của một phân công dịch vụ theo ID (yêu cầu dịch vụ, nhà cung cấp, chi phí ước tính).
+            Yêu cầu: Đã đăng nhập.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.GraphQL.Queries.AssignmentQuery.GetAssignmentsByServiceRequestId(System.Guid,Microsoft.EntityFrameworkCore.IDbContextFactory{SmartService.Infrastructure.Persistence.AppDbContext})">
+            <summary>
+            Lấy danh sách các phân công dịch vụ của một yêu cầu dịch vụ cụ thể.
+            Yêu cầu: Đã đăng nhập.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.GraphQL.Queries.AssignmentQuery.GetAssignmentsByAgentId(System.Guid,Microsoft.EntityFrameworkCore.IDbContextFactory{SmartService.Infrastructure.Persistence.AppDbContext})">
+            <summary>
+            Lấy danh sách các phân công dịch vụ của một nhà cung cấp dịch vụ cụ thể, sắp xếp theo thời gian phân công mới nhất.
+            Yêu cầu quyền: Agent (chỉ xem được của mình), Staff hoặc Admin (xem được tất cả).
+            </summary>
+        </member>
+        <member name="T:SmartService.API.GraphQL.Queries.DashboardQuery">
+            <summary>
+            GraphQL queries for admin dashboard summary.
+            Provides aggregated statistics about users, services, requests, and revenue.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.GraphQL.Queries.DashboardQuery.GetDashboardSummary(Microsoft.EntityFrameworkCore.IDbContextFactory{SmartService.Infrastructure.Persistence.AppDbContext})">
+            <summary>
+            Lấy tổng quan thống kê hệ thống cho admin dashboard.
+            Bao gồm: tổng users, staff, agents, services, requests, revenue.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.GraphQL.Queries.MatchingResultQuery.GetMatchingResults(Microsoft.EntityFrameworkCore.IDbContextFactory{SmartService.Infrastructure.Persistence.AppDbContext})">
+            <summary>
+            Lấy danh sách tất cả kết quả khớp dịch vụ trong hệ thống (kết quả so khớp giữa yêu cầu dịch vụ và nhà cung cấp).
+            Yêu cầu quyền: Staff hoặc Admin.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.GraphQL.Queries.MatchingResultQuery.GetMatchingResultById(System.Guid,Microsoft.EntityFrameworkCore.IDbContextFactory{SmartService.Infrastructure.Persistence.AppDbContext})">
+            <summary>
+            Lấy thông tin chi tiết của một kết quả khớp dịch vụ theo ID (điểm khớp, nhà cung cấp được khuyến nghị).
+            Yêu cầu: Đã đăng nhập.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.GraphQL.Queries.MatchingResultQuery.GetMatchingResultsByServiceRequestId(System.Guid,Microsoft.EntityFrameworkCore.IDbContextFactory{SmartService.Infrastructure.Persistence.AppDbContext})">
+            <summary>
+            Lấy danh sách kết quả khớp dịch vụ của một yêu cầu dịch vụ cụ thể, sắp xếp theo điểm khớp từ cao xuống thấp.
+            Yêu cầu: Đã đăng nhập.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.GraphQL.Queries.MatchingResultQuery.GetRecommendedMatches(System.Guid,Microsoft.EntityFrameworkCore.IDbContextFactory{SmartService.Infrastructure.Persistence.AppDbContext})">
+            <summary>
+            Lấy danh sách các nhà cung cấp dịch vụ được khuyến nghị cho một yêu cầu dịch vụ cụ thể, sắp xếp theo điểm khớp từ cao xuống thấp.
+            Yêu cầu quyền: Staff hoặc Admin.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.GraphQL.Queries.ServiceAgentQuery.GetServiceAgents(Microsoft.EntityFrameworkCore.IDbContextFactory{SmartService.Infrastructure.Persistence.AppDbContext})">
+            <summary>
+            Lấy danh sách tất cả nhà cung cấp dịch vụ trong hệ thống (bao gồm cả active và inactive).
+            Yêu cầu: Đã đăng nhập.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.GraphQL.Queries.ServiceAgentQuery.GetMyServiceAgent(System.Security.Claims.ClaimsPrincipal,Microsoft.EntityFrameworkCore.IDbContextFactory{SmartService.Infrastructure.Persistence.AppDbContext})">
+            <summary>
+            Lấy hồ sơ ServiceAgent của chính tài khoản đang đăng nhập.
+            Nếu user có role Agent nhưng chưa có hồ sơ liên kết, hệ thống sẽ tự tạo hồ sơ mới.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.GraphQL.Queries.ServiceAgentQuery.GetServiceAgentById(System.Guid,Microsoft.EntityFrameworkCore.IDbContextFactory{SmartService.Infrastructure.Persistence.AppDbContext})">
+            <summary>
+            Lấy thông tin chi tiết của một nhà cung cấp dịch vụ theo ID (thông tin liên hệ, trạng thái, khả năng).
+            Yêu cầu: Đã đăng nhập.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.GraphQL.Queries.ServiceAgentQuery.GetActiveServiceAgents(Microsoft.EntityFrameworkCore.IDbContextFactory{SmartService.Infrastructure.Persistence.AppDbContext})">
+            <summary>
+            Lấy danh sách các nhà cung cấp dịch vụ đang hoạt động (isActive = true).
+            Public query - không cần đăng nhập.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.GraphQL.Queries.ServiceAttachmentQuery.GetServiceAttachments(Microsoft.EntityFrameworkCore.IDbContextFactory{SmartService.Infrastructure.Persistence.AppDbContext})">
+            <summary>
+            Lấy danh sách tất cả các tệp đính kèm dịch vụ trong hệ thống.
+            Yêu cầu quyền: Staff hoặc Admin.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.GraphQL.Queries.ServiceAttachmentQuery.GetServiceAttachmentById(System.Guid,Microsoft.EntityFrameworkCore.IDbContextFactory{SmartService.Infrastructure.Persistence.AppDbContext})">
+            <summary>
+            Lấy thông tin chi tiết của một tệp đính kèm dịch vụ theo ID (tên tệp, đường dẫn, loại tệp).
+            Yêu cầu: Đã đăng nhập.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.GraphQL.Queries.ServiceAttachmentQuery.GetAttachmentsByServiceRequestId(System.Guid,Microsoft.EntityFrameworkCore.IDbContextFactory{SmartService.Infrastructure.Persistence.AppDbContext})">
+            <summary>
+            Lấy danh sách các tệp đính kèm của một yêu cầu dịch vụ cụ thể, sắp xếp theo thời gian tải lên mới nhất.
+            Yêu cầu: Đã đăng nhập.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.GraphQL.Queries.ServiceCategoryQuery.GetServiceCategories(Microsoft.EntityFrameworkCore.IDbContextFactory{SmartService.Infrastructure.Persistence.AppDbContext})">
+            <summary>
+            Lấy danh sách tất cả các danh mục dịch vụ trong hệ thống (ví dụ: Pháp lý, Bất động sản, Kỹ thuật).
+            Public query - không cần đăng nhập.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.GraphQL.Queries.ServiceCategoryQuery.GetServiceCategoryById(System.Guid,Microsoft.EntityFrameworkCore.IDbContextFactory{SmartService.Infrastructure.Persistence.AppDbContext})">
+            <summary>
+            Lấy thông tin chi tiết của một danh mục dịch vụ theo ID (tên, mô tả).
+            Public query - không cần đăng nhập.
+            </summary>
+        </member>
+        <member name="T:SmartService.API.GraphQL.Queries.ServiceDefinitionQuery">
+            <summary>
+            GraphQL queries for service definitions.
+            Provides service listing with category name and booking count.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.GraphQL.Queries.ServiceDefinitionQuery.GetServiceDefinitions(Microsoft.EntityFrameworkCore.IDbContextFactory{SmartService.Infrastructure.Persistence.AppDbContext})">
+            <summary>
+            Lấy danh sách tất cả dịch vụ, bao gồm tên danh mục và số lượng booking.
+            Public query - không cần đăng nhập.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.GraphQL.Queries.ServiceDefinitionQuery.GetServiceDefinitionById(System.Guid,Microsoft.EntityFrameworkCore.IDbContextFactory{SmartService.Infrastructure.Persistence.AppDbContext})">
+            <summary>
+            Lấy chi tiết một dịch vụ theo ID.
+            Public query - không cần đăng nhập.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.GraphQL.Queries.ServiceDefinitionQuery.GetServiceDefinitionsByCategory(System.Guid,Microsoft.EntityFrameworkCore.IDbContextFactory{SmartService.Infrastructure.Persistence.AppDbContext})">
+            <summary>
+            Lấy danh sách dịch vụ theo danh mục.
+            Public query - không cần đăng nhập.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.GraphQL.Queries.ServiceFeedbackQuery.GetServiceFeedbacks(Microsoft.EntityFrameworkCore.IDbContextFactory{SmartService.Infrastructure.Persistence.AppDbContext})">
+            <summary>
+            Lấy danh sách tất cả phản hồi/đánh giá dịch vụ trong hệ thống, sắp xếp theo thời gian tạo mới nhất.
+            Yêu cầu quyền: Staff hoặc Admin.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.GraphQL.Queries.ServiceFeedbackQuery.GetServiceFeedbackById(System.Guid,Microsoft.EntityFrameworkCore.IDbContextFactory{SmartService.Infrastructure.Persistence.AppDbContext})">
+            <summary>
+            Lấy thông tin chi tiết của một phản hồi/đánh giá dịch vụ theo ID (điểm đánh giá, nhận xét).
+            Yêu cầu: Đã đăng nhập.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.GraphQL.Queries.ServiceFeedbackQuery.GetFeedbackByServiceRequestId(System.Guid,Microsoft.EntityFrameworkCore.IDbContextFactory{SmartService.Infrastructure.Persistence.AppDbContext})">
+            <summary>
+            Lấy danh sách phản hồi/đánh giá của một yêu cầu dịch vụ cụ thể, sắp xếp theo thời gian tạo mới nhất.
+            Yêu cầu: Đã đăng nhập.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.GraphQL.Queries.ServiceFeedbackQuery.GetFeedbackByUserId(System.Guid,Microsoft.EntityFrameworkCore.IDbContextFactory{SmartService.Infrastructure.Persistence.AppDbContext})">
+            <summary>
+            Lấy danh sách phản hồi/đánh giá của một người dùng cụ thể, sắp xếp theo thời gian tạo mới nhất.
+            Yêu cầu: Đã đăng nhập.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.GraphQL.Queries.ServiceFeedbackQuery.GetAverageRatingByServiceRequestId(System.Guid,Microsoft.EntityFrameworkCore.IDbContextFactory{SmartService.Infrastructure.Persistence.AppDbContext})">
+            <summary>
+            Tính điểm đánh giá trung bình của một yêu cầu dịch vụ cụ thể dựa trên tất cả các phản hồi.
+            Trả về 0 nếu không có phản hồi nào.
+            Yêu cầu: Đã đăng nhập.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.GraphQL.Queries.ServiceFeedbackQuery.GetMyServiceFeedbacks(Microsoft.EntityFrameworkCore.IDbContextFactory{SmartService.Infrastructure.Persistence.AppDbContext},System.Security.Claims.ClaimsPrincipal)">
+            <summary>
+            Lấy danh sách phản hồi/đánh giá do chính người dùng hiện tại tạo,
+            sắp xếp theo thời gian tạo mới nhất. Yêu cầu: Đã đăng nhập.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.GraphQL.Queries.ServiceRequestQuery.GetServiceRequests(Microsoft.EntityFrameworkCore.IDbContextFactory{SmartService.Infrastructure.Persistence.AppDbContext})">
+            <summary>
+            Lấy danh sách tất cả yêu cầu dịch vụ trong hệ thống, sắp xếp theo thời gian tạo mới nhất.
+            Yêu cầu quyền: Staff hoặc Admin.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.GraphQL.Queries.ServiceRequestQuery.GetServiceRequestById(System.Guid,Microsoft.EntityFrameworkCore.IDbContextFactory{SmartService.Infrastructure.Persistence.AppDbContext},System.Security.Claims.ClaimsPrincipal)">
+            <summary>
+            Lấy thông tin chi tiết của một yêu cầu dịch vụ theo ID (mô tả, độ phức tạp, trạng thái, chi phí ước tính).
+            Yêu cầu: Đã đăng nhập.
+            Lưu ý: Khách hàng chỉ xem được yêu cầu của chính mình, Staff/Admin xem được tất cả.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.GraphQL.Queries.ServiceRequestQuery.GetServiceRequestsByCustomerId(System.Guid,Microsoft.EntityFrameworkCore.IDbContextFactory{SmartService.Infrastructure.Persistence.AppDbContext},System.Security.Claims.ClaimsPrincipal)">
+            <summary>
+            Lấy danh sách yêu cầu dịch vụ của một khách hàng cụ thể, sắp xếp theo thời gian tạo mới nhất.
+            Yêu cầu: Đã đăng nhập.
+            Lưu ý: Khách hàng chỉ xem được yêu cầu của chính mình, Staff/Admin xem được tất cả.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.GraphQL.Queries.ServiceRequestQuery.GetServiceRequestsByStatus(SmartService.Domain.ValueObjects.ServiceStatus,Microsoft.EntityFrameworkCore.IDbContextFactory{SmartService.Infrastructure.Persistence.AppDbContext})">
+            <summary>
+            Lấy danh sách yêu cầu dịch vụ theo trạng thái (PENDING, PENDING_REVIEW, IN_PROGRESS, COMPLETED, CANCELLED).
+            Yêu cầu quyền: Staff hoặc Admin.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.GraphQL.Queries.ServiceRequestQuery.GetMyServiceRequests(System.Nullable{SmartService.Domain.ValueObjects.ServiceStatus},Microsoft.EntityFrameworkCore.IDbContextFactory{SmartService.Infrastructure.Persistence.AppDbContext},System.Security.Claims.ClaimsPrincipal)">
+            <summary>
+            Lấy danh sách yêu cầu dịch vụ của chính người dùng hiện tại (customer),
+            sắp xếp theo thời gian tạo mới nhất. Yêu cầu: Đã đăng nhập.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.GraphQL.Queries.UserQuery.GetUsers(Microsoft.EntityFrameworkCore.IDbContextFactory{SmartService.Infrastructure.Persistence.AppDbContext})">
+            <summary>
+            Lấy danh sách tất cả người dùng trong hệ thống (khách hàng, nhân viên, nhà cung cấp, admin).
+            Yêu cầu quyền: Staff hoặc Admin.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.GraphQL.Queries.UserQuery.GetUserById(System.Guid,Microsoft.EntityFrameworkCore.IDbContextFactory{SmartService.Infrastructure.Persistence.AppDbContext})">
+            <summary>
+            Lấy thông tin chi tiết của một người dùng theo ID (email, tên, số điện thoại, vai trò).
+            Yêu cầu: Đã đăng nhập (authenticated).
+            </summary>
+        </member>
+        <member name="M:SmartService.API.GraphQL.Queries.UserQuery.GetUsersByRole(SmartService.Domain.Entities.UserRole,Microsoft.EntityFrameworkCore.IDbContextFactory{SmartService.Infrastructure.Persistence.AppDbContext})">
+            <summary>
+            Lấy danh sách người dùng theo vai trò (Customer, Staff, Agent, Admin).
+            Yêu cầu quyền: Staff hoặc Admin.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.GraphQL.Queries.UserQuery.GetCurrentUser(System.Security.Claims.ClaimsPrincipal,Microsoft.EntityFrameworkCore.IDbContextFactory{SmartService.Infrastructure.Persistence.AppDbContext})">
+            <summary>
+            Lấy thông tin tài khoản của chính người dùng hiện tại (dựa trên access token).
+            Yêu cầu: Đã đăng nhập.
+            </summary>
+        </member>
+        <member name="T:SmartService.API.GraphQL.Query">
+            <summary>
+            Root GraphQL query type.
+            All query extensions will be merged into this type.
+            </summary>
+        </member>
+        <member name="T:SmartService.API.GraphQL.StandardErrorFilter">
+            <summary>
+            GraphQL error filter to standardize error codes and extensions.
+            </summary>
+        </member>
+        <member name="T:SmartService.API.GraphQL.Types.DashboardSummary">
+            <summary>
+            GraphQL return type for dashboard summary data.
+            Not a domain entity — used only for the getDashboardSummary query response.
+            </summary>
+        </member>
+        <member name="T:SmartService.API.GraphQL.Types.ServiceListItem">
+            <summary>
+            GraphQL return type for service list items.
+            Enriches ServiceDefinition with computed fields like categoryName and bookingCount.
+            </summary>
+        </member>
+        <member name="P:SmartService.API.GraphQL.Types.ServiceListItem.ComplexityRange">
+            <summary>Complexity range [min, max] (1–5 scale). AI uses this as baseline for analysis.</summary>
+        </member>
+        <member name="P:SmartService.API.GraphQL.Types.ServiceListItem.IsDangerous">
+            <summary>True if this service type is inherently dangerous (e.g. electrical, gas).</summary>
+        </member>
+        <member name="T:SmartService.API.Helpers.GuidConverter">
+            <summary>
+            Custom JsonConverter for Guid that supports multiple formats,
+            including standard hyphenated (D) and non-hyphenated (N) formats.
+            This prevents model binding failures when the frontend sends UUIDs without dashes.
+            </summary>
+        </member>
+        <member name="T:SmartService.API.Helpers.NullableGuidConverter">
+            <summary>
+            Custom JsonConverter for nullable Guid.
+            </summary>
+        </member>
+        <member name="T:SmartService.API.Hubs.ServiceRequestHub">
+            <summary>
+            SignalR hub for real-time updates on service requests.
+            Used to push SafetyAdvice to clients immediately after AI analysis.
+            </summary>
+        </member>
+        <member name="T:SmartService.API.Middleware.ExceptionHandlingMiddleware">
+            <summary>
+            Global exception handling middleware to catch and standardize all errors.
+            </summary>
+        </member>
+        <member name="M:SmartService.API.Notifications.SignalRServiceRequestNotificationService.NotifyDangerFlaggedAsync(System.Guid,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Broadcasts to the "supervisors" group so staff can act immediately.
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -27,10 +27,10 @@ public class CreatePriceAdjustmentRequestHandler : IRequestHandler<CreatePriceAd
         if (serviceRequest.Status != ServiceStatus.InProgress)
             throw new InvalidOperationException("Chỉ có thể yêu cầu điều chỉnh giá khi đơn hàng đang thực hiện.");
 
-        if (request.EvidenceImageStream == null)
+        if (string.IsNullOrWhiteSpace(request.EvidenceImageUrl))
             throw new InvalidOperationException("Ảnh bằng chứng phản hồi tăng giá là bắt buộc.");
 
-        var imageUrl = $"local://{request.EvidenceImageFileName}";
+        var imageUrl = request.EvidenceImageUrl.Trim();
 
         var adjustmentRequest = new PriceAdjustmentRequest(
             request.ServiceRequestId,

@@ -1,0 +1,9 @@
+{
+  "serviceGroup": "REAL_ESTATE",
+  "subCategoryId": "RE_VALUATION",
+  "name": "Thẩm định giá",
+  "cases": [
+    { "caseId": "RE_VAL_HOUSE", "name": "Định giá nhà ở" },
+    { "caseId": "RE_VAL_LAND", "name": "Định giá đất" }
+  ]
+}

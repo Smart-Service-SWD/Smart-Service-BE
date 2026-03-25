@@ -172,6 +172,14 @@ builder.Services.AddHostedService<SmartService.Infrastructure.BackgroundServices
 
 var app = builder.Build();
 
+var webRootPath = app.Environment.WebRootPath;
+if (string.IsNullOrWhiteSpace(webRootPath))
+{
+    webRootPath = System.IO.Path.Combine(app.Environment.ContentRootPath, "wwwroot");
+}
+System.IO.Directory.CreateDirectory(System.IO.Path.Combine(webRootPath, "uploads", "price-adjustments"));
+System.IO.Directory.CreateDirectory(System.IO.Path.Combine(webRootPath, "uploads", "completion-evidences"));
+
 app.Use(async (context, next) =>
 {
     context.Response.Headers.Append("X-Content-Type-Options", "nosniff");
@@ -199,6 +207,7 @@ if (app.Environment.IsDevelopment())
 }
 
 // app.UseHttpsRedirection();
+app.UseStaticFiles();
 app.UseCors("AllowAll");
 app.UseRouting();
 app.UseAuthentication();

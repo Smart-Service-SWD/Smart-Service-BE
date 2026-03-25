@@ -1,0 +1,8 @@
+{
+  "subCategoryId": "TECH_IT",
+  "pricingByComplexity": [
+    { "complexityLevel": 1, "minPrice": { "amount": 300000, "currency": "VND" }, "maxPrice": { "amount": 600000, "currency": "VND" } },
+    { "complexityLevel": 3, "minPrice": { "amount": 700000, "currency": "VND" }, "maxPrice": { "amount": 1500000, "currency": "VND" } },
+    { "complexityLevel": 5, "minPrice": { "amount": 2000000, "currency": "VND" }, "maxPrice": { "amount": 4000000, "currency": "VND" } }
+  ]
+}

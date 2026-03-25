@@ -1,0 +1,87 @@
+{
+  "serviceGroup": "ELECTRICAL",
+  "subCategoryId": "a1000000-0000-0000-0000-000000000001",
+  "name": "Electrical",
+  "cases": [
+    {
+      "caseId": "b1020000-0000-0000-0000-000000000002",
+      "name": "L\u1EAFp \u0111\u1EB7t \u0111i\u1EC7n m\u1EDBi",
+      "description": "\u0110i d\u00E2y \u0111i\u1EC7n, l\u1EAFp b\u1EA3ng \u0111i\u1EC7n, aptomat cho nh\u00E0 m\u1EDBi x\u00E2y ho\u1EB7c c\u1EA3i t\u1EA1o",
+      "complexityRange": [
+        2,
+        4
+      ],
+      "isDangerous": false
+    },
+    {
+      "caseId": "b1030000-0000-0000-0000-000000000003",
+      "name": "S\u1EEDa ch\u1EEFa \u0111i\u1EC7n h\u1EC7 th\u1ED1ng",
+      "description": "Ki\u1EC3m tra v\u00E0 s\u1EEDa ch\u1EEFa h\u1EC7 th\u1ED1ng \u0111i\u1EC7n 3 pha, t\u1EE7 \u0111i\u1EC7n, CB t\u1ED5ng c\u00F4ng nghi\u1EC7p",
+      "complexityRange": [
+        3,
+        5
+      ],
+      "isDangerous": true
+    },
+    {
+      "caseId": "b1040000-0000-0000-0000-000000000004",
+      "name": "L\u1EAFp \u0111i\u1EC7n n\u0103ng l\u01B0\u1EE3ng m\u1EB7t tr\u1EDDi",
+      "description": "L\u1EAFp \u0111\u1EB7t t\u1EA5m pin m\u1EB7t tr\u1EDDi, inverter, h\u1EC7 th\u1ED1ng h\u00F2a l\u01B0\u1EDBi \u0111i\u1EC7n qu\u1ED1c gia",
+      "complexityRange": [
+        3,
+        5
+      ],
+      "isDangerous": true
+    },
+    {
+      "caseId": "b1050000-0000-0000-0000-000000000005",
+      "name": "Ki\u1EC3m tra \u0026 b\u1EA3o tr\u00EC \u0111\u1ECBnh k\u1EF3 h\u1EC7 th\u1ED1ng \u0111i\u1EC7n",
+      "description": "Ki\u1EC3m tra to\u00E0n b\u1ED9 h\u1EC7 th\u1ED1ng \u0111i\u1EC7n trong nh\u00E0 ho\u1EB7c v\u0103n ph\u00F2ng, thay th\u1EBF linh ki\u1EC7n l\u00E3o h\u00F3a",
+      "complexityRange": [
+        1,
+        3
+      ],
+      "isDangerous": false
+    },
+    {
+      "caseId": "b1060000-0000-0000-0000-000000000006",
+      "name": "X\u1EED l\u00FD s\u1EF1 c\u1ED1 \u0111i\u1EC7n kh\u1EA9n c\u1EA5p",
+      "description": "X\u1EED l\u00FD ch\u1EADp ch\u00E1y, m\u1EA5t \u0111i\u1EC7n \u0111\u1ED9t ng\u1ED9t, r\u00F2 r\u1EC9 \u0111i\u1EC7n, ch\u00E1y \u0111\u01B0\u1EDDng d\u00E2y nguy hi\u1EC3m",
+      "complexityRange": [
+        4,
+        5
+      ],
+      "isDangerous": true
+    },
+    {
+      "caseId": "b1070000-0000-0000-0000-000000000007",
+      "name": "L\u1EAFp \u0111\u1EB7t \u0111i\u1EC1u h\u00F2a \u0026 m\u00E1y l\u1EA1nh",
+      "description": "L\u1EAFp m\u1EDBi, di d\u1EDDi, v\u1EC7 sinh \u0111i\u1EC1u h\u00F2a d\u00E2n d\u1EE5ng v\u00E0 th\u01B0\u01A1ng m\u1EA1i, ki\u1EC3m tra gas",
+      "complexityRange": [
+        1,
+        3
+      ],
+      "isDangerous": false
+    },
+    {
+      "caseId": "b1010000-0000-0000-0000-000000000001",
+      "name": "S\u1EEDa ch\u1EEFa \u0111i\u1EC7n gia d\u1EE5ng",
+      "description": "S\u1EEDa \u1ED5 c\u1EAFm, c\u00F4ng t\u1EAFc, b\u00F3ng \u0111\u00E8n, qu\u1EA1t, c\u00E1c thi\u1EBFt b\u1ECB \u0111i\u1EC7n nh\u1ECF trong nh\u00E0",
+      "complexityRange": [
+        1,
+        2
+      ],
+      "isDangerous": false
+    },
+    {
+      "caseId": "b1080000-0000-0000-0000-000000000008",
+      "name": "L\u1EAFp \u0111\u1EB7t h\u1EC7 th\u1ED1ng chi\u1EBFu s\u00E1ng",
+      "description": "Thi\u1EBFt k\u1EBF v\u00E0 l\u1EAFp \u0111\u1EB7t h\u1EC7 th\u1ED1ng \u0111\u00E8n LED, \u0111\u00E8n trang tr\u00ED n\u1ED9i th\u1EA5t v\u00E0 ngo\u1EA1i th\u1EA5t",
+      "complexityRange": [
+        1,
+        3
+      ],
+      "isDangerous": false
+    }
+  ]
+}

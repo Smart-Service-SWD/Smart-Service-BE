@@ -1,0 +1,11 @@
+{
+  "serviceGroup": "TECHNICAL",
+  "subCategoryId": "TECH_IT",
+  "name": "Hỗ trợ kỹ thuật máy tính",
+  "cases": [
+    { "caseId": "IT_INSTALL_OS", "name": "Cài hệ điều hành" },
+    { "caseId": "IT_FIX_HW", "name": "Sửa phần cứng" },
+    { "caseId": "IT_NETWORK", "name": "Sửa lỗi mạng" },
+    { "caseId": "IT_VIRUS", "name": "Diệt virus" }
+  ]
+}

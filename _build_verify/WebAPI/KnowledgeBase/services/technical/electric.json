@@ -1,0 +1,12 @@
+{
+  "serviceGroup": "TECHNICAL",
+  "subCategoryId": "TECH_ELECTRIC",
+  "name": "Điện dân dụng",
+  "cases": [
+    { "caseId": "ELEC_SOCKET", "name": "Sửa ổ cắm, công tắc" },
+    { "caseId": "ELEC_SHORT", "name": "Xử lý chập điện" },
+    { "caseId": "ELEC_LIGHT", "name": "Lắp đặt đèn chiếu sáng" },
+    { "caseId": "ELEC_BREAKER", "name": "Sửa Aptomat" },
+    { "caseId": "ELEC_REWIRE", "name": "Đi lại hệ thống điện" }
+  ]
+}

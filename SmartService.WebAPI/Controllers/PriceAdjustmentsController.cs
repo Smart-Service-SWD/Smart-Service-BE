@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.StaticFiles;
 using SmartService.Application.Features.PriceAdjustments.Commands.ApprovePriceAdjustment;
 using SmartService.Application.Features.PriceAdjustments.Commands.RejectPriceAdjustment;
 using SmartService.Application.Features.PriceAdjustments.Commands.CreatePriceAdjustmentRequest;
@@ -16,9 +17,24 @@ namespace SmartService.API.Controllers;
 public class PriceAdjustmentsController : ControllerBase
 {
     private readonly IMediator _mediator;
+    private readonly IWebHostEnvironment _environment;
 
-    public PriceAdjustmentsController(IMediator mediator)
-        => _mediator = mediator;
+    private static readonly HashSet<string> AllowedImageExtensions = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ".jpg",
+        ".jpeg",
+        ".png",
+        ".webp",
+        ".gif",
+        ".heic",
+        ".heif"
+    };
+
+    public PriceAdjustmentsController(IMediator mediator, IWebHostEnvironment environment)
+    {
+        _mediator = mediator;
+        _environment = environment;
+    }
 
     [Authorize(Roles = UserRoleConstants.Agent)]
     [HttpPost]
@@ -35,7 +51,30 @@ public class PriceAdjustmentsController : ControllerBase
         if (evidenceImage == null || evidenceImage.Length == 0)
             return BadRequest("Ảnh bằng chứng là bắt buộc.");
 
-        var imageStream = evidenceImage.OpenReadStream();
+        var extension = System.IO.Path.GetExtension(evidenceImage.FileName);
+        if (string.IsNullOrWhiteSpace(extension) || !AllowedImageExtensions.Contains(extension))
+        {
+            extension = ".jpg";
+        }
+
+        var webRootPath = _environment.WebRootPath;
+        if (string.IsNullOrWhiteSpace(webRootPath))
+        {
+            webRootPath = System.IO.Path.Combine(_environment.ContentRootPath, "wwwroot");
+        }
+
+        var uploadDirectory = System.IO.Path.Combine(webRootPath, "uploads", "price-adjustments");
+        System.IO.Directory.CreateDirectory(uploadDirectory);
+
+        var storedFileName = $"{Guid.NewGuid():N}{extension.ToLowerInvariant()}";
+        var filePath = System.IO.Path.Combine(uploadDirectory, storedFileName);
+
+        await using (var fileStream = new System.IO.FileStream(filePath, System.IO.FileMode.Create, System.IO.FileAccess.Write, System.IO.FileShare.None))
+        {
+            await evidenceImage.CopyToAsync(fileStream, cancellationToken);
+        }
+
+        var imageUrl = $"/uploads/price-adjustments/{storedFileName}";
 
         var command = new CreatePriceAdjustmentRequestCommand
         {
@@ -44,13 +83,11 @@ public class PriceAdjustmentsController : ControllerBase
             NewPriceCurrency = newPriceCurrency ?? "VND",
             Reason = reason,
             CreatedBy = createdBy,
-            EvidenceImageStream = imageStream,
-            EvidenceImageFileName = evidenceImage.FileName
+            EvidenceImageUrl = imageUrl
         };
 
         var result = await _mediator.Send(command, cancellationToken);
-        
-        await imageStream.DisposeAsync();
+
         return Ok(result);
     }
 
@@ -60,6 +97,39 @@ public class PriceAdjustmentsController : ControllerBase
     {
         var result = await _mediator.Send(new GetPendingPriceAdjustmentsQuery(), cancellationToken);
         return Ok(result);
+    }
+
+    [AllowAnonymous]
+    [HttpGet("/uploads/price-adjustments/{fileName}")]
+    public IActionResult GetEvidenceImage([FromRoute] string fileName)
+    {
+        if (string.IsNullOrWhiteSpace(fileName) ||
+            fileName.Contains("..", StringComparison.Ordinal) ||
+            fileName.Contains('/') ||
+            fileName.Contains('\\'))
+        {
+            return BadRequest("Tên tệp không hợp lệ.");
+        }
+
+        var webRootPath = _environment.WebRootPath;
+        if (string.IsNullOrWhiteSpace(webRootPath))
+        {
+            webRootPath = System.IO.Path.Combine(_environment.ContentRootPath, "wwwroot");
+        }
+
+        var filePath = System.IO.Path.Combine(webRootPath, "uploads", "price-adjustments", fileName);
+        if (!System.IO.File.Exists(filePath))
+        {
+            return NotFound();
+        }
+
+        var contentTypeProvider = new FileExtensionContentTypeProvider();
+        if (!contentTypeProvider.TryGetContentType(filePath, out var contentType))
+        {
+            contentType = "application/octet-stream";
+        }
+
+        return PhysicalFile(filePath, contentType);
     }
 
     [Authorize(Roles = $"{UserRoleConstants.Agent},{UserRoleConstants.Staff},{UserRoleConstants.Admin}")]

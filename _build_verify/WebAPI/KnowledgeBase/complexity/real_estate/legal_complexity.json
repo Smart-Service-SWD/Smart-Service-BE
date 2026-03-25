@@ -1,0 +1,8 @@
+{
+  "subCategoryId": "RE_LEGAL",
+  "levels": [
+    { "level": 1, "criteria": ["Thủ tục hành chính"] },
+    { "level": 3, "criteria": ["Xác minh pháp lý"] },
+    { "level": 5, "criteria": ["Tranh chấp đất đai"] }
+  ]
+}

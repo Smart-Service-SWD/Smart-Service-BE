@@ -1,0 +1,8 @@
+{
+  "subCategoryId": "RE_BROKERAGE",
+  "pricingByComplexity": [
+    { "complexityLevel": 1, "minPrice": { "amount": 10000000, "currency": "VND" }, "maxPrice": { "amount": 20000000, "currency": "VND" } },
+    { "complexityLevel": 3, "minPrice": { "amount": 20000000, "currency": "VND" }, "maxPrice": { "amount": 50000000, "currency": "VND" } },
+    { "complexityLevel": 5, "minPrice": { "amount": 50000000, "currency": "VND" }, "maxPrice": { "amount": 100000000, "currency": "VND" } }
+  ]
+}
