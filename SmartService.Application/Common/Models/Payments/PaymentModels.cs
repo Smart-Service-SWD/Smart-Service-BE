@@ -7,6 +7,12 @@ public record PaymentLinkResult(
     string QrCode
 );
 
+public record PaymentStatusResult(
+    long OrderCode,
+    string Status,
+    decimal AmountPaid
+);
+
 public record WebhookData(
     long OrderCode,
     decimal Amount,

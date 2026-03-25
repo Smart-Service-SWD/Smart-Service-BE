@@ -22,7 +22,35 @@ public sealed class UpdateUserRoleCommandHandler : IRequestHandler<UpdateUserRol
         if (user is null)
             return false;
 
+        var previousRole = user.Role;
         user.ChangeRole(request.Role);
+
+        if (request.Role == UserRole.Agent)
+        {
+            var linkedAgent = await _context.ServiceAgents
+                .FirstOrDefaultAsync(x => x.UserId == user.Id, cancellationToken);
+
+            if (linkedAgent is null)
+            {
+                _context.ServiceAgents.Add(ServiceAgent.CreateForUser(user.FullName, user.Id));
+            }
+            else if (!linkedAgent.IsActive)
+            {
+                linkedAgent.Activate();
+            }
+        }
+        else if (previousRole == UserRole.Agent)
+        {
+            var linkedAgents = await _context.ServiceAgents
+                .Where(x => x.UserId == user.Id && x.IsActive)
+                .ToListAsync(cancellationToken);
+
+            foreach (var linkedAgent in linkedAgents)
+            {
+                linkedAgent.Deactivate();
+            }
+        }
+
         await _context.SaveChangesAsync(cancellationToken);
 
         return true;
