@@ -54,6 +54,17 @@ public class ServiceAgent
         return new ServiceAgent(Guid.NewGuid(), fullName, userId);
     }
 
+    public void LinkToUser(Guid userId)
+    {
+        if (userId == Guid.Empty)
+            throw new ArgumentException("UserId is required.", nameof(userId));
+
+        if (UserId.HasValue && UserId.Value != userId)
+            throw new InvalidOperationException("This service agent is already linked to another user.");
+
+        UserId ??= userId;
+    }
+
     public void AddCapability(AgentCapability capability)
     {
         capability.AssignToAgent(Id);

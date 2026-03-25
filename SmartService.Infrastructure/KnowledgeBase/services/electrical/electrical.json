@@ -4,16 +4,6 @@
   "name": "Electrical",
   "cases": [
     {
-      "caseId": "b1010000-0000-0000-0000-000000000001",
-      "name": "S\u1EEDa ch\u1EEFa \u0111i\u1EC7n gia d\u1EE5ng",
-      "description": "S\u1EEDa \u1ED5 c\u1EAFm, c\u00F4ng t\u1EAFc, b\u00F3ng \u0111\u00E8n, qu\u1EA1t, c\u00E1c thi\u1EBFt b\u1ECB \u0111i\u1EC7n nh\u1ECF trong nh\u00E0",
-      "complexityRange": [
-        1,
-        2
-      ],
-      "isDangerous": false
-    },
-    {
       "caseId": "b1020000-0000-0000-0000-000000000002",
       "name": "L\u1EAFp \u0111\u1EB7t \u0111i\u1EC7n m\u1EDBi",
       "description": "\u0110i d\u00E2y \u0111i\u1EC7n, l\u1EAFp b\u1EA3ng \u0111i\u1EC7n, aptomat cho nh\u00E0 m\u1EDBi x\u00E2y ho\u1EB7c c\u1EA3i t\u1EA1o",
@@ -70,6 +60,16 @@
       "complexityRange": [
         1,
         3
+      ],
+      "isDangerous": false
+    },
+    {
+      "caseId": "b1010000-0000-0000-0000-000000000001",
+      "name": "S\u1EEDa ch\u1EEFa \u0111i\u1EC7n gia d\u1EE5ng",
+      "description": "S\u1EEDa \u1ED5 c\u1EAFm, c\u00F4ng t\u1EAFc, b\u00F3ng \u0111\u00E8n, qu\u1EA1t, c\u00E1c thi\u1EBFt b\u1ECB \u0111i\u1EC7n nh\u1ECF trong nh\u00E0",
+      "complexityRange": [
+        1,
+        2
       ],
       "isDangerous": false
     },

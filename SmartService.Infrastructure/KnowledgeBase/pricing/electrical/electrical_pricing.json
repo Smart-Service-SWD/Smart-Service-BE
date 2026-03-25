@@ -2,15 +2,6 @@
   "subCategoryId": "a1000000-0000-0000-0000-000000000001",
   "pricingByService": [
     {
-      "serviceId": "b1010000-0000-0000-0000-000000000001",
-      "serviceName": "S\u1EEDa ch\u1EEFa \u0111i\u1EC7n gia d\u1EE5ng",
-      "basePrice": {
-        "amount": 150000.00,
-        "currency": "VND"
-      },
-      "estimatedDuration": 60
-    },
-    {
       "serviceId": "b1020000-0000-0000-0000-000000000002",
       "serviceName": "L\u1EAFp \u0111\u1EB7t \u0111i\u1EC7n m\u1EDBi",
       "basePrice": {
@@ -63,6 +54,15 @@
         "currency": "VND"
       },
       "estimatedDuration": 180
+    },
+    {
+      "serviceId": "b1010000-0000-0000-0000-000000000001",
+      "serviceName": "S\u1EEDa ch\u1EEFa \u0111i\u1EC7n gia d\u1EE5ng",
+      "basePrice": {
+        "amount": 10000.00,
+        "currency": "VND"
+      },
+      "estimatedDuration": 60
     },
     {
       "serviceId": "b1080000-0000-0000-0000-000000000008",

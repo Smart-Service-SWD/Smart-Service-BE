@@ -32,16 +32,37 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, AuthResult>
 
         if (authResult.Role == UserRole.Agent)
         {
-            var linkedAgentExists = await _context.ServiceAgents
-                .AnyAsync(x => x.UserId == authResult.UserId, cancellationToken);
+            var linkedAgent = await _context.ServiceAgents
+                .FirstOrDefaultAsync(x => x.UserId == authResult.UserId, cancellationToken);
 
-            if (!linkedAgentExists)
+            if (linkedAgent is null)
             {
-                _context.ServiceAgents.Add(ServiceAgent.CreateForUser(authResult.FullName, authResult.UserId));
-                await _context.SaveChangesAsync(cancellationToken);
+                var normalizedFullName = authResult.FullName.Trim().ToLower();
+                var orphanAgents = await _context.ServiceAgents
+                    .Where(x => x.UserId == null && x.FullName.ToLower() == normalizedFullName)
+                    .ToListAsync(cancellationToken);
+
+                if (orphanAgents.Count == 1)
+                {
+                    linkedAgent = orphanAgents[0];
+                    linkedAgent.LinkToUser(authResult.UserId);
+                }
+                else
+                {
+                    linkedAgent = ServiceAgent.CreateForUser(authResult.FullName, authResult.UserId);
+                    _context.ServiceAgents.Add(linkedAgent);
+                }
             }
+
+            if (!linkedAgent.IsActive)
+            {
+                linkedAgent.Activate();
+            }
+
+            await _context.SaveChangesAsync(cancellationToken);
         }
 
         return authResult;
     }
 }
+

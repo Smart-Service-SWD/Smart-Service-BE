@@ -32,9 +32,24 @@ public sealed class UpdateUserRoleCommandHandler : IRequestHandler<UpdateUserRol
 
             if (linkedAgent is null)
             {
-                _context.ServiceAgents.Add(ServiceAgent.CreateForUser(user.FullName, user.Id));
+                var normalizedFullName = user.FullName.Trim().ToLower();
+                var orphanAgents = await _context.ServiceAgents
+                    .Where(x => x.UserId == null && x.FullName.ToLower() == normalizedFullName)
+                    .ToListAsync(cancellationToken);
+
+                if (orphanAgents.Count == 1)
+                {
+                    linkedAgent = orphanAgents[0];
+                    linkedAgent.LinkToUser(user.Id);
+                }
+                else
+                {
+                    linkedAgent = ServiceAgent.CreateForUser(user.FullName, user.Id);
+                    _context.ServiceAgents.Add(linkedAgent);
+                }
             }
-            else if (!linkedAgent.IsActive)
+
+            if (!linkedAgent.IsActive)
             {
                 linkedAgent.Activate();
             }
@@ -56,4 +71,5 @@ public sealed class UpdateUserRoleCommandHandler : IRequestHandler<UpdateUserRol
         return true;
     }
 }
+
 
