@@ -1,0 +1,562 @@
+Using launch settings from SmartService.WebAPI\Properties\launchSettings.json...
+Building...
+D:\Ky_4\SWD\System_Smart-Service-master\Smart-Service\Service_BE\SmartService.WebAPI\Controllers\ServiceRequestsController.cs(117,13): warning CS8604: Possible null reference argument for parameter 'EstimatedCost' in 'AssignProviderCommand.AssignProviderCommand(Guid ServiceRequestId, Guid ProviderId, Money EstimatedCost)'. [D:\Ky_4\SWD\System_Smart-Service-master\Smart-Service\Service_BE\SmartService.WebAPI\SmartService.WebAPI.csproj]
+info: SmartService.Infrastructure.KnowledgeBase.Sync.KnowledgeBaseSyncBackgroundService[0]
+      KnowledgeBase sync starting on application startup...
+info: SmartService.Infrastructure.KnowledgeBase.Sync.KnowledgeBaseSyncService[0]
+      Starting KnowledgeBase sync from DB...
+warn: Microsoft.EntityFrameworkCore.Model.Validation[10625]
+      The foreign key property 'MatchingResult.ServiceRequestId1' was created in shadow state because a conflicting property with the simple name 'ServiceRequestId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+warn: Microsoft.EntityFrameworkCore.Model.Validation[10625]
+      The foreign key property 'ServiceAttachment.ServiceRequestId1' was created in shadow state because a conflicting property with the simple name 'ServiceRequestId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (61ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."Description", s."Name"
+      FROM "ServiceCategories" AS s
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (94ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."BasePrice", s."CategoryId", s."ComplexityRange", s."CreatedAt", s."Description", s."EstimatedDuration", s."IsActive", s."IsDangerous", s."Name", s."UpdatedAt"
+      FROM "ServiceDefinitions" AS s
+      WHERE s."IsActive"
+info: SmartService.Infrastructure.KnowledgeBase.Sync.KnowledgeBaseSyncService[0]
+      Synced KnowledgeBase for category 'Electrical' (8 services)
+info: SmartService.Infrastructure.KnowledgeBase.Sync.KnowledgeBaseSyncService[0]
+      Synced KnowledgeBase for category 'Law' (8 services)
+info: SmartService.Infrastructure.KnowledgeBase.Sync.KnowledgeBaseSyncService[0]
+      Synced KnowledgeBase for category 'IT' (8 services)
+info: SmartService.Infrastructure.KnowledgeBase.Sync.KnowledgeBaseSyncService[0]
+      Synced KnowledgeBase for category 'Real Estate' (8 services)
+info: SmartService.Infrastructure.KnowledgeBase.Sync.KnowledgeBaseSyncService[0]
+      KnowledgeBase sync completed. 4 categories, 32 services synced.
+info: Microsoft.Hosting.Lifetime[14]
+      Now listening on: http://0.0.0.0:5268
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Development
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: D:\Ky_4\SWD\System_Smart-Service-master\Smart-Service\Service_BE\SmartService.WebAPI
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (143ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."AddressText", s."AssignedProviderId", s."CategoryId", s."CommissionRate", s."CreatedAt", s."CustomerId", s."Description", s."EstimatedDuration", s."EstimatedPrice", s."IsDepositPaid", s."OcrExtractedText", s."PayOSOrderCode", s."ServiceDefinitionId", s."Status", s."WasAnalyzedByAI", s."CommissionAmount_Amount", s."CommissionAmount_Currency", s."ComplexityLevel", s."DepositAmount_Amount", s."DepositAmount_Currency", s."EstimatedCost_Amount", s."EstimatedCost_Currency", s."FinalAmountPaid_Amount", s."FinalAmountPaid_Currency", s."FinalPrice_Amount", s."FinalPrice_Currency", s."WorkerAmount_Amount", s."WorkerAmount_Currency"
+      FROM "ServiceRequests" AS s
+      WHERE s."Status" = 0
+      ORDER BY s."CreatedAt"
+      LIMIT @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (160ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."AddressText", s."AssignedProviderId", s."CategoryId", s."CommissionRate", s."CreatedAt", s."CustomerId", s."Description", s."EstimatedDuration", s."EstimatedPrice", s."IsDepositPaid", s."OcrExtractedText", s."PayOSOrderCode", s."ServiceDefinitionId", s."Status", s."WasAnalyzedByAI", s."CommissionAmount_Amount", s."CommissionAmount_Currency", s."ComplexityLevel", s."DepositAmount_Amount", s."DepositAmount_Currency", s."EstimatedCost_Amount", s."EstimatedCost_Currency", s."FinalAmountPaid_Amount", s."FinalAmountPaid_Currency", s."FinalPrice_Amount", s."FinalPrice_Currency", s."WorkerAmount_Amount", s."WorkerAmount_Currency"
+      FROM "ServiceRequests" AS s
+      WHERE s."Status" = 0
+      ORDER BY s."CreatedAt"
+      LIMIT @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (154ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."AddressText", s."AssignedProviderId", s."CategoryId", s."CommissionRate", s."CreatedAt", s."CustomerId", s."Description", s."EstimatedDuration", s."EstimatedPrice", s."IsDepositPaid", s."OcrExtractedText", s."PayOSOrderCode", s."ServiceDefinitionId", s."Status", s."WasAnalyzedByAI", s."CommissionAmount_Amount", s."CommissionAmount_Currency", s."ComplexityLevel", s."DepositAmount_Amount", s."DepositAmount_Currency", s."EstimatedCost_Amount", s."EstimatedCost_Currency", s."FinalAmountPaid_Amount", s."FinalAmountPaid_Currency", s."FinalPrice_Amount", s."FinalPrice_Currency", s."WorkerAmount_Amount", s."WorkerAmount_Currency"
+      FROM "ServiceRequests" AS s
+      WHERE s."Status" = 0
+      ORDER BY s."CreatedAt"
+      LIMIT @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (152ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."AddressText", s."AssignedProviderId", s."CategoryId", s."CommissionRate", s."CreatedAt", s."CustomerId", s."Description", s."EstimatedDuration", s."EstimatedPrice", s."IsDepositPaid", s."OcrExtractedText", s."PayOSOrderCode", s."ServiceDefinitionId", s."Status", s."WasAnalyzedByAI", s."CommissionAmount_Amount", s."CommissionAmount_Currency", s."ComplexityLevel", s."DepositAmount_Amount", s."DepositAmount_Currency", s."EstimatedCost_Amount", s."EstimatedCost_Currency", s."FinalAmountPaid_Amount", s."FinalAmountPaid_Currency", s."FinalPrice_Amount", s."FinalPrice_Currency", s."WorkerAmount_Amount", s."WorkerAmount_Currency"
+      FROM "ServiceRequests" AS s
+      WHERE s."Status" = 0
+      ORDER BY s."CreatedAt"
+      LIMIT @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (163ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."AddressText", s."AssignedProviderId", s."CategoryId", s."CommissionRate", s."CreatedAt", s."CustomerId", s."Description", s."EstimatedDuration", s."EstimatedPrice", s."IsDepositPaid", s."OcrExtractedText", s."PayOSOrderCode", s."ServiceDefinitionId", s."Status", s."WasAnalyzedByAI", s."CommissionAmount_Amount", s."CommissionAmount_Currency", s."ComplexityLevel", s."DepositAmount_Amount", s."DepositAmount_Currency", s."EstimatedCost_Amount", s."EstimatedCost_Currency", s."FinalAmountPaid_Amount", s."FinalAmountPaid_Currency", s."FinalPrice_Amount", s."FinalPrice_Currency", s."WorkerAmount_Amount", s."WorkerAmount_Currency"
+      FROM "ServiceRequests" AS s
+      WHERE s."Status" = 0
+      ORDER BY s."CreatedAt"
+      LIMIT @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (152ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."AddressText", s."AssignedProviderId", s."CategoryId", s."CommissionRate", s."CreatedAt", s."CustomerId", s."Description", s."EstimatedDuration", s."EstimatedPrice", s."IsDepositPaid", s."OcrExtractedText", s."PayOSOrderCode", s."ServiceDefinitionId", s."Status", s."WasAnalyzedByAI", s."CommissionAmount_Amount", s."CommissionAmount_Currency", s."ComplexityLevel", s."DepositAmount_Amount", s."DepositAmount_Currency", s."EstimatedCost_Amount", s."EstimatedCost_Currency", s."FinalAmountPaid_Amount", s."FinalAmountPaid_Currency", s."FinalPrice_Amount", s."FinalPrice_Currency", s."WorkerAmount_Amount", s."WorkerAmount_Currency"
+      FROM "ServiceRequests" AS s
+      WHERE s."Status" = 0
+      ORDER BY s."CreatedAt"
+      LIMIT @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (148ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."AddressText", s."AssignedProviderId", s."CategoryId", s."CommissionRate", s."CreatedAt", s."CustomerId", s."Description", s."EstimatedDuration", s."EstimatedPrice", s."IsDepositPaid", s."OcrExtractedText", s."PayOSOrderCode", s."ServiceDefinitionId", s."Status", s."WasAnalyzedByAI", s."CommissionAmount_Amount", s."CommissionAmount_Currency", s."ComplexityLevel", s."DepositAmount_Amount", s."DepositAmount_Currency", s."EstimatedCost_Amount", s."EstimatedCost_Currency", s."FinalAmountPaid_Amount", s."FinalAmountPaid_Currency", s."FinalPrice_Amount", s."FinalPrice_Currency", s."WorkerAmount_Amount", s."WorkerAmount_Currency"
+      FROM "ServiceRequests" AS s
+      WHERE s."Status" = 0
+      ORDER BY s."CreatedAt"
+      LIMIT @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (128ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."AddressText", s."AssignedProviderId", s."CategoryId", s."CommissionRate", s."CreatedAt", s."CustomerId", s."Description", s."EstimatedDuration", s."EstimatedPrice", s."IsDepositPaid", s."OcrExtractedText", s."PayOSOrderCode", s."ServiceDefinitionId", s."Status", s."WasAnalyzedByAI", s."CommissionAmount_Amount", s."CommissionAmount_Currency", s."ComplexityLevel", s."DepositAmount_Amount", s."DepositAmount_Currency", s."EstimatedCost_Amount", s."EstimatedCost_Currency", s."FinalAmountPaid_Amount", s."FinalAmountPaid_Currency", s."FinalPrice_Amount", s."FinalPrice_Currency", s."WorkerAmount_Amount", s."WorkerAmount_Currency"
+      FROM "ServiceRequests" AS s
+      WHERE s."Status" = 0
+      ORDER BY s."CreatedAt"
+      LIMIT @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (149ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."AddressText", s."AssignedProviderId", s."CategoryId", s."CommissionRate", s."CreatedAt", s."CustomerId", s."Description", s."EstimatedDuration", s."EstimatedPrice", s."IsDepositPaid", s."OcrExtractedText", s."PayOSOrderCode", s."ServiceDefinitionId", s."Status", s."WasAnalyzedByAI", s."CommissionAmount_Amount", s."CommissionAmount_Currency", s."ComplexityLevel", s."DepositAmount_Amount", s."DepositAmount_Currency", s."EstimatedCost_Amount", s."EstimatedCost_Currency", s."FinalAmountPaid_Amount", s."FinalAmountPaid_Currency", s."FinalPrice_Amount", s."FinalPrice_Currency", s."WorkerAmount_Amount", s."WorkerAmount_Currency"
+      FROM "ServiceRequests" AS s
+      WHERE s."Status" = 0
+      ORDER BY s."CreatedAt"
+      LIMIT @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (155ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."AddressText", s."AssignedProviderId", s."CategoryId", s."CommissionRate", s."CreatedAt", s."CustomerId", s."Description", s."EstimatedDuration", s."EstimatedPrice", s."IsDepositPaid", s."OcrExtractedText", s."PayOSOrderCode", s."ServiceDefinitionId", s."Status", s."WasAnalyzedByAI", s."CommissionAmount_Amount", s."CommissionAmount_Currency", s."ComplexityLevel", s."DepositAmount_Amount", s."DepositAmount_Currency", s."EstimatedCost_Amount", s."EstimatedCost_Currency", s."FinalAmountPaid_Amount", s."FinalAmountPaid_Currency", s."FinalPrice_Amount", s."FinalPrice_Currency", s."WorkerAmount_Amount", s."WorkerAmount_Currency"
+      FROM "ServiceRequests" AS s
+      WHERE s."Status" = 0
+      ORDER BY s."CreatedAt"
+      LIMIT @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (148ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."Description", s."Name"
+      FROM "ServiceCategories" AS s
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (117ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."FullName", s."IsActive", s."UserId", s."Balance_Amount", s."Balance_Currency", a."Id", a."CategoryId", a."ServiceAgentId", a."ServiceIds", a."MaxComplexityLevel"
+      FROM "ServiceAgents" AS s
+      LEFT JOIN "AgentCapabilities" AS a ON s."Id" = a."ServiceAgentId"
+      ORDER BY s."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (103ms) [Parameters=[@__userIdGuid_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."AddressText", s."AssignedProviderId", s."CategoryId", s."CommissionRate", s."CreatedAt", s."CustomerId", s."Description", s."EstimatedDuration", s."EstimatedPrice", s."IsDepositPaid", s."OcrExtractedText", s."PayOSOrderCode", s."ServiceDefinitionId", s."Status", s."WasAnalyzedByAI", s."CommissionAmount_Amount", s."CommissionAmount_Currency", s."ComplexityLevel", s."DepositAmount_Amount", s."DepositAmount_Currency", s."EstimatedCost_Amount", s."EstimatedCost_Currency", s."FinalAmountPaid_Amount", s."FinalAmountPaid_Currency", s."FinalPrice_Amount", s."FinalPrice_Currency", s."WorkerAmount_Amount", s."WorkerAmount_Currency"
+      FROM "ServiceRequests" AS s
+      WHERE s."CustomerId" = @__userIdGuid_0
+      ORDER BY s."CreatedAt" DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (57ms) [Parameters=[@__userIdGuid_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."Comment", s."CreatedAt", s."CreatedByUserId", s."Rating", s."ServiceRequestId"
+      FROM "ServiceFeedbacks" AS s
+      WHERE s."CreatedByUserId" = @__userIdGuid_0
+      ORDER BY s."CreatedAt" DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (62ms) [Parameters=[@__userIdGuid_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."AddressText", s."AssignedProviderId", s."CategoryId", s."CommissionRate", s."CreatedAt", s."CustomerId", s."Description", s."EstimatedDuration", s."EstimatedPrice", s."IsDepositPaid", s."OcrExtractedText", s."PayOSOrderCode", s."ServiceDefinitionId", s."Status", s."WasAnalyzedByAI", s."CommissionAmount_Amount", s."CommissionAmount_Currency", s."ComplexityLevel", s."DepositAmount_Amount", s."DepositAmount_Currency", s."EstimatedCost_Amount", s."EstimatedCost_Currency", s."FinalAmountPaid_Amount", s."FinalAmountPaid_Currency", s."FinalPrice_Amount", s."FinalPrice_Currency", s."WorkerAmount_Amount", s."WorkerAmount_Currency"
+      FROM "ServiceRequests" AS s
+      WHERE s."CustomerId" = @__userIdGuid_0
+      ORDER BY s."CreatedAt" DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (73ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."Name", s."Description", s0."Name" AS "CategoryName", s."BasePrice", s."EstimatedDuration", s."IsActive", (
+          SELECT count(*)::int
+          FROM "ServiceRequests" AS s1
+          WHERE s1."CategoryId" = s."CategoryId") AS "BookingCount", s."CreatedAt", s."UpdatedAt", s."ComplexityRange", s."IsDangerous"
+      FROM "ServiceDefinitions" AS s
+      INNER JOIN "ServiceCategories" AS s0 ON s."CategoryId" = s0."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (96ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."Name", s."Description", s0."Name" AS "CategoryName", s."BasePrice", s."EstimatedDuration", s."IsActive", (
+          SELECT count(*)::int
+          FROM "ServiceRequests" AS s1
+          WHERE s1."CategoryId" = s."CategoryId") AS "BookingCount", s."CreatedAt", s."UpdatedAt", s."ComplexityRange", s."IsDangerous"
+      FROM "ServiceDefinitions" AS s
+      INNER JOIN "ServiceCategories" AS s0 ON s."CategoryId" = s0."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (99ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."FullName", s."IsActive", s."UserId", s."Balance_Amount", s."Balance_Currency", a."Id", a."CategoryId", a."ServiceAgentId", a."ServiceIds", a."MaxComplexityLevel"
+      FROM "ServiceAgents" AS s
+      LEFT JOIN "AgentCapabilities" AS a ON s."Id" = a."ServiceAgentId"
+      ORDER BY s."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (92ms) [Parameters=[@__categoryId_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."Name", s."Description", s0."Name" AS "CategoryName", s."BasePrice", s."EstimatedDuration", s."IsActive", (
+          SELECT count(*)::int
+          FROM "ServiceRequests" AS s1
+          WHERE s1."CategoryId" = s."CategoryId") AS "BookingCount", s."CreatedAt", s."UpdatedAt", s."ComplexityRange", s."IsDangerous"
+      FROM "ServiceDefinitions" AS s
+      INNER JOIN "ServiceCategories" AS s0 ON s."CategoryId" = s0."Id"
+      WHERE s."CategoryId" = @__categoryId_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (152ms) [Parameters=[@__userIdGuid_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."Comment", s."CreatedAt", s."CreatedByUserId", s."Rating", s."ServiceRequestId"
+      FROM "ServiceFeedbacks" AS s
+      WHERE s."CreatedByUserId" = @__userIdGuid_0
+      ORDER BY s."CreatedAt" DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (107ms) [Parameters=[@__categoryId_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."Name", s."Description", s0."Name" AS "CategoryName", s."BasePrice", s."EstimatedDuration", s."IsActive", (
+          SELECT count(*)::int
+          FROM "ServiceRequests" AS s1
+          WHERE s1."CategoryId" = s."CategoryId") AS "BookingCount", s."CreatedAt", s."UpdatedAt", s."ComplexityRange", s."IsDangerous"
+      FROM "ServiceDefinitions" AS s
+      INNER JOIN "ServiceCategories" AS s0 ON s."CategoryId" = s0."Id"
+      WHERE s."CategoryId" = @__categoryId_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (50ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."AddressText", s."AssignedProviderId", s."CategoryId", s."CommissionRate", s."CreatedAt", s."CustomerId", s."Description", s."EstimatedDuration", s."EstimatedPrice", s."IsDepositPaid", s."OcrExtractedText", s."PayOSOrderCode", s."ServiceDefinitionId", s."Status", s."WasAnalyzedByAI", s."CommissionAmount_Amount", s."CommissionAmount_Currency", s."ComplexityLevel", s."DepositAmount_Amount", s."DepositAmount_Currency", s."EstimatedCost_Amount", s."EstimatedCost_Currency", s."FinalAmountPaid_Amount", s."FinalAmountPaid_Currency", s."FinalPrice_Amount", s."FinalPrice_Currency", s."WorkerAmount_Amount", s."WorkerAmount_Currency"
+      FROM "ServiceRequests" AS s
+      WHERE s."Status" = 0
+      ORDER BY s."CreatedAt"
+      LIMIT @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (109ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."AddressText", s."AssignedProviderId", s."CategoryId", s."CommissionRate", s."CreatedAt", s."CustomerId", s."Description", s."EstimatedDuration", s."EstimatedPrice", s."IsDepositPaid", s."OcrExtractedText", s."PayOSOrderCode", s."ServiceDefinitionId", s."Status", s."WasAnalyzedByAI", s."CommissionAmount_Amount", s."CommissionAmount_Currency", s."ComplexityLevel", s."DepositAmount_Amount", s."DepositAmount_Currency", s."EstimatedCost_Amount", s."EstimatedCost_Currency", s."FinalAmountPaid_Amount", s."FinalAmountPaid_Currency", s."FinalPrice_Amount", s."FinalPrice_Currency", s."WorkerAmount_Amount", s."WorkerAmount_Currency"
+      FROM "ServiceRequests" AS s
+      WHERE s."Id" = @__id_0
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (173ms) [Parameters=[@__userIdGuid_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT u."Id", u."Email", u."FullName", u."IsLocked", u."PhoneNumber", u."Role"
+      FROM "Users" AS u
+      WHERE u."Id" = @__userIdGuid_0
+      LIMIT 1
+warn: LuckyPennySoftware.MediatR.License[0]
+      You do not have a valid license key for the Lucky Penny software MediatR. This is allowed for development and testing scenarios. If you are running in production you are required to have a licensed version. Please visit https://luckypennysoftware.com to obtain a valid license.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (179ms) [Parameters=[@__encryptedRefreshToken_0='?'], CommandType='Text', CommandTimeout='30']
+      SELECT a."Id", a."CreatedAt", a."Email", a."EncryptedRefreshToken", a."PasswordHash", a."PasswordResetToken", a."PasswordResetTokenExpiresAt", a."RefreshTokenExpiresAt", a."UpdatedAt", a."UserId"
+      FROM "AuthData" AS a
+      WHERE a."EncryptedRefreshToken" = @__encryptedRefreshToken_0
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (142ms) [Parameters=[@p3='?' (DbType = Guid), @p0='?', @p1='?' (DbType = DateTime), @p2='?' (DbType = DateTime)], CommandType='Text', CommandTimeout='30']
+      UPDATE "AuthData" SET "EncryptedRefreshToken" = @p0, "RefreshTokenExpiresAt" = @p1, "UpdatedAt" = @p2
+      WHERE "Id" = @p3;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (144ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."AddressText", s."AssignedProviderId", s."CategoryId", s."CommissionRate", s."CreatedAt", s."CustomerId", s."Description", s."EstimatedDuration", s."EstimatedPrice", s."IsDepositPaid", s."OcrExtractedText", s."PayOSOrderCode", s."ServiceDefinitionId", s."Status", s."WasAnalyzedByAI", s."CommissionAmount_Amount", s."CommissionAmount_Currency", s."ComplexityLevel", s."DepositAmount_Amount", s."DepositAmount_Currency", s."EstimatedCost_Amount", s."EstimatedCost_Currency", s."FinalAmountPaid_Amount", s."FinalAmountPaid_Currency", s."FinalPrice_Amount", s."FinalPrice_Currency", s."WorkerAmount_Amount", s."WorkerAmount_Currency"
+      FROM "ServiceRequests" AS s
+      WHERE s."Status" = 0
+      ORDER BY s."CreatedAt"
+      LIMIT @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (150ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."AddressText", s."AssignedProviderId", s."CategoryId", s."CommissionRate", s."CreatedAt", s."CustomerId", s."Description", s."EstimatedDuration", s."EstimatedPrice", s."IsDepositPaid", s."OcrExtractedText", s."PayOSOrderCode", s."ServiceDefinitionId", s."Status", s."WasAnalyzedByAI", s."CommissionAmount_Amount", s."CommissionAmount_Currency", s."ComplexityLevel", s."DepositAmount_Amount", s."DepositAmount_Currency", s."EstimatedCost_Amount", s."EstimatedCost_Currency", s."FinalAmountPaid_Amount", s."FinalAmountPaid_Currency", s."FinalPrice_Amount", s."FinalPrice_Currency", s."WorkerAmount_Amount", s."WorkerAmount_Currency"
+      FROM "ServiceRequests" AS s
+      WHERE s."Status" = 0
+      ORDER BY s."CreatedAt"
+      LIMIT @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (141ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."AddressText", s."AssignedProviderId", s."CategoryId", s."CommissionRate", s."CreatedAt", s."CustomerId", s."Description", s."EstimatedDuration", s."EstimatedPrice", s."IsDepositPaid", s."OcrExtractedText", s."PayOSOrderCode", s."ServiceDefinitionId", s."Status", s."WasAnalyzedByAI", s."CommissionAmount_Amount", s."CommissionAmount_Currency", s."ComplexityLevel", s."DepositAmount_Amount", s."DepositAmount_Currency", s."EstimatedCost_Amount", s."EstimatedCost_Currency", s."FinalAmountPaid_Amount", s."FinalAmountPaid_Currency", s."FinalPrice_Amount", s."FinalPrice_Currency", s."WorkerAmount_Amount", s."WorkerAmount_Currency"
+      FROM "ServiceRequests" AS s
+      WHERE s."Status" = 0
+      ORDER BY s."CreatedAt"
+      LIMIT @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (128ms) [Parameters=[@__email_0='?'], CommandType='Text', CommandTimeout='30']
+      SELECT a."Id", a."CreatedAt", a."Email", a."EncryptedRefreshToken", a."PasswordHash", a."PasswordResetToken", a."PasswordResetTokenExpiresAt", a."RefreshTokenExpiresAt", a."UpdatedAt", a."UserId"
+      FROM "AuthData" AS a
+      WHERE a."Email" = @__email_0
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (135ms) [Parameters=[@__get_Item_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT u."Id", u."Email", u."FullName", u."IsLocked", u."PhoneNumber", u."Role"
+      FROM "Users" AS u
+      WHERE u."Id" = @__get_Item_0
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (342ms) [Parameters=[@__userId_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT a."Id", a."CreatedAt", a."Email", a."EncryptedRefreshToken", a."PasswordHash", a."PasswordResetToken", a."PasswordResetTokenExpiresAt", a."RefreshTokenExpiresAt", a."UpdatedAt", a."UserId"
+      FROM "AuthData" AS a
+      WHERE a."UserId" = @__userId_0
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (182ms) [Parameters=[@p3='?' (DbType = Guid), @p0='?', @p1='?' (DbType = DateTime), @p2='?' (DbType = DateTime)], CommandType='Text', CommandTimeout='30']
+      UPDATE "AuthData" SET "EncryptedRefreshToken" = @p0, "RefreshTokenExpiresAt" = @p1, "UpdatedAt" = @p2
+      WHERE "Id" = @p3;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (140ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."Name", s."Description", s0."Name" AS "CategoryName", s."BasePrice", s."EstimatedDuration", s."IsActive", (
+          SELECT count(*)::int
+          FROM "ServiceRequests" AS s1
+          WHERE s1."CategoryId" = s."CategoryId") AS "BookingCount", s."CreatedAt", s."UpdatedAt", s."ComplexityRange", s."IsDangerous"
+      FROM "ServiceDefinitions" AS s
+      INNER JOIN "ServiceCategories" AS s0 ON s."CategoryId" = s0."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (262ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."Description", s."Name"
+      FROM "ServiceCategories" AS s
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (164ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."Name", s."Description", s0."Name" AS "CategoryName", s."BasePrice", s."EstimatedDuration", s."IsActive", (
+          SELECT count(*)::int
+          FROM "ServiceRequests" AS s1
+          WHERE s1."CategoryId" = s."CategoryId") AS "BookingCount", s."CreatedAt", s."UpdatedAt", s."ComplexityRange", s."IsDangerous"
+      FROM "ServiceDefinitions" AS s
+      INNER JOIN "ServiceCategories" AS s0 ON s."CategoryId" = s0."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (237ms) [Parameters=[@__userIdGuid_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."Comment", s."CreatedAt", s."CreatedByUserId", s."Rating", s."ServiceRequestId"
+      FROM "ServiceFeedbacks" AS s
+      WHERE s."CreatedByUserId" = @__userIdGuid_0
+      ORDER BY s."CreatedAt" DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (217ms) [Parameters=[@__userIdGuid_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."AddressText", s."AssignedProviderId", s."CategoryId", s."CommissionRate", s."CreatedAt", s."CustomerId", s."Description", s."EstimatedDuration", s."EstimatedPrice", s."IsDepositPaid", s."OcrExtractedText", s."PayOSOrderCode", s."ServiceDefinitionId", s."Status", s."WasAnalyzedByAI", s."CommissionAmount_Amount", s."CommissionAmount_Currency", s."ComplexityLevel", s."DepositAmount_Amount", s."DepositAmount_Currency", s."EstimatedCost_Amount", s."EstimatedCost_Currency", s."FinalAmountPaid_Amount", s."FinalAmountPaid_Currency", s."FinalPrice_Amount", s."FinalPrice_Currency", s."WorkerAmount_Amount", s."WorkerAmount_Currency"
+      FROM "ServiceRequests" AS s
+      WHERE s."CustomerId" = @__userIdGuid_0
+      ORDER BY s."CreatedAt" DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (213ms) [Parameters=[@__userIdGuid_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."AddressText", s."AssignedProviderId", s."CategoryId", s."CommissionRate", s."CreatedAt", s."CustomerId", s."Description", s."EstimatedDuration", s."EstimatedPrice", s."IsDepositPaid", s."OcrExtractedText", s."PayOSOrderCode", s."ServiceDefinitionId", s."Status", s."WasAnalyzedByAI", s."CommissionAmount_Amount", s."CommissionAmount_Currency", s."ComplexityLevel", s."DepositAmount_Amount", s."DepositAmount_Currency", s."EstimatedCost_Amount", s."EstimatedCost_Currency", s."FinalAmountPaid_Amount", s."FinalAmountPaid_Currency", s."FinalPrice_Amount", s."FinalPrice_Currency", s."WorkerAmount_Amount", s."WorkerAmount_Currency"
+      FROM "ServiceRequests" AS s
+      WHERE s."CustomerId" = @__userIdGuid_0
+      ORDER BY s."CreatedAt" DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (208ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."FullName", s."IsActive", s."UserId", s."Balance_Amount", s."Balance_Currency", a."Id", a."CategoryId", a."ServiceAgentId", a."ServiceIds", a."MaxComplexityLevel"
+      FROM "ServiceAgents" AS s
+      LEFT JOIN "AgentCapabilities" AS a ON s."Id" = a."ServiceAgentId"
+      ORDER BY s."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (135ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."Name", s."Description", s0."Name" AS "CategoryName", s."BasePrice", s."EstimatedDuration", s."IsActive", (
+          SELECT count(*)::int
+          FROM "ServiceRequests" AS s1
+          WHERE s1."CategoryId" = s."CategoryId") AS "BookingCount", s."CreatedAt", s."UpdatedAt", s."ComplexityRange", s."IsDangerous"
+      FROM "ServiceDefinitions" AS s
+      INNER JOIN "ServiceCategories" AS s0 ON s."CategoryId" = s0."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (177ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."FullName", s."IsActive", s."UserId", s."Balance_Amount", s."Balance_Currency", a."Id", a."CategoryId", a."ServiceAgentId", a."ServiceIds", a."MaxComplexityLevel"
+      FROM "ServiceAgents" AS s
+      LEFT JOIN "AgentCapabilities" AS a ON s."Id" = a."ServiceAgentId"
+      ORDER BY s."Id"
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (281ms) [Parameters=[@__id_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."AddressText", s."AssignedProviderId", s."CategoryId", s."CommissionRate", s."CreatedAt", s."CustomerId", s."Description", s."EstimatedDuration", s."EstimatedPrice", s."IsDepositPaid", s."OcrExtractedText", s."PayOSOrderCode", s."ServiceDefinitionId", s."Status", s."WasAnalyzedByAI", s."CommissionAmount_Amount", s."CommissionAmount_Currency", s."ComplexityLevel", s."DepositAmount_Amount", s."DepositAmount_Currency", s."EstimatedCost_Amount", s."EstimatedCost_Currency", s."FinalAmountPaid_Amount", s."FinalAmountPaid_Currency", s."FinalPrice_Amount", s."FinalPrice_Currency", s."WorkerAmount_Amount", s."WorkerAmount_Currency"
+      FROM "ServiceRequests" AS s
+      WHERE s."Id" = @__id_0
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (333ms) [Parameters=[@__userIdGuid_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."Comment", s."CreatedAt", s."CreatedByUserId", s."Rating", s."ServiceRequestId"
+      FROM "ServiceFeedbacks" AS s
+      WHERE s."CreatedByUserId" = @__userIdGuid_0
+      ORDER BY s."CreatedAt" DESC
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (242ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."AddressText", s."AssignedProviderId", s."CategoryId", s."CommissionRate", s."CreatedAt", s."CustomerId", s."Description", s."EstimatedDuration", s."EstimatedPrice", s."IsDepositPaid", s."OcrExtractedText", s."PayOSOrderCode", s."ServiceDefinitionId", s."Status", s."WasAnalyzedByAI", s."CommissionAmount_Amount", s."CommissionAmount_Currency", s."ComplexityLevel", s."DepositAmount_Amount", s."DepositAmount_Currency", s."EstimatedCost_Amount", s."EstimatedCost_Currency", s."FinalAmountPaid_Amount", s."FinalAmountPaid_Currency", s."FinalPrice_Amount", s."FinalPrice_Currency", s."WorkerAmount_Amount", s."WorkerAmount_Currency"
+      FROM "ServiceRequests" AS s
+      WHERE s."Status" = 0
+      ORDER BY s."CreatedAt"
+      LIMIT @__p_0
+[PaymentsController] CreateDepositLink called for 7e617903-f283-492b-8cbe-cd99822ec93d
+[PayOS Config] ClientId: 9ec01fc8..., ApiKey: b9293e8c...
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (96ms) [Parameters=[@__request_ServiceRequestId_0='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."AddressText", s."AssignedProviderId", s."CategoryId", s."CommissionRate", s."CreatedAt", s."CustomerId", s."Description", s."EstimatedDuration", s."EstimatedPrice", s."IsDepositPaid", s."OcrExtractedText", s."PayOSOrderCode", s."ServiceDefinitionId", s."Status", s."WasAnalyzedByAI", s."CommissionAmount_Amount", s."CommissionAmount_Currency", s."ComplexityLevel", s."DepositAmount_Amount", s."DepositAmount_Currency", s."EstimatedCost_Amount", s."EstimatedCost_Currency", s."FinalAmountPaid_Amount", s."FinalAmountPaid_Currency", s."FinalPrice_Amount", s."FinalPrice_Currency", s."WorkerAmount_Amount", s."WorkerAmount_Currency"
+      FROM "ServiceRequests" AS s
+      WHERE s."Id" = @__request_ServiceRequestId_0
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (179ms) [Parameters=[@p1='?' (DbType = Guid), @p0='?' (DbType = Int64)], CommandType='Text', CommandTimeout='30']
+      UPDATE "ServiceRequests" SET "PayOSOrderCode" = @p0
+      WHERE "Id" = @p1;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (149ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."AddressText", s."AssignedProviderId", s."CategoryId", s."CommissionRate", s."CreatedAt", s."CustomerId", s."Description", s."EstimatedDuration", s."EstimatedPrice", s."IsDepositPaid", s."OcrExtractedText", s."PayOSOrderCode", s."ServiceDefinitionId", s."Status", s."WasAnalyzedByAI", s."CommissionAmount_Amount", s."CommissionAmount_Currency", s."ComplexityLevel", s."DepositAmount_Amount", s."DepositAmount_Currency", s."EstimatedCost_Amount", s."EstimatedCost_Currency", s."FinalAmountPaid_Amount", s."FinalAmountPaid_Currency", s."FinalPrice_Amount", s."FinalPrice_Currency", s."WorkerAmount_Amount", s."WorkerAmount_Currency"
+      FROM "ServiceRequests" AS s
+      WHERE s."Status" = 0
+      ORDER BY s."CreatedAt"
+      LIMIT @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (154ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."AddressText", s."AssignedProviderId", s."CategoryId", s."CommissionRate", s."CreatedAt", s."CustomerId", s."Description", s."EstimatedDuration", s."EstimatedPrice", s."IsDepositPaid", s."OcrExtractedText", s."PayOSOrderCode", s."ServiceDefinitionId", s."Status", s."WasAnalyzedByAI", s."CommissionAmount_Amount", s."CommissionAmount_Currency", s."ComplexityLevel", s."DepositAmount_Amount", s."DepositAmount_Currency", s."EstimatedCost_Amount", s."EstimatedCost_Currency", s."FinalAmountPaid_Amount", s."FinalAmountPaid_Currency", s."FinalPrice_Amount", s."FinalPrice_Currency", s."WorkerAmount_Amount", s."WorkerAmount_Currency"
+      FROM "ServiceRequests" AS s
+      WHERE s."Status" = 0
+      ORDER BY s."CreatedAt"
+      LIMIT @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (143ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."AddressText", s."AssignedProviderId", s."CategoryId", s."CommissionRate", s."CreatedAt", s."CustomerId", s."Description", s."EstimatedDuration", s."EstimatedPrice", s."IsDepositPaid", s."OcrExtractedText", s."PayOSOrderCode", s."ServiceDefinitionId", s."Status", s."WasAnalyzedByAI", s."CommissionAmount_Amount", s."CommissionAmount_Currency", s."ComplexityLevel", s."DepositAmount_Amount", s."DepositAmount_Currency", s."EstimatedCost_Amount", s."EstimatedCost_Currency", s."FinalAmountPaid_Amount", s."FinalAmountPaid_Currency", s."FinalPrice_Amount", s."FinalPrice_Currency", s."WorkerAmount_Amount", s."WorkerAmount_Currency"
+      FROM "ServiceRequests" AS s
+      WHERE s."Status" = 0
+      ORDER BY s."CreatedAt"
+      LIMIT @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (47ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."AddressText", s."AssignedProviderId", s."CategoryId", s."CommissionRate", s."CreatedAt", s."CustomerId", s."Description", s."EstimatedDuration", s."EstimatedPrice", s."IsDepositPaid", s."OcrExtractedText", s."PayOSOrderCode", s."ServiceDefinitionId", s."Status", s."WasAnalyzedByAI", s."CommissionAmount_Amount", s."CommissionAmount_Currency", s."ComplexityLevel", s."DepositAmount_Amount", s."DepositAmount_Currency", s."EstimatedCost_Amount", s."EstimatedCost_Currency", s."FinalAmountPaid_Amount", s."FinalAmountPaid_Currency", s."FinalPrice_Amount", s."FinalPrice_Currency", s."WorkerAmount_Amount", s."WorkerAmount_Currency"
+      FROM "ServiceRequests" AS s
+      WHERE s."Status" = 0
+      ORDER BY s."CreatedAt"
+      LIMIT @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (132ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."AddressText", s."AssignedProviderId", s."CategoryId", s."CommissionRate", s."CreatedAt", s."CustomerId", s."Description", s."EstimatedDuration", s."EstimatedPrice", s."IsDepositPaid", s."OcrExtractedText", s."PayOSOrderCode", s."ServiceDefinitionId", s."Status", s."WasAnalyzedByAI", s."CommissionAmount_Amount", s."CommissionAmount_Currency", s."ComplexityLevel", s."DepositAmount_Amount", s."DepositAmount_Currency", s."EstimatedCost_Amount", s."EstimatedCost_Currency", s."FinalAmountPaid_Amount", s."FinalAmountPaid_Currency", s."FinalPrice_Amount", s."FinalPrice_Currency", s."WorkerAmount_Amount", s."WorkerAmount_Currency"
+      FROM "ServiceRequests" AS s
+      WHERE s."Status" = 0
+      ORDER BY s."CreatedAt"
+      LIMIT @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (195ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."AddressText", s."AssignedProviderId", s."CategoryId", s."CommissionRate", s."CreatedAt", s."CustomerId", s."Description", s."EstimatedDuration", s."EstimatedPrice", s."IsDepositPaid", s."OcrExtractedText", s."PayOSOrderCode", s."ServiceDefinitionId", s."Status", s."WasAnalyzedByAI", s."CommissionAmount_Amount", s."CommissionAmount_Currency", s."ComplexityLevel", s."DepositAmount_Amount", s."DepositAmount_Currency", s."EstimatedCost_Amount", s."EstimatedCost_Currency", s."FinalAmountPaid_Amount", s."FinalAmountPaid_Currency", s."FinalPrice_Amount", s."FinalPrice_Currency", s."WorkerAmount_Amount", s."WorkerAmount_Currency"
+      FROM "ServiceRequests" AS s
+      WHERE s."Status" = 0
+      ORDER BY s."CreatedAt"
+      LIMIT @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (158ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."AddressText", s."AssignedProviderId", s."CategoryId", s."CommissionRate", s."CreatedAt", s."CustomerId", s."Description", s."EstimatedDuration", s."EstimatedPrice", s."IsDepositPaid", s."OcrExtractedText", s."PayOSOrderCode", s."ServiceDefinitionId", s."Status", s."WasAnalyzedByAI", s."CommissionAmount_Amount", s."CommissionAmount_Currency", s."ComplexityLevel", s."DepositAmount_Amount", s."DepositAmount_Currency", s."EstimatedCost_Amount", s."EstimatedCost_Currency", s."FinalAmountPaid_Amount", s."FinalAmountPaid_Currency", s."FinalPrice_Amount", s."FinalPrice_Currency", s."WorkerAmount_Amount", s."WorkerAmount_Currency"
+      FROM "ServiceRequests" AS s
+      WHERE s."Status" = 0
+      ORDER BY s."CreatedAt"
+      LIMIT @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (262ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."AddressText", s."AssignedProviderId", s."CategoryId", s."CommissionRate", s."CreatedAt", s."CustomerId", s."Description", s."EstimatedDuration", s."EstimatedPrice", s."IsDepositPaid", s."OcrExtractedText", s."PayOSOrderCode", s."ServiceDefinitionId", s."Status", s."WasAnalyzedByAI", s."CommissionAmount_Amount", s."CommissionAmount_Currency", s."ComplexityLevel", s."DepositAmount_Amount", s."DepositAmount_Currency", s."EstimatedCost_Amount", s."EstimatedCost_Currency", s."FinalAmountPaid_Amount", s."FinalAmountPaid_Currency", s."FinalPrice_Amount", s."FinalPrice_Currency", s."WorkerAmount_Amount", s."WorkerAmount_Currency"
+      FROM "ServiceRequests" AS s
+      WHERE s."Status" = 0
+      ORDER BY s."CreatedAt"
+      LIMIT @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (217ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."AddressText", s."AssignedProviderId", s."CategoryId", s."CommissionRate", s."CreatedAt", s."CustomerId", s."Description", s."EstimatedDuration", s."EstimatedPrice", s."IsDepositPaid", s."OcrExtractedText", s."PayOSOrderCode", s."ServiceDefinitionId", s."Status", s."WasAnalyzedByAI", s."CommissionAmount_Amount", s."CommissionAmount_Currency", s."ComplexityLevel", s."DepositAmount_Amount", s."DepositAmount_Currency", s."EstimatedCost_Amount", s."EstimatedCost_Currency", s."FinalAmountPaid_Amount", s."FinalAmountPaid_Currency", s."FinalPrice_Amount", s."FinalPrice_Currency", s."WorkerAmount_Amount", s."WorkerAmount_Currency"
+      FROM "ServiceRequests" AS s
+      WHERE s."Status" = 0
+      ORDER BY s."CreatedAt"
+      LIMIT @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (219ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."AddressText", s."AssignedProviderId", s."CategoryId", s."CommissionRate", s."CreatedAt", s."CustomerId", s."Description", s."EstimatedDuration", s."EstimatedPrice", s."IsDepositPaid", s."OcrExtractedText", s."PayOSOrderCode", s."ServiceDefinitionId", s."Status", s."WasAnalyzedByAI", s."CommissionAmount_Amount", s."CommissionAmount_Currency", s."ComplexityLevel", s."DepositAmount_Amount", s."DepositAmount_Currency", s."EstimatedCost_Amount", s."EstimatedCost_Currency", s."FinalAmountPaid_Amount", s."FinalAmountPaid_Currency", s."FinalPrice_Amount", s."FinalPrice_Currency", s."WorkerAmount_Amount", s."WorkerAmount_Currency"
+      FROM "ServiceRequests" AS s
+      WHERE s."Status" = 0
+      ORDER BY s."CreatedAt"
+      LIMIT @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (215ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."AddressText", s."AssignedProviderId", s."CategoryId", s."CommissionRate", s."CreatedAt", s."CustomerId", s."Description", s."EstimatedDuration", s."EstimatedPrice", s."IsDepositPaid", s."OcrExtractedText", s."PayOSOrderCode", s."ServiceDefinitionId", s."Status", s."WasAnalyzedByAI", s."CommissionAmount_Amount", s."CommissionAmount_Currency", s."ComplexityLevel", s."DepositAmount_Amount", s."DepositAmount_Currency", s."EstimatedCost_Amount", s."EstimatedCost_Currency", s."FinalAmountPaid_Amount", s."FinalAmountPaid_Currency", s."FinalPrice_Amount", s."FinalPrice_Currency", s."WorkerAmount_Amount", s."WorkerAmount_Currency"
+      FROM "ServiceRequests" AS s
+      WHERE s."Status" = 0
+      ORDER BY s."CreatedAt"
+      LIMIT @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (357ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."AddressText", s."AssignedProviderId", s."CategoryId", s."CommissionRate", s."CreatedAt", s."CustomerId", s."Description", s."EstimatedDuration", s."EstimatedPrice", s."IsDepositPaid", s."OcrExtractedText", s."PayOSOrderCode", s."ServiceDefinitionId", s."Status", s."WasAnalyzedByAI", s."CommissionAmount_Amount", s."CommissionAmount_Currency", s."ComplexityLevel", s."DepositAmount_Amount", s."DepositAmount_Currency", s."EstimatedCost_Amount", s."EstimatedCost_Currency", s."FinalAmountPaid_Amount", s."FinalAmountPaid_Currency", s."FinalPrice_Amount", s."FinalPrice_Currency", s."WorkerAmount_Amount", s."WorkerAmount_Currency"
+      FROM "ServiceRequests" AS s
+      WHERE s."Status" = 0
+      ORDER BY s."CreatedAt"
+      LIMIT @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (389ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."AddressText", s."AssignedProviderId", s."CategoryId", s."CommissionRate", s."CreatedAt", s."CustomerId", s."Description", s."EstimatedDuration", s."EstimatedPrice", s."IsDepositPaid", s."OcrExtractedText", s."PayOSOrderCode", s."ServiceDefinitionId", s."Status", s."WasAnalyzedByAI", s."CommissionAmount_Amount", s."CommissionAmount_Currency", s."ComplexityLevel", s."DepositAmount_Amount", s."DepositAmount_Currency", s."EstimatedCost_Amount", s."EstimatedCost_Currency", s."FinalAmountPaid_Amount", s."FinalAmountPaid_Currency", s."FinalPrice_Amount", s."FinalPrice_Currency", s."WorkerAmount_Amount", s."WorkerAmount_Currency"
+      FROM "ServiceRequests" AS s
+      WHERE s."Status" = 0
+      ORDER BY s."CreatedAt"
+      LIMIT @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (137ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."AddressText", s."AssignedProviderId", s."CategoryId", s."CommissionRate", s."CreatedAt", s."CustomerId", s."Description", s."EstimatedDuration", s."EstimatedPrice", s."IsDepositPaid", s."OcrExtractedText", s."PayOSOrderCode", s."ServiceDefinitionId", s."Status", s."WasAnalyzedByAI", s."CommissionAmount_Amount", s."CommissionAmount_Currency", s."ComplexityLevel", s."DepositAmount_Amount", s."DepositAmount_Currency", s."EstimatedCost_Amount", s."EstimatedCost_Currency", s."FinalAmountPaid_Amount", s."FinalAmountPaid_Currency", s."FinalPrice_Amount", s."FinalPrice_Currency", s."WorkerAmount_Amount", s."WorkerAmount_Currency"
+      FROM "ServiceRequests" AS s
+      WHERE s."Status" = 0
+      ORDER BY s."CreatedAt"
+      LIMIT @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (141ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."AddressText", s."AssignedProviderId", s."CategoryId", s."CommissionRate", s."CreatedAt", s."CustomerId", s."Description", s."EstimatedDuration", s."EstimatedPrice", s."IsDepositPaid", s."OcrExtractedText", s."PayOSOrderCode", s."ServiceDefinitionId", s."Status", s."WasAnalyzedByAI", s."CommissionAmount_Amount", s."CommissionAmount_Currency", s."ComplexityLevel", s."DepositAmount_Amount", s."DepositAmount_Currency", s."EstimatedCost_Amount", s."EstimatedCost_Currency", s."FinalAmountPaid_Amount", s."FinalAmountPaid_Currency", s."FinalPrice_Amount", s."FinalPrice_Currency", s."WorkerAmount_Amount", s."WorkerAmount_Currency"
+      FROM "ServiceRequests" AS s
+      WHERE s."Status" = 0
+      ORDER BY s."CreatedAt"
+      LIMIT @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (134ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."AddressText", s."AssignedProviderId", s."CategoryId", s."CommissionRate", s."CreatedAt", s."CustomerId", s."Description", s."EstimatedDuration", s."EstimatedPrice", s."IsDepositPaid", s."OcrExtractedText", s."PayOSOrderCode", s."ServiceDefinitionId", s."Status", s."WasAnalyzedByAI", s."CommissionAmount_Amount", s."CommissionAmount_Currency", s."ComplexityLevel", s."DepositAmount_Amount", s."DepositAmount_Currency", s."EstimatedCost_Amount", s."EstimatedCost_Currency", s."FinalAmountPaid_Amount", s."FinalAmountPaid_Currency", s."FinalPrice_Amount", s."FinalPrice_Currency", s."WorkerAmount_Amount", s."WorkerAmount_Currency"
+      FROM "ServiceRequests" AS s
+      WHERE s."Status" = 0
+      ORDER BY s."CreatedAt"
+      LIMIT @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (161ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."AddressText", s."AssignedProviderId", s."CategoryId", s."CommissionRate", s."CreatedAt", s."CustomerId", s."Description", s."EstimatedDuration", s."EstimatedPrice", s."IsDepositPaid", s."OcrExtractedText", s."PayOSOrderCode", s."ServiceDefinitionId", s."Status", s."WasAnalyzedByAI", s."CommissionAmount_Amount", s."CommissionAmount_Currency", s."ComplexityLevel", s."DepositAmount_Amount", s."DepositAmount_Currency", s."EstimatedCost_Amount", s."EstimatedCost_Currency", s."FinalAmountPaid_Amount", s."FinalAmountPaid_Currency", s."FinalPrice_Amount", s."FinalPrice_Currency", s."WorkerAmount_Amount", s."WorkerAmount_Currency"
+      FROM "ServiceRequests" AS s
+      WHERE s."Status" = 0
+      ORDER BY s."CreatedAt"
+      LIMIT @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (246ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."AddressText", s."AssignedProviderId", s."CategoryId", s."CommissionRate", s."CreatedAt", s."CustomerId", s."Description", s."EstimatedDuration", s."EstimatedPrice", s."IsDepositPaid", s."OcrExtractedText", s."PayOSOrderCode", s."ServiceDefinitionId", s."Status", s."WasAnalyzedByAI", s."CommissionAmount_Amount", s."CommissionAmount_Currency", s."ComplexityLevel", s."DepositAmount_Amount", s."DepositAmount_Currency", s."EstimatedCost_Amount", s."EstimatedCost_Currency", s."FinalAmountPaid_Amount", s."FinalAmountPaid_Currency", s."FinalPrice_Amount", s."FinalPrice_Currency", s."WorkerAmount_Amount", s."WorkerAmount_Currency"
+      FROM "ServiceRequests" AS s
+      WHERE s."Status" = 0
+      ORDER BY s."CreatedAt"
+      LIMIT @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (221ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."AddressText", s."AssignedProviderId", s."CategoryId", s."CommissionRate", s."CreatedAt", s."CustomerId", s."Description", s."EstimatedDuration", s."EstimatedPrice", s."IsDepositPaid", s."OcrExtractedText", s."PayOSOrderCode", s."ServiceDefinitionId", s."Status", s."WasAnalyzedByAI", s."CommissionAmount_Amount", s."CommissionAmount_Currency", s."ComplexityLevel", s."DepositAmount_Amount", s."DepositAmount_Currency", s."EstimatedCost_Amount", s."EstimatedCost_Currency", s."FinalAmountPaid_Amount", s."FinalAmountPaid_Currency", s."FinalPrice_Amount", s."FinalPrice_Currency", s."WorkerAmount_Amount", s."WorkerAmount_Currency"
+      FROM "ServiceRequests" AS s
+      WHERE s."Status" = 0
+      ORDER BY s."CreatedAt"
+      LIMIT @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (152ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."AddressText", s."AssignedProviderId", s."CategoryId", s."CommissionRate", s."CreatedAt", s."CustomerId", s."Description", s."EstimatedDuration", s."EstimatedPrice", s."IsDepositPaid", s."OcrExtractedText", s."PayOSOrderCode", s."ServiceDefinitionId", s."Status", s."WasAnalyzedByAI", s."CommissionAmount_Amount", s."CommissionAmount_Currency", s."ComplexityLevel", s."DepositAmount_Amount", s."DepositAmount_Currency", s."EstimatedCost_Amount", s."EstimatedCost_Currency", s."FinalAmountPaid_Amount", s."FinalAmountPaid_Currency", s."FinalPrice_Amount", s."FinalPrice_Currency", s."WorkerAmount_Amount", s."WorkerAmount_Currency"
+      FROM "ServiceRequests" AS s
+      WHERE s."Status" = 0
+      ORDER BY s."CreatedAt"
+      LIMIT @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (149ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."AddressText", s."AssignedProviderId", s."CategoryId", s."CommissionRate", s."CreatedAt", s."CustomerId", s."Description", s."EstimatedDuration", s."EstimatedPrice", s."IsDepositPaid", s."OcrExtractedText", s."PayOSOrderCode", s."ServiceDefinitionId", s."Status", s."WasAnalyzedByAI", s."CommissionAmount_Amount", s."CommissionAmount_Currency", s."ComplexityLevel", s."DepositAmount_Amount", s."DepositAmount_Currency", s."EstimatedCost_Amount", s."EstimatedCost_Currency", s."FinalAmountPaid_Amount", s."FinalAmountPaid_Currency", s."FinalPrice_Amount", s."FinalPrice_Currency", s."WorkerAmount_Amount", s."WorkerAmount_Currency"
+      FROM "ServiceRequests" AS s
+      WHERE s."Status" = 0
+      ORDER BY s."CreatedAt"
+      LIMIT @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (132ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."AddressText", s."AssignedProviderId", s."CategoryId", s."CommissionRate", s."CreatedAt", s."CustomerId", s."Description", s."EstimatedDuration", s."EstimatedPrice", s."IsDepositPaid", s."OcrExtractedText", s."PayOSOrderCode", s."ServiceDefinitionId", s."Status", s."WasAnalyzedByAI", s."CommissionAmount_Amount", s."CommissionAmount_Currency", s."ComplexityLevel", s."DepositAmount_Amount", s."DepositAmount_Currency", s."EstimatedCost_Amount", s."EstimatedCost_Currency", s."FinalAmountPaid_Amount", s."FinalAmountPaid_Currency", s."FinalPrice_Amount", s."FinalPrice_Currency", s."WorkerAmount_Amount", s."WorkerAmount_Currency"
+      FROM "ServiceRequests" AS s
+      WHERE s."Status" = 0
+      ORDER BY s."CreatedAt"
+      LIMIT @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (138ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."AddressText", s."AssignedProviderId", s."CategoryId", s."CommissionRate", s."CreatedAt", s."CustomerId", s."Description", s."EstimatedDuration", s."EstimatedPrice", s."IsDepositPaid", s."OcrExtractedText", s."PayOSOrderCode", s."ServiceDefinitionId", s."Status", s."WasAnalyzedByAI", s."CommissionAmount_Amount", s."CommissionAmount_Currency", s."ComplexityLevel", s."DepositAmount_Amount", s."DepositAmount_Currency", s."EstimatedCost_Amount", s."EstimatedCost_Currency", s."FinalAmountPaid_Amount", s."FinalAmountPaid_Currency", s."FinalPrice_Amount", s."FinalPrice_Currency", s."WorkerAmount_Amount", s."WorkerAmount_Currency"
+      FROM "ServiceRequests" AS s
+      WHERE s."Status" = 0
+      ORDER BY s."CreatedAt"
+      LIMIT @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (142ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."AddressText", s."AssignedProviderId", s."CategoryId", s."CommissionRate", s."CreatedAt", s."CustomerId", s."Description", s."EstimatedDuration", s."EstimatedPrice", s."IsDepositPaid", s."OcrExtractedText", s."PayOSOrderCode", s."ServiceDefinitionId", s."Status", s."WasAnalyzedByAI", s."CommissionAmount_Amount", s."CommissionAmount_Currency", s."ComplexityLevel", s."DepositAmount_Amount", s."DepositAmount_Currency", s."EstimatedCost_Amount", s."EstimatedCost_Currency", s."FinalAmountPaid_Amount", s."FinalAmountPaid_Currency", s."FinalPrice_Amount", s."FinalPrice_Currency", s."WorkerAmount_Amount", s."WorkerAmount_Currency"
+      FROM "ServiceRequests" AS s
+      WHERE s."Status" = 0
+      ORDER BY s."CreatedAt"
+      LIMIT @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (160ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."AddressText", s."AssignedProviderId", s."CategoryId", s."CommissionRate", s."CreatedAt", s."CustomerId", s."Description", s."EstimatedDuration", s."EstimatedPrice", s."IsDepositPaid", s."OcrExtractedText", s."PayOSOrderCode", s."ServiceDefinitionId", s."Status", s."WasAnalyzedByAI", s."CommissionAmount_Amount", s."CommissionAmount_Currency", s."ComplexityLevel", s."DepositAmount_Amount", s."DepositAmount_Currency", s."EstimatedCost_Amount", s."EstimatedCost_Currency", s."FinalAmountPaid_Amount", s."FinalAmountPaid_Currency", s."FinalPrice_Amount", s."FinalPrice_Currency", s."WorkerAmount_Amount", s."WorkerAmount_Currency"
+      FROM "ServiceRequests" AS s
+      WHERE s."Status" = 0
+      ORDER BY s."CreatedAt"
+      LIMIT @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (150ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."AddressText", s."AssignedProviderId", s."CategoryId", s."CommissionRate", s."CreatedAt", s."CustomerId", s."Description", s."EstimatedDuration", s."EstimatedPrice", s."IsDepositPaid", s."OcrExtractedText", s."PayOSOrderCode", s."ServiceDefinitionId", s."Status", s."WasAnalyzedByAI", s."CommissionAmount_Amount", s."CommissionAmount_Currency", s."ComplexityLevel", s."DepositAmount_Amount", s."DepositAmount_Currency", s."EstimatedCost_Amount", s."EstimatedCost_Currency", s."FinalAmountPaid_Amount", s."FinalAmountPaid_Currency", s."FinalPrice_Amount", s."FinalPrice_Currency", s."WorkerAmount_Amount", s."WorkerAmount_Currency"
+      FROM "ServiceRequests" AS s
+      WHERE s."Status" = 0
+      ORDER BY s."CreatedAt"
+      LIMIT @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (229ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."AddressText", s."AssignedProviderId", s."CategoryId", s."CommissionRate", s."CreatedAt", s."CustomerId", s."Description", s."EstimatedDuration", s."EstimatedPrice", s."IsDepositPaid", s."OcrExtractedText", s."PayOSOrderCode", s."ServiceDefinitionId", s."Status", s."WasAnalyzedByAI", s."CommissionAmount_Amount", s."CommissionAmount_Currency", s."ComplexityLevel", s."DepositAmount_Amount", s."DepositAmount_Currency", s."EstimatedCost_Amount", s."EstimatedCost_Currency", s."FinalAmountPaid_Amount", s."FinalAmountPaid_Currency", s."FinalPrice_Amount", s."FinalPrice_Currency", s."WorkerAmount_Amount", s."WorkerAmount_Currency"
+      FROM "ServiceRequests" AS s
+      WHERE s."Status" = 0
+      ORDER BY s."CreatedAt"
+      LIMIT @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (148ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."AddressText", s."AssignedProviderId", s."CategoryId", s."CommissionRate", s."CreatedAt", s."CustomerId", s."Description", s."EstimatedDuration", s."EstimatedPrice", s."IsDepositPaid", s."OcrExtractedText", s."PayOSOrderCode", s."ServiceDefinitionId", s."Status", s."WasAnalyzedByAI", s."CommissionAmount_Amount", s."CommissionAmount_Currency", s."ComplexityLevel", s."DepositAmount_Amount", s."DepositAmount_Currency", s."EstimatedCost_Amount", s."EstimatedCost_Currency", s."FinalAmountPaid_Amount", s."FinalAmountPaid_Currency", s."FinalPrice_Amount", s."FinalPrice_Currency", s."WorkerAmount_Amount", s."WorkerAmount_Currency"
+      FROM "ServiceRequests" AS s
+      WHERE s."Status" = 0
+      ORDER BY s."CreatedAt"
+      LIMIT @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (143ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."AddressText", s."AssignedProviderId", s."CategoryId", s."CommissionRate", s."CreatedAt", s."CustomerId", s."Description", s."EstimatedDuration", s."EstimatedPrice", s."IsDepositPaid", s."OcrExtractedText", s."PayOSOrderCode", s."ServiceDefinitionId", s."Status", s."WasAnalyzedByAI", s."CommissionAmount_Amount", s."CommissionAmount_Currency", s."ComplexityLevel", s."DepositAmount_Amount", s."DepositAmount_Currency", s."EstimatedCost_Amount", s."EstimatedCost_Currency", s."FinalAmountPaid_Amount", s."FinalAmountPaid_Currency", s."FinalPrice_Amount", s."FinalPrice_Currency", s."WorkerAmount_Amount", s."WorkerAmount_Currency"
+      FROM "ServiceRequests" AS s
+      WHERE s."Status" = 0
+      ORDER BY s."CreatedAt"
+      LIMIT @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (152ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."AddressText", s."AssignedProviderId", s."CategoryId", s."CommissionRate", s."CreatedAt", s."CustomerId", s."Description", s."EstimatedDuration", s."EstimatedPrice", s."IsDepositPaid", s."OcrExtractedText", s."PayOSOrderCode", s."ServiceDefinitionId", s."Status", s."WasAnalyzedByAI", s."CommissionAmount_Amount", s."CommissionAmount_Currency", s."ComplexityLevel", s."DepositAmount_Amount", s."DepositAmount_Currency", s."EstimatedCost_Amount", s."EstimatedCost_Currency", s."FinalAmountPaid_Amount", s."FinalAmountPaid_Currency", s."FinalPrice_Amount", s."FinalPrice_Currency", s."WorkerAmount_Amount", s."WorkerAmount_Currency"
+      FROM "ServiceRequests" AS s
+      WHERE s."Status" = 0
+      ORDER BY s."CreatedAt"
+      LIMIT @__p_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (363ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT s."Id", s."AddressText", s."AssignedProviderId", s."CategoryId", s."CommissionRate", s."CreatedAt", s."CustomerId", s."Description", s."EstimatedDuration", s."EstimatedPrice", s."IsDepositPaid", s."OcrExtractedText", s."PayOSOrderCode", s."ServiceDefinitionId", s."Status", s."WasAnalyzedByAI", s."CommissionAmount_Amount", s."CommissionAmount_Currency", s."ComplexityLevel", s."DepositAmount_Amount", s."DepositAmount_Currency", s."EstimatedCost_Amount", s."EstimatedCost_Currency", s."FinalAmountPaid_Amount", s."FinalAmountPaid_Currency", s."FinalPrice_Amount", s."FinalPrice_Currency", s."WorkerAmount_Amount", s."WorkerAmount_Currency"
+      FROM "ServiceRequests" AS s
+      WHERE s."Status" = 0
+      ORDER BY s."CreatedAt"
+      LIMIT @__p_0

@@ -37,6 +37,16 @@ public class AssignProviderHandler : IRequestHandler<AssignProviderCommand, Unit
         if (isBusy)
             throw new InvalidOperationException("Thợ hiện đang bận xử lý một đơn hàng khác.");
 
+        // Kiểm tra giá không được thấp hơn giá niêm yết của dịch vụ (nếu đã chọn dịch vụ)
+        if (serviceRequest.ServiceDefinitionId.HasValue)
+        {
+            var definition = await _context.ServiceDefinitions.FindAsync(new object[] { serviceRequest.ServiceDefinitionId.Value }, cancellationToken);
+            if (definition != null && request.EstimatedCost.Amount < definition.BasePrice)
+            {
+                throw new ServiceRequestException.PriceTooLowException(definition.BasePrice);
+            }
+        }
+
         serviceRequest.AssignProvider(request.ProviderId, request.EstimatedCost);
         
         await _context.SaveChangesAsync(cancellationToken);

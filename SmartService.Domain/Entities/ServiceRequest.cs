@@ -23,6 +23,7 @@ public class ServiceRequest : IAggregateRoot
     public Guid Id { get; private set; }
     public Guid CustomerId { get; private set; }
     public Guid CategoryId { get; private set; }
+    public long? PayOSOrderCode { get; private set; }
 
         /// <summary>
         /// Optional reference to the primary ServiceDefinition this request is associated with.
@@ -278,6 +279,11 @@ public class ServiceRequest : IAggregateRoot
         }
 
         Status = ServiceStatus.Cancelled;
+    }
+
+    public void SetPayOSOrderCode(long orderCode)
+    {
+        PayOSOrderCode = orderCode;
     }
 }
 

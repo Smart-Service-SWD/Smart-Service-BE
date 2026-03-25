@@ -44,5 +44,11 @@ namespace SmartService.Domain.Exceptions
             public InvalidStatusForOperationException(string operation, string requiredStatus)
                 : base($"Operation '{operation}' requires status to be '{requiredStatus}'.") { }
         }
+
+        public class PriceTooLowException : ServiceRequestException
+        {
+            public PriceTooLowException(decimal basePrice)
+                : base($"Chi phí ước tính không được thấp hơn giá niêm yết ({basePrice:N0} VND).") { }
+        }
     }
 }

@@ -114,7 +114,10 @@ public class ServiceRequestsController : ControllerBase
         var command = new AssignProviderCommand(
             serviceRequestId,
             request.ProviderId,
-            Money.Create(request.EstimatedCost.Amount, request.EstimatedCost.Currency));
+            request.EstimatedCost != null 
+                ? Money.Create(request.EstimatedCost.Amount, request.EstimatedCost.Currency) 
+                : null
+        );
 
         await _mediator.Send(command, cancellationToken);
         return NoContent();

@@ -13,6 +13,8 @@ using SmartService.Infrastructure.Email;
 using SmartService.Infrastructure.KnowledgeBase.Complexity;
 using SmartService.Infrastructure.KnowledgeBase.Sync;
 using SmartService.Infrastructure.Persistence;
+using SmartService.Application.Abstractions.Payments;
+using SmartService.Infrastructure.Payments.PayOS;
 
 namespace SmartService.Infrastructure;
 
@@ -65,6 +67,7 @@ public static class DependencyInjection
         // Register Email service (Gmail SMTP via MailKit)
         services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
         services.AddScoped<IEmailService, GmailEmailService>();
+        services.AddScoped<IPayOSService, PayOSService>();
 
         // Register notification service (will be implemented in WebAPI layer with SignalR)
         // Note: IServiceRequestNotificationService implementation is registered in Program.cs

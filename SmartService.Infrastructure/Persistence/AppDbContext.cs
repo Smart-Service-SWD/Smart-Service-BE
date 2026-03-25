@@ -62,6 +62,17 @@ public class AppDbContext : DbContext, IAppDbContext
                   .WithOne()
                   .HasForeignKey("ServiceAgentId")
                   .OnDelete(DeleteBehavior.Cascade);
+
+            entity.OwnsOne(x => x.Balance, money =>
+            {
+                money.Property(m => m.Amount)
+                     .HasColumnName("Balance_Amount")
+                     .HasPrecision(18, 2);
+
+                money.Property(m => m.Currency)
+                     .HasColumnName("Balance_Currency")
+                     .HasMaxLength(10);
+            });
         });
 
         modelBuilder.Entity<AgentCapability>(entity =>

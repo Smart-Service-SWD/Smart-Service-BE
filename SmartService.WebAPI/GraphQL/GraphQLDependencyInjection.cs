@@ -26,6 +26,7 @@ public static class GraphQLDependencyInjection
             .AddType<DashboardQuery>()
             .AddType<ServiceDefinitionQuery>()
             .AddType<AssignmentType>()
+            .AddType<ServiceAgentType>()
             .AddAuthorization() // Enable authorization directive
             .AddErrorFilter<StandardErrorFilter>() // Standardize GraphQL errors
             .AddHttpRequestInterceptor<HttpRequestInterceptor>() // Ensure HttpContext.User is available

@@ -11,9 +11,48 @@ using SmartService.Infrastructure.KnowledgeBase.Complexity;
 using System.Text;
 using SmartService.API.Middleware;
 
+using SmartService.API.Helpers;
+
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new GuidConverter());
+        options.JsonSerializerOptions.Converters.Add(new NullableGuidConverter());
+    })
+    .ConfigureApiBehaviorOptions(options =>
+    {
+        options.InvalidModelStateResponseFactory = context =>
+        {
+            var errors = context.ModelState
+                .Where(e => e.Value?.Errors.Count > 0)
+                .Select(e => new
+                {
+                    PropertyName = e.Key,
+                    ErrorMessage = e.Value?.Errors.First().ErrorMessage,
+                    ExceptionMsg = e.Value?.Errors.First().Exception?.Message
+                }).ToList();
+
+            var errorResponse = new SmartService.Application.Common.Errors.ErrorResponse
+            {
+                Success = false,
+                ErrorCode = SmartService.Application.Common.Errors.ErrorCodes.REQUEST_400_VALIDATION_FAILED,
+                Message = "Validation failed.",
+                Details = errors
+            };
+
+            return new Microsoft.AspNetCore.Mvc.BadRequestObjectResult(errorResponse);
+        };
+    });
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        builder => builder.AllowAnyOrigin()
+                          .AllowAnyMethod()
+                          .AllowAnyHeader());
+});
 
 // Configure JWT Authentication
 var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<TokenConfiguration>();
@@ -159,7 +198,8 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
+app.UseCors("AllowAll");
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();

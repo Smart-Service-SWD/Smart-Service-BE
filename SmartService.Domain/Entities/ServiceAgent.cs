@@ -1,3 +1,4 @@
+using SmartService.Domain.ValueObjects;
 using SmartService.Domain.Exceptions;
 
 namespace SmartService.Domain.Entities;
@@ -22,6 +23,7 @@ public class ServiceAgent
     public Guid? UserId { get; private set; }
     public string FullName { get; private set; }
     public bool IsActive { get; private set; }
+    public Money Balance { get; private set; } = Money.Create(0, "VND");
 
     private readonly List<AgentCapability> _capabilities = new();
     public IReadOnlyCollection<AgentCapability> Capabilities => _capabilities;
@@ -75,5 +77,10 @@ public class ServiceAgent
     public void Activate()
     {
         IsActive = true;
+    }
+
+    public void AddBalance(Money amount)
+    {
+        Balance += amount;
     }
 }
