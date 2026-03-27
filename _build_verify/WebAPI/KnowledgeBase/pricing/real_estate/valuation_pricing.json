@@ -1,0 +1,8 @@
+{
+  "subCategoryId": "RE_VALUATION",
+  "pricingByComplexity": [
+    { "complexityLevel": 1, "minPrice": { "amount": 2000000, "currency": "VND" }, "maxPrice": { "amount": 5000000, "currency": "VND" } },
+    { "complexityLevel": 3, "minPrice": { "amount": 7000000, "currency": "VND" }, "maxPrice": { "amount": 15000000, "currency": "VND" } },
+    { "complexityLevel": 5, "minPrice": { "amount": 20000000, "currency": "VND" }, "maxPrice": { "amount": 40000000, "currency": "VND" } }
+  ]
+}

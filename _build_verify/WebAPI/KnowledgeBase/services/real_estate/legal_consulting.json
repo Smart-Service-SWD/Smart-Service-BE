@@ -1,0 +1,9 @@
+{
+  "serviceGroup": "REAL_ESTATE",
+  "subCategoryId": "RE_LEGAL",
+  "name": "Pháp lý nhà đất",
+  "cases": [
+    { "caseId": "RE_BOOK", "name": "Làm sổ đỏ" },
+    { "caseId": "RE_DISPUTE", "name": "Tranh chấp đất đai" }
+  ]
+}

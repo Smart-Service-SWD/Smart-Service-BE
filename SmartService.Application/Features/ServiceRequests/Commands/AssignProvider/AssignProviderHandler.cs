@@ -1,6 +1,8 @@
 using MediatR;
 using SmartService.Application.Abstractions.Persistence;
 using SmartService.Domain.Exceptions;
+using Microsoft.EntityFrameworkCore;
+using SmartService.Domain.ValueObjects;
 
 namespace SmartService.Application.Features.ServiceRequests.Commands.AssignProvider;
 
@@ -23,6 +25,27 @@ public class AssignProviderHandler : IRequestHandler<AssignProviderCommand, Unit
 
         if (serviceRequest == null)
             throw new KeyNotFoundException($"ServiceRequest with ID '{request.ServiceRequestId}' not found.");
+
+        // Kiểm tra xem thợ có đang bận không
+        var isBusy = await _context.ServiceRequests.AsNoTracking().AnyAsync(sr => 
+            sr.AssignedProviderId == request.ProviderId && 
+            (sr.Status == ServiceStatus.Assigned || 
+             sr.Status == ServiceStatus.InProgress || 
+             sr.Status == ServiceStatus.AwaitingCompletionReview), 
+            cancellationToken);
+
+        if (isBusy)
+            throw new InvalidOperationException("Thợ hiện đang bận xử lý một đơn hàng khác.");
+
+        // Kiểm tra giá không được thấp hơn giá niêm yết của dịch vụ (nếu đã chọn dịch vụ)
+        if (serviceRequest.ServiceDefinitionId.HasValue)
+        {
+            var definition = await _context.ServiceDefinitions.FindAsync(new object[] { serviceRequest.ServiceDefinitionId.Value }, cancellationToken);
+            if (definition != null && request.EstimatedCost.Amount < definition.BasePrice)
+            {
+                throw new ServiceRequestException.PriceTooLowException(definition.BasePrice);
+            }
+        }
 
         serviceRequest.AssignProvider(request.ProviderId, request.EstimatedCost);
         

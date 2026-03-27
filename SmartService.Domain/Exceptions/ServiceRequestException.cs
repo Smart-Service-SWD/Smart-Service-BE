@@ -33,10 +33,22 @@ namespace SmartService.Domain.Exceptions
                 : base("An AssignedProvider must be specified before marking the ServiceRequest as In Progress.") { }
         }
 
+        public class MissingAssignedProviderForDepositException : ServiceRequestException
+        {
+            public MissingAssignedProviderForDepositException()
+                : base("Phải gán thợ và xác định giá dự kiến trước khi yêu cầu đặt cọc.") { }
+        }
+
         public class InvalidStatusForOperationException : ServiceRequestException
         {
             public InvalidStatusForOperationException(string operation, string requiredStatus)
                 : base($"Operation '{operation}' requires status to be '{requiredStatus}'.") { }
+        }
+
+        public class PriceTooLowException : ServiceRequestException
+        {
+            public PriceTooLowException(decimal basePrice)
+                : base($"Chi phí ước tính không được thấp hơn giá niêm yết ({basePrice:N0} VND).") { }
         }
     }
 }

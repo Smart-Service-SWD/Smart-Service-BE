@@ -1,0 +1,87 @@
+{
+  "serviceGroup": "IT",
+  "subCategoryId": "a3000000-0000-0000-0000-000000000003",
+  "name": "IT",
+  "cases": [
+    {
+      "caseId": "b3020000-0000-0000-0000-000000000002",
+      "name": "Ph\u1EE5c h\u1ED3i d\u1EEF li\u1EC7u",
+      "description": "Kh\u00F4i ph\u1EE5c d\u1EEF li\u1EC7u b\u1ECB x\u00F3a, \u1ED5 c\u1EE9ng h\u1ECFng, ph\u00E2n v\u00F9ng b\u1ECB m\u1EA5t, thi\u1EBFt b\u1ECB l\u01B0u tr\u1EEF",
+      "complexityRange": [
+        3,
+        5
+      ],
+      "isDangerous": false
+    },
+    {
+      "caseId": "b3030000-0000-0000-0000-000000000003",
+      "name": "Thi\u1EBFt k\u1EBF \u0026 ph\u00E1t tri\u1EC3n website",
+      "description": "Thi\u1EBFt k\u1EBF giao di\u1EC7n, l\u1EADp tr\u00ECnh frontend/backend, t\u00EDch h\u1EE3p CMS, thanh to\u00E1n online",
+      "complexityRange": [
+        2,
+        5
+      ],
+      "isDangerous": false
+    },
+    {
+      "caseId": "b3040000-0000-0000-0000-000000000004",
+      "name": "B\u1EA3o m\u1EADt \u0026 ki\u1EC3m th\u1EED h\u1EC7 th\u1ED1ng",
+      "description": "Pentest, r\u00E0 so\u00E1t l\u1ED7 h\u1ED5ng b\u1EA3o m\u1EADt, c\u1EA5u h\u00ECnh firewall, hardening server",
+      "complexityRange": [
+        4,
+        5
+      ],
+      "isDangerous": true
+    },
+    {
+      "caseId": "b3050000-0000-0000-0000-000000000005",
+      "name": "Tri\u1EC3n khai h\u1EA1 t\u1EA7ng Cloud",
+      "description": "Setup AWS/GCP/Azure, Kubernetes, CI/CD pipeline, monitoring, backup t\u1EF1 \u0111\u1ED9ng",
+      "complexityRange": [
+        4,
+        5
+      ],
+      "isDangerous": false
+    },
+    {
+      "caseId": "b3060000-0000-0000-0000-000000000006",
+      "name": "Ph\u00E1t tri\u1EC3n \u1EE9ng d\u1EE5ng mobile",
+      "description": "L\u1EADp tr\u00ECnh app iOS/Android (React Native, Flutter), t\u00EDch h\u1EE3p API, \u0111\u0103ng l\u00EAn store",
+      "complexityRange": [
+        3,
+        5
+      ],
+      "isDangerous": false
+    },
+    {
+      "caseId": "b3070000-0000-0000-0000-000000000007",
+      "name": "T\u01B0 v\u1EA5n chuy\u1EC3n \u0111\u1ED5i s\u1ED1",
+      "description": "Ph\u00E2n t\u00EDch quy tr\u00ECnh, \u0111\u1EC1 xu\u1EA5t gi\u1EA3i ph\u00E1p s\u1ED1 h\u00F3a, l\u1ED9 tr\u00ECnh tri\u1EC3n khai cho doanh nghi\u1EC7p",
+      "complexityRange": [
+        2,
+        4
+      ],
+      "isDangerous": false
+    },
+    {
+      "caseId": "b3080000-0000-0000-0000-000000000008",
+      "name": "X\u1EED l\u00FD s\u1EF1 c\u1ED1 h\u1EC7 th\u1ED1ng kh\u1EA9n c\u1EA5p",
+      "description": "Kh\u1EAFc ph\u1EE5c server down, t\u1EA5n c\u00F4ng m\u1EA1ng, m\u1EA5t d\u1EEF li\u1EC7u, s\u1EF1 c\u1ED1 production nghi\u00EAm tr\u1ECDng",
+      "complexityRange": [
+        4,
+        5
+      ],
+      "isDangerous": true
+    },
+    {
+      "caseId": "b3010000-0000-0000-0000-000000000001",
+      "name": "H\u1ED7 tr\u1EE3 k\u1EF9 thu\u1EADt m\u00E1y t\u00EDnh",
+      "description": "C\u00E0i \u0111\u1EB7t h\u1EC7 \u0111i\u1EC1u h\u00E0nh, driver, ph\u1EA7n m\u1EC1m, di\u1EC7t virus, s\u1EEDa l\u1ED7i m\u00E1y t\u00EDnh c\u01A1 b\u1EA3n",
+      "complexityRange": [
+        1,
+        5
+      ],
+      "isDangerous": false
+    }
+  ]
+}

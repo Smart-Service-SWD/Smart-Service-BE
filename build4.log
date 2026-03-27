@@ -1,0 +1,25 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+D:\Ky_4\SWD\System_Smart-Service-master\Smart-Service\Service_BE\SmartService.Domain\Entities\ServiceRequest.cs(252,82): error CS1056: Unexpected character '\' [D:\Ky_4\SWD\System_Smart-Service-master\Smart-Service\Service_BE\SmartService.Domain\SmartService.Domain.csproj]
+D:\Ky_4\SWD\System_Smart-Service-master\Smart-Service\Service_BE\SmartService.Domain\Entities\ServiceRequest.cs(252,83): error CS1010: Newline in constant [D:\Ky_4\SWD\System_Smart-Service-master\Smart-Service\Service_BE\SmartService.Domain\SmartService.Domain.csproj]
+D:\Ky_4\SWD\System_Smart-Service-master\Smart-Service\Service_BE\SmartService.Domain\Entities\ServiceRequest.cs(252,131): error CS1003: Syntax error, ',' expected [D:\Ky_4\SWD\System_Smart-Service-master\Smart-Service\Service_BE\SmartService.Domain\SmartService.Domain.csproj]
+D:\Ky_4\SWD\System_Smart-Service-master\Smart-Service\Service_BE\SmartService.Domain\Entities\ServiceRequest.cs(254,47): error CS1026: ) expected [D:\Ky_4\SWD\System_Smart-Service-master\Smart-Service\Service_BE\SmartService.Domain\SmartService.Domain.csproj]
+D:\Ky_4\SWD\System_Smart-Service-master\Smart-Service\Service_BE\SmartService.Domain\Entities\ServiceRequest.cs(261,83): error CS1056: Unexpected character '\' [D:\Ky_4\SWD\System_Smart-Service-master\Smart-Service\Service_BE\SmartService.Domain\SmartService.Domain.csproj]
+D:\Ky_4\SWD\System_Smart-Service-master\Smart-Service\Service_BE\SmartService.Domain\Entities\ServiceRequest.cs(261,84): error CS1010: Newline in constant [D:\Ky_4\SWD\System_Smart-Service-master\Smart-Service\Service_BE\SmartService.Domain\SmartService.Domain.csproj]
+D:\Ky_4\SWD\System_Smart-Service-master\Smart-Service\Service_BE\SmartService.Domain\Entities\ServiceRequest.cs(261,137): error CS1003: Syntax error, ',' expected [D:\Ky_4\SWD\System_Smart-Service-master\Smart-Service\Service_BE\SmartService.Domain\SmartService.Domain.csproj]
+D:\Ky_4\SWD\System_Smart-Service-master\Smart-Service\Service_BE\SmartService.Domain\Entities\ServiceRequest.cs(263,30): error CS1026: ) expected [D:\Ky_4\SWD\System_Smart-Service-master\Smart-Service\Service_BE\SmartService.Domain\SmartService.Domain.csproj]
+
+Build FAILED.
+
+D:\Ky_4\SWD\System_Smart-Service-master\Smart-Service\Service_BE\SmartService.Domain\Entities\ServiceRequest.cs(252,82): error CS1056: Unexpected character '\' [D:\Ky_4\SWD\System_Smart-Service-master\Smart-Service\Service_BE\SmartService.Domain\SmartService.Domain.csproj]
+D:\Ky_4\SWD\System_Smart-Service-master\Smart-Service\Service_BE\SmartService.Domain\Entities\ServiceRequest.cs(252,83): error CS1010: Newline in constant [D:\Ky_4\SWD\System_Smart-Service-master\Smart-Service\Service_BE\SmartService.Domain\SmartService.Domain.csproj]
+D:\Ky_4\SWD\System_Smart-Service-master\Smart-Service\Service_BE\SmartService.Domain\Entities\ServiceRequest.cs(252,131): error CS1003: Syntax error, ',' expected [D:\Ky_4\SWD\System_Smart-Service-master\Smart-Service\Service_BE\SmartService.Domain\SmartService.Domain.csproj]
+D:\Ky_4\SWD\System_Smart-Service-master\Smart-Service\Service_BE\SmartService.Domain\Entities\ServiceRequest.cs(254,47): error CS1026: ) expected [D:\Ky_4\SWD\System_Smart-Service-master\Smart-Service\Service_BE\SmartService.Domain\SmartService.Domain.csproj]
+D:\Ky_4\SWD\System_Smart-Service-master\Smart-Service\Service_BE\SmartService.Domain\Entities\ServiceRequest.cs(261,83): error CS1056: Unexpected character '\' [D:\Ky_4\SWD\System_Smart-Service-master\Smart-Service\Service_BE\SmartService.Domain\SmartService.Domain.csproj]
+D:\Ky_4\SWD\System_Smart-Service-master\Smart-Service\Service_BE\SmartService.Domain\Entities\ServiceRequest.cs(261,84): error CS1010: Newline in constant [D:\Ky_4\SWD\System_Smart-Service-master\Smart-Service\Service_BE\SmartService.Domain\SmartService.Domain.csproj]
+D:\Ky_4\SWD\System_Smart-Service-master\Smart-Service\Service_BE\SmartService.Domain\Entities\ServiceRequest.cs(261,137): error CS1003: Syntax error, ',' expected [D:\Ky_4\SWD\System_Smart-Service-master\Smart-Service\Service_BE\SmartService.Domain\SmartService.Domain.csproj]
+D:\Ky_4\SWD\System_Smart-Service-master\Smart-Service\Service_BE\SmartService.Domain\Entities\ServiceRequest.cs(263,30): error CS1026: ) expected [D:\Ky_4\SWD\System_Smart-Service-master\Smart-Service\Service_BE\SmartService.Domain\SmartService.Domain.csproj]
+    0 Warning(s)
+    8 Error(s)
+
+Time Elapsed 00:00:00.74

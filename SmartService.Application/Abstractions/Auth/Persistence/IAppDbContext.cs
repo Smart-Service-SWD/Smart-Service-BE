@@ -25,6 +25,10 @@ public interface IAppDbContext
     DbSet<AgentCapability> AgentCapabilities { get; }
     DbSet<ServiceAnalysis> ServiceAnalyses { get; }
     DbSet<ServiceDefinition> ServiceDefinitions { get; }
+    DbSet<PriceAdjustmentRequest> PriceAdjustmentRequests { get; }
+    DbSet<Payout> Payouts { get; }
+    DbSet<CommissionSettings> CommissionSettings { get; }
+    DbSet<CompletionEvidence> CompletionEvidences { get; }
 
     /// <summary>
     /// Saves all changes made to the database asynchronously.

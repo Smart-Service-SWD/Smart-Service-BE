@@ -1,0 +1,10 @@
+{
+  "serviceGroup": "LEGAL",
+  "subCategoryId": "LEGAL_CIVIL",
+  "name": "Luật dân sự",
+  "cases": [
+    { "caseId": "LAW_CONTRACT", "name": "Tranh chấp hợp đồng" },
+    { "caseId": "LAW_INHERIT", "name": "Thừa kế" },
+    { "caseId": "LAW_COMPENSATION", "name": "Bồi thường thiệt hại" }
+  ]
+}

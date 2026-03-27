@@ -4,7 +4,9 @@ using HotChocolate.Types;
 using Microsoft.EntityFrameworkCore;
 using SmartService.API.GraphQL;
 using SmartService.Domain.Entities;
+using SmartService.Domain.ValueObjects;
 using SmartService.Infrastructure.Persistence;
+using System.Security.Claims;
 
 namespace SmartService.API.GraphQL.Queries;
 
@@ -30,6 +32,56 @@ public class ServiceAgentQuery
             .AsNoTracking()
             .Include(x => x.Capabilities)
             .ToListAsync();
+    }
+
+    /// <summary>
+    /// Lấy hồ sơ ServiceAgent của chính tài khoản đang đăng nhập.
+    /// Nếu user có role Agent nhưng chưa có hồ sơ liên kết, hệ thống sẽ tự tạo hồ sơ mới.
+    /// </summary>
+    [GraphQLName("getMyServiceAgent")]
+    [GraphQLDescription(
+        "Lấy hồ sơ ServiceAgent của chính tài khoản đang đăng nhập.\n" +
+        "Nếu user có role Agent nhưng chưa có hồ sơ liên kết, hệ thống sẽ tự tạo hồ sơ mới.\n" +
+        "Yêu cầu quyền: Agent.\n" +
+        "Tags: Agent Dashboard, Agent Profile")]
+    [Authorize(Roles = new[] { UserRoleConstants.Agent })]
+    public async Task<ServiceAgent?> GetMyServiceAgent(
+        ClaimsPrincipal claimsPrincipal,
+        [Service] IDbContextFactory<AppDbContext> factory)
+    {
+        var userId = claimsPrincipal.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (!Guid.TryParse(userId, out var userIdGuid))
+        {
+            return null;
+        }
+
+        using var db = await factory.CreateDbContextAsync();
+
+        var linkedAgent = await db.ServiceAgents
+            .Include(x => x.Capabilities)
+            .FirstOrDefaultAsync(x => x.UserId == userIdGuid);
+
+        if (linkedAgent is not null)
+        {
+            return linkedAgent;
+        }
+
+        var user = await db.Users
+            .FirstOrDefaultAsync(x => x.Id == userIdGuid);
+
+        if (user is null || user.Role != UserRole.Agent)
+        {
+            return null;
+        }
+
+        var createdAgent = ServiceAgent.CreateForUser(user.FullName, user.Id);
+        db.ServiceAgents.Add(createdAgent);
+        await db.SaveChangesAsync();
+
+        return await db.ServiceAgents
+            .AsNoTracking()
+            .Include(x => x.Capabilities)
+            .FirstOrDefaultAsync(x => x.Id == createdAgent.Id);
     }
 
     /// <summary>
@@ -75,3 +127,4 @@ public class ServiceAgentQuery
             .ToListAsync();
     }
 }
+

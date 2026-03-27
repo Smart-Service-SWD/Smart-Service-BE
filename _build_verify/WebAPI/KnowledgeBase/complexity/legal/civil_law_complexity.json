@@ -1,0 +1,10 @@
+{
+  "subCategoryId": "LEGAL_CIVIL",
+  "levels": [
+    { "level": 1, "criteria": ["Tư vấn đơn giản"] },
+    { "level": 2, "criteria": ["Soạn thảo văn bản"] },
+    { "level": 3, "criteria": ["Tranh chấp nhỏ"] },
+    { "level": 4, "criteria": ["Ra tòa"] },
+    { "level": 5, "criteria": ["Vụ việc phức tạp kéo dài"] }
+  ]
+}

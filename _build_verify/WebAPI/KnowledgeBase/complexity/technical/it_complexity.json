@@ -1,0 +1,10 @@
+{
+  "subCategoryId": "TECH_IT",
+  "levels": [
+    { "level": 1, "criteria": ["Cài phần mềm"] },
+    { "level": 2, "criteria": ["Lỗi nhẹ"] },
+    { "level": 3, "criteria": ["Lỗi hệ thống"] },
+    { "level": 4, "criteria": ["Lỗi phần cứng"] },
+    { "level": 5, "criteria": ["Mất dữ liệu nghiêm trọng"] }
+  ]
+}

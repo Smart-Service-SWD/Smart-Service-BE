@@ -1,14 +1,21 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.StaticFiles;
 using Swashbuckle.AspNetCore.Annotations;
 using SmartService.API.Contracts;
 using SmartService.Application.Features.ServiceRequests.Commands.CancelServiceRequest;
-using SmartService.Application.Features.ServiceRequests.Commands.CompleteServiceRequest;
 using SmartService.Application.Features.ServiceRequests.Commands.AssignProvider;
 using SmartService.Application.Features.ServiceRequests.Commands.Create;
 using SmartService.Application.Features.ServiceRequests.Commands.EvaluateComplexity;
 using SmartService.Application.Features.ServiceRequests.Commands.StartServiceRequest;
+using SmartService.Application.Features.ServiceRequests.Commands.RequestDeposit;
+using SmartService.Application.Features.ServiceRequests.Commands.RequestCompletion;
+using SmartService.Application.Features.ServiceRequests.Commands.ApproveCompletion;
+using SmartService.Application.Features.ServiceRequests.Commands.RejectCompletion;
+using SmartService.Application.Features.ServiceRequests.Commands.ConfirmPayment;
+using SmartService.Application.Features.ServiceRequests.Commands.RequestFinalPayment;
+using SmartService.Application.Features.ServiceRequests.Commands.PayoutServiceRequest;
 using SmartService.Domain.ValueObjects;
 using System.Security.Claims;
 
@@ -23,10 +30,23 @@ namespace SmartService.API.Controllers;
 public class ServiceRequestsController : ControllerBase
 {
     private readonly IMediator _mediator;
+    private readonly IWebHostEnvironment _environment;
 
-    public ServiceRequestsController(IMediator mediator)
+    private static readonly HashSet<string> AllowedImageExtensions = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ".jpg",
+        ".jpeg",
+        ".png",
+        ".webp",
+        ".gif",
+        ".heic",
+        ".heif"
+    };
+
+    public ServiceRequestsController(IMediator mediator, IWebHostEnvironment environment)
     {
         _mediator = mediator;
+        _environment = environment;
     }
 
     /// <summary>
@@ -108,7 +128,10 @@ public class ServiceRequestsController : ControllerBase
         var command = new AssignProviderCommand(
             serviceRequestId,
             request.ProviderId,
-            Money.Create(request.EstimatedCost.Amount, request.EstimatedCost.Currency));
+            request.EstimatedCost != null 
+                ? Money.Create(request.EstimatedCost.Amount, request.EstimatedCost.Currency) 
+                : null
+        );
 
         await _mediator.Send(command, cancellationToken);
         return NoContent();
@@ -132,13 +155,37 @@ public class ServiceRequestsController : ControllerBase
         CancellationToken cancellationToken)
     {
         var complexity = SmartService.Domain.ValueObjects.ServiceComplexity.From(request.Complexity.Level);
+        var estimatedCost = request.EstimatedCost != null 
+            ? Money.Create(request.EstimatedCost.Amount, request.EstimatedCost.Currency) 
+            : null;
 
         var command = new EvaluateServiceComplexityCommand(
             serviceRequestId,
-            complexity);
+            complexity,
+            request.ServiceDefinitionId,
+            estimatedCost);
 
         var result = await _mediator.Send(command, cancellationToken);
         return Ok(result);
+    }
+
+    /// <summary>
+    /// [UPDATE] Staff yêu cầu khách hàng đặt cọc
+    /// </summary>
+    [HttpPatch("{serviceRequestId}/request-deposit")]
+    [SwaggerOperation(Summary = "Yêu cầu đặt cọc", OperationId = "RequestDeposit")]
+    public async Task<IActionResult> RequestDeposit(
+        [FromRoute] Guid serviceRequestId,
+        [FromBody] RequestDepositInput input,
+        CancellationToken cancellationToken)
+    {
+        var command = new RequestDepositCommand(
+            serviceRequestId,
+            Money.Create(input.Amount, input.Currency),
+            input.CommissionRate);
+
+        await _mediator.Send(command, cancellationToken);
+        return NoContent();
     }
 
     /// <summary>
@@ -165,26 +212,115 @@ public class ServiceRequestsController : ControllerBase
     }
 
     /// <summary>
-    /// [UPDATE] Hoàn thành yêu cầu dịch vụ đang được xử lý.
+    /// [UPDATE] Thợ nộp bằng chứng và yêu cầu hoàn tất công việc.
     /// </summary>
-    [HttpPatch("{serviceRequestId}/complete")]
-    [SwaggerOperation(
-        Summary = "Hoàn thành yêu cầu dịch vụ",
-        Description = "Chuyển trạng thái yêu cầu từ InProgress sang Completed",
-        OperationId = "CompleteServiceRequest",
-        Tags = new[] { "2. UPDATE - Cập nhật (PATCH)" })]
-    [ProducesResponseType(typeof(ServiceRequestStatusResult), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> Complete(
+    [HttpPatch("{serviceRequestId}/request-completion")]
+    [SwaggerOperation(Summary = "Thợ yêu cầu hoàn tất (kèm bằng chứng)", OperationId = "RequestCompletion")]
+    [Consumes("multipart/form-data")]
+    public async Task<IActionResult> RequestCompletion(
+        [FromRoute] Guid serviceRequestId,
+        [FromForm] string? notes,
+        IFormFile? image,
+        CancellationToken cancellationToken)
+    {
+        string? uploadedImageUrl = null;
+        if (image != null && image.Length > 0)
+        {
+            var extension = System.IO.Path.GetExtension(image.FileName);
+            if (string.IsNullOrWhiteSpace(extension) || !AllowedImageExtensions.Contains(extension))
+            {
+                extension = ".jpg";
+            }
+
+            var webRootPath = _environment.WebRootPath;
+            if (string.IsNullOrWhiteSpace(webRootPath))
+            {
+                webRootPath = System.IO.Path.Combine(_environment.ContentRootPath, "wwwroot");
+            }
+
+            var uploadDirectory = System.IO.Path.Combine(webRootPath, "uploads", "completion-evidences");
+            System.IO.Directory.CreateDirectory(uploadDirectory);
+
+            var storedFileName = $"{Guid.NewGuid():N}{extension.ToLowerInvariant()}";
+            var filePath = System.IO.Path.Combine(uploadDirectory, storedFileName);
+
+            await using (var fileStream = new System.IO.FileStream(filePath, System.IO.FileMode.Create, System.IO.FileAccess.Write, System.IO.FileShare.None))
+            {
+                await image.CopyToAsync(fileStream, cancellationToken);
+            }
+
+            uploadedImageUrl = $"/uploads/completion-evidences/{storedFileName}";
+        }
+
+        var command = new RequestCompletionCommand(
+            serviceRequestId,
+            new List<CompletionEvidenceDto>(), // URL-based list empty for simple flow
+            uploadedImageUrl,
+            notes);
+
+        await _mediator.Send(command, cancellationToken);
+
+        return NoContent();
+    }
+
+    [AllowAnonymous]
+    [HttpGet("/uploads/completion-evidences/{fileName}")]
+    public IActionResult GetCompletionEvidenceImage([FromRoute] string fileName)
+    {
+        if (string.IsNullOrWhiteSpace(fileName) ||
+            fileName.Contains("..", StringComparison.Ordinal) ||
+            fileName.Contains('/') ||
+            fileName.Contains('\\'))
+        {
+            return BadRequest("Tên tệp không hợp lệ.");
+        }
+
+        var webRootPath = _environment.WebRootPath;
+        if (string.IsNullOrWhiteSpace(webRootPath))
+        {
+            webRootPath = System.IO.Path.Combine(_environment.ContentRootPath, "wwwroot");
+        }
+
+        var filePath = System.IO.Path.Combine(webRootPath, "uploads", "completion-evidences", fileName);
+        if (!System.IO.File.Exists(filePath))
+        {
+            return NotFound();
+        }
+
+        var contentTypeProvider = new FileExtensionContentTypeProvider();
+        if (!contentTypeProvider.TryGetContentType(filePath, out var contentType))
+        {
+            contentType = "application/octet-stream";
+        }
+
+        return PhysicalFile(filePath, contentType);
+    }
+
+    /// <summary>
+    /// [UPDATE] Staff duyệt hoàn tất công việc.
+    /// </summary>
+    [HttpPatch("{serviceRequestId}/approve-completion")]
+    [SwaggerOperation(Summary = "Staff duyệt hoàn tất", OperationId = "ApproveCompletion")]
+    public async Task<IActionResult> ApproveCompletion(
         [FromRoute] Guid serviceRequestId,
         CancellationToken cancellationToken)
     {
-        var result = await _mediator.Send(
-            new CompleteServiceRequestCommand(serviceRequestId),
-            cancellationToken);
+        await _mediator.Send(new ApproveCompletionCommand(serviceRequestId), cancellationToken);
+        return NoContent();
+    }
 
-        return Ok(result);
+    /// <summary>
+    /// [UPDATE] Staff từ chối hoàn tất công việc.
+    /// </summary>
+    [HttpPatch("{serviceRequestId}/reject-completion")]
+    [SwaggerOperation(Summary = "Staff từ chối hoàn tất", OperationId = "RejectCompletion")]
+    public async Task<IActionResult> RejectCompletion(
+        [FromRoute] Guid serviceRequestId,
+        [FromBody] RejectCompletionRequest? request,
+        CancellationToken cancellationToken)
+    {
+        await _mediator.Send(new RejectCompletionCommand(serviceRequestId, request?.Reason), cancellationToken);
+        return NoContent();
     }
 
     /// <summary>
@@ -217,6 +353,45 @@ public class ServiceRequestsController : ControllerBase
 
         return Ok(result);
     }
+
+    /// <summary>
+    /// [UPDATE] Staff xác nhận khách đã thanh toán (cọc hoặc trả nốt).
+    /// </summary>
+    [HttpPatch("{serviceRequestId}/paid")]
+    [SwaggerOperation(Summary = "Xác nhận đã thanh toán", OperationId = "ConfirmPaymentPaid")]
+    public async Task<IActionResult> ConfirmPaid(
+        [FromRoute] Guid serviceRequestId,
+        CancellationToken cancellationToken)
+    {
+        await _mediator.Send(new ConfirmPaymentCommand(serviceRequestId), cancellationToken);
+        return NoContent();
+    }
+
+    /// <summary>
+    /// [UPDATE] Staff yêu cầu khách thanh toán phần còn lại sau khi hoàn thành.
+    /// </summary>
+    [HttpPatch("{serviceRequestId}/awaiting-payment")]
+    [SwaggerOperation(Summary = "Yêu cầu thanh toán cuối", OperationId = "RequestFinalPayment")]
+    public async Task<IActionResult> RequestFinalPayment(
+        [FromRoute] Guid serviceRequestId,
+        CancellationToken cancellationToken)
+    {
+        await _mediator.Send(new RequestFinalPaymentCommand(serviceRequestId), cancellationToken);
+        return NoContent();
+    }
+
+    /// <summary>
+    /// [POST] Staff tất toán tiền cho thợ.
+    /// </summary>
+    [HttpPost("{serviceRequestId}/payout")]
+    [SwaggerOperation(Summary = "Tất toán cho thợ", OperationId = "PayoutServiceRequest")]
+    public async Task<IActionResult> Payout(
+        [FromRoute] Guid serviceRequestId,
+        CancellationToken cancellationToken)
+    {
+        await _mediator.Send(new PayoutServiceRequestCommand(serviceRequestId), cancellationToken);
+        return NoContent();
+    }
 }
 
 // ── Inline record models ──────────────────────────────────────────────────────
@@ -237,8 +412,14 @@ public record AssignProviderRequest(
 
 /// <summary>Model yêu cầu đánh giá độ phức tạp của yêu cầu dịch vụ.</summary>
 public record EvaluateComplexityRequest(
-    EvaluateComplexityRequest.ServiceComplexityInput Complexity)
+    EvaluateComplexityRequest.ServiceComplexityInput Complexity,
+    Guid? ServiceDefinitionId = null,
+    MoneyInput? EstimatedCost = null)
 {
     /// <summary>Input đơn giản cho ServiceComplexity (1–5).</summary>
     public record ServiceComplexityInput(int Level);
 }
+
+public record RequestDepositInput(decimal Amount, string Currency, decimal CommissionRate);
+
+public record RejectCompletionRequest(string? Reason);

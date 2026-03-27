@@ -30,6 +30,7 @@ public class ServiceRequestQuery
 
         return await db.ServiceRequests
             .AsNoTracking()
+            .Include(x => x.CompletionEvidences)
             .OrderByDescending(x => x.CreatedAt)
             .ToListAsync();
     }
@@ -54,6 +55,7 @@ public class ServiceRequestQuery
 
         var request = await db.ServiceRequests
             .AsNoTracking()
+            .Include(x => x.CompletionEvidences)
             .FirstOrDefaultAsync(x => x.Id == id);
 
         if (request == null)
@@ -101,6 +103,7 @@ public class ServiceRequestQuery
 
         return await db.ServiceRequests
             .AsNoTracking()
+            .Include(x => x.CompletionEvidences)
             .Where(x => x.CustomerId == customerId)
             .OrderByDescending(x => x.CreatedAt)
             .ToListAsync();
@@ -112,18 +115,19 @@ public class ServiceRequestQuery
     /// </summary>
     [GraphQLName("getServiceRequestsByStatus")]
     [GraphQLDescription(
-        "Lấy danh sách yêu cầu dịch vụ theo trạng thái (PENDING, PENDING_REVIEW, IN_PROGRESS, COMPLETED, CANCELLED).\n" +
+        "Lấy danh sách yêu cầu dịch vụ theo trạng thái (PENDING, PENDING_REVIEW, IN_PROGRESS, FINAL_PAYMENT_PAID, CANCELLED).\n" +
         "Yêu cầu quyền: Staff hoặc Admin.\n" +
         "Tags: Admin Dashboard, Request Management, Status Filter")]
     [Authorize(Roles = new[] { UserRoleConstants.Staff, UserRoleConstants.Admin })]
     public async Task<List<ServiceRequest>> GetServiceRequestsByStatus(
-        [GraphQLDescription("Trạng thái cần lọc (PENDING, PENDING_REVIEW, IN_PROGRESS, COMPLETED, CANCELLED)")] ServiceStatus status,
+        [GraphQLDescription("Trạng thái cần lọc (PENDING, PENDING_REVIEW, IN_PROGRESS, FINAL_PAYMENT_PAID, CANCELLED)")] ServiceStatus status,
         [Service] IDbContextFactory<AppDbContext> factory)
     {
         using var db = await factory.CreateDbContextAsync();
 
         return await db.ServiceRequests
             .AsNoTracking()
+            .Include(x => x.CompletionEvidences)
             .Where(x => x.Status == status)
             .OrderByDescending(x => x.CreatedAt)
             .ToListAsync();
@@ -154,6 +158,7 @@ public class ServiceRequestQuery
 
         var query = db.ServiceRequests
             .AsNoTracking()
+            .Include(x => x.CompletionEvidences)
             .Where(x => x.CustomerId == userIdGuid);
 
         if (status.HasValue)

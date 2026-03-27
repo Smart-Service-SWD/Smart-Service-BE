@@ -87,6 +87,66 @@ namespace SmartService.Infrastructure.Migrations
                     b.ToTable("Assignments");
                 });
 
+            modelBuilder.Entity("SmartService.Domain.Entities.CommissionSettings", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal>("CommissionPercent")
+                        .HasPrecision(5, 2)
+                        .HasColumnType("numeric(5,2)");
+
+                    b.Property<decimal>("DepositPercent")
+                        .HasPrecision(5, 2)
+                        .HasColumnType("numeric(5,2)");
+
+                    b.Property<Guid>("ServiceDefinitionId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ServiceDefinitionId");
+
+                    b.ToTable("CommissionSettings");
+                });
+
+            modelBuilder.Entity("SmartService.Domain.Entities.CompletionEvidence", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<Guid>("ServiceRequestId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("WorkerId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ServiceRequestId");
+
+                    b.ToTable("CompletionEvidences");
+                });
+
             modelBuilder.Entity("SmartService.Domain.Entities.MatchingResult", b =>
                 {
                     b.Property<Guid>("Id")
@@ -115,6 +175,71 @@ namespace SmartService.Infrastructure.Migrations
                     b.HasIndex("ServiceRequestId1");
 
                     b.ToTable("MatchingResults");
+                });
+
+            modelBuilder.Entity("SmartService.Domain.Entities.Payout", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal>("CommissionPercent")
+                        .HasPrecision(5, 2)
+                        .HasColumnType("numeric(5,2)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("PaymentReference")
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("ServiceRequestId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("WorkerId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Payouts");
+                });
+
+            modelBuilder.Entity("SmartService.Domain.Entities.PriceAdjustmentRequest", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("EvidenceImageUrl")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("ProcessedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("ProcessedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<Guid>("ServiceRequestId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PriceAdjustmentRequests");
                 });
 
             modelBuilder.Entity("SmartService.Domain.Entities.ServiceAgent", b =>
@@ -328,6 +453,10 @@ namespace SmartService.Infrastructure.Migrations
                     b.Property<Guid>("CategoryId")
                         .HasColumnType("uuid");
 
+                    b.Property<decimal>("CommissionRate")
+                        .HasPrecision(5, 4)
+                        .HasColumnType("numeric(5,4)");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -346,8 +475,16 @@ namespace SmartService.Infrastructure.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
+                    b.Property<bool>("IsDepositPaid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
                     b.Property<string>("OcrExtractedText")
                         .HasColumnType("text");
+
+                    b.Property<long?>("PayOSOrderCode")
+                        .HasColumnType("bigint");
 
                     b.Property<Guid?>("ServiceDefinitionId")
                         .HasColumnType("uuid");
@@ -505,6 +642,24 @@ namespace SmartService.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("SmartService.Domain.Entities.CommissionSettings", b =>
+                {
+                    b.HasOne("SmartService.Domain.Entities.ServiceDefinition", null)
+                        .WithMany()
+                        .HasForeignKey("ServiceDefinitionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SmartService.Domain.Entities.CompletionEvidence", b =>
+                {
+                    b.HasOne("SmartService.Domain.Entities.ServiceRequest", null)
+                        .WithMany("CompletionEvidences")
+                        .HasForeignKey("ServiceRequestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("SmartService.Domain.Entities.MatchingResult", b =>
                 {
                     b.HasOne("SmartService.Domain.Entities.ServiceRequest", null)
@@ -538,6 +693,177 @@ namespace SmartService.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("SmartService.Domain.Entities.Payout", b =>
+                {
+                    b.OwnsOne("SmartService.Domain.ValueObjects.Money", "CommissionAmount", b1 =>
+                        {
+                            b1.Property<Guid>("PayoutId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<decimal>("Amount")
+                                .HasPrecision(18, 2)
+                                .HasColumnType("numeric(18,2)")
+                                .HasColumnName("CommissionAmount_Amount");
+
+                            b1.Property<string>("Currency")
+                                .IsRequired()
+                                .HasMaxLength(10)
+                                .HasColumnType("character varying(10)")
+                                .HasColumnName("CommissionAmount_Currency");
+
+                            b1.HasKey("PayoutId");
+
+                            b1.ToTable("Payouts");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PayoutId");
+                        });
+
+                    b.OwnsOne("SmartService.Domain.ValueObjects.Money", "TotalAmount", b1 =>
+                        {
+                            b1.Property<Guid>("PayoutId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<decimal>("Amount")
+                                .HasPrecision(18, 2)
+                                .HasColumnType("numeric(18,2)")
+                                .HasColumnName("TotalAmount_Amount");
+
+                            b1.Property<string>("Currency")
+                                .IsRequired()
+                                .HasMaxLength(10)
+                                .HasColumnType("character varying(10)")
+                                .HasColumnName("TotalAmount_Currency");
+
+                            b1.HasKey("PayoutId");
+
+                            b1.ToTable("Payouts");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PayoutId");
+                        });
+
+                    b.OwnsOne("SmartService.Domain.ValueObjects.Money", "WorkerAmount", b1 =>
+                        {
+                            b1.Property<Guid>("PayoutId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<decimal>("Amount")
+                                .HasPrecision(18, 2)
+                                .HasColumnType("numeric(18,2)")
+                                .HasColumnName("WorkerAmount_Amount");
+
+                            b1.Property<string>("Currency")
+                                .IsRequired()
+                                .HasMaxLength(10)
+                                .HasColumnType("character varying(10)")
+                                .HasColumnName("WorkerAmount_Currency");
+
+                            b1.HasKey("PayoutId");
+
+                            b1.ToTable("Payouts");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PayoutId");
+                        });
+
+                    b.Navigation("CommissionAmount")
+                        .IsRequired();
+
+                    b.Navigation("TotalAmount")
+                        .IsRequired();
+
+                    b.Navigation("WorkerAmount")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SmartService.Domain.Entities.PriceAdjustmentRequest", b =>
+                {
+                    b.OwnsOne("SmartService.Domain.ValueObjects.Money", "NewPrice", b1 =>
+                        {
+                            b1.Property<Guid>("PriceAdjustmentRequestId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<decimal>("Amount")
+                                .HasPrecision(18, 2)
+                                .HasColumnType("numeric(18,2)")
+                                .HasColumnName("NewPrice_Amount");
+
+                            b1.Property<string>("Currency")
+                                .IsRequired()
+                                .HasMaxLength(10)
+                                .HasColumnType("character varying(10)")
+                                .HasColumnName("NewPrice_Currency");
+
+                            b1.HasKey("PriceAdjustmentRequestId");
+
+                            b1.ToTable("PriceAdjustmentRequests");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PriceAdjustmentRequestId");
+                        });
+
+                    b.OwnsOne("SmartService.Domain.ValueObjects.Money", "OldPrice", b1 =>
+                        {
+                            b1.Property<Guid>("PriceAdjustmentRequestId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<decimal>("Amount")
+                                .HasPrecision(18, 2)
+                                .HasColumnType("numeric(18,2)")
+                                .HasColumnName("OldPrice_Amount");
+
+                            b1.Property<string>("Currency")
+                                .IsRequired()
+                                .HasMaxLength(10)
+                                .HasColumnType("character varying(10)")
+                                .HasColumnName("OldPrice_Currency");
+
+                            b1.HasKey("PriceAdjustmentRequestId");
+
+                            b1.ToTable("PriceAdjustmentRequests");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PriceAdjustmentRequestId");
+                        });
+
+                    b.Navigation("NewPrice")
+                        .IsRequired();
+
+                    b.Navigation("OldPrice")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SmartService.Domain.Entities.ServiceAgent", b =>
+                {
+                    b.OwnsOne("SmartService.Domain.ValueObjects.Money", "Balance", b1 =>
+                        {
+                            b1.Property<Guid>("ServiceAgentId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<decimal>("Amount")
+                                .HasPrecision(18, 2)
+                                .HasColumnType("numeric(18,2)")
+                                .HasColumnName("Balance_Amount");
+
+                            b1.Property<string>("Currency")
+                                .IsRequired()
+                                .HasMaxLength(10)
+                                .HasColumnType("character varying(10)")
+                                .HasColumnName("Balance_Currency");
+
+                            b1.HasKey("ServiceAgentId");
+
+                            b1.ToTable("ServiceAgents");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ServiceAgentId");
+                        });
+
+                    b.Navigation("Balance")
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("SmartService.Domain.Entities.ServiceAttachment", b =>
                 {
                     b.HasOne("SmartService.Domain.Entities.ServiceRequest", null)
@@ -567,6 +893,30 @@ namespace SmartService.Infrastructure.Migrations
                         .HasForeignKey("ServiceDefinitionId")
                         .OnDelete(DeleteBehavior.SetNull);
 
+                    b.OwnsOne("SmartService.Domain.ValueObjects.Money", "CommissionAmount", b1 =>
+                        {
+                            b1.Property<Guid>("ServiceRequestId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<decimal>("Amount")
+                                .HasPrecision(18, 2)
+                                .HasColumnType("numeric(18,2)")
+                                .HasColumnName("CommissionAmount_Amount");
+
+                            b1.Property<string>("Currency")
+                                .IsRequired()
+                                .HasMaxLength(10)
+                                .HasColumnType("character varying(10)")
+                                .HasColumnName("CommissionAmount_Currency");
+
+                            b1.HasKey("ServiceRequestId");
+
+                            b1.ToTable("ServiceRequests");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ServiceRequestId");
+                        });
+
                     b.OwnsOne("SmartService.Domain.ValueObjects.ServiceComplexity", "Complexity", b1 =>
                         {
                             b1.Property<Guid>("ServiceRequestId")
@@ -575,6 +925,30 @@ namespace SmartService.Infrastructure.Migrations
                             b1.Property<int>("Level")
                                 .HasColumnType("integer")
                                 .HasColumnName("ComplexityLevel");
+
+                            b1.HasKey("ServiceRequestId");
+
+                            b1.ToTable("ServiceRequests");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ServiceRequestId");
+                        });
+
+                    b.OwnsOne("SmartService.Domain.ValueObjects.Money", "DepositAmount", b1 =>
+                        {
+                            b1.Property<Guid>("ServiceRequestId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<decimal>("Amount")
+                                .HasPrecision(18, 2)
+                                .HasColumnType("numeric(18,2)")
+                                .HasColumnName("DepositAmount_Amount");
+
+                            b1.Property<string>("Currency")
+                                .IsRequired()
+                                .HasMaxLength(10)
+                                .HasColumnType("character varying(10)")
+                                .HasColumnName("DepositAmount_Currency");
 
                             b1.HasKey("ServiceRequestId");
 
@@ -608,10 +982,92 @@ namespace SmartService.Infrastructure.Migrations
                                 .HasForeignKey("ServiceRequestId");
                         });
 
+                    b.OwnsOne("SmartService.Domain.ValueObjects.Money", "FinalAmountPaid", b1 =>
+                        {
+                            b1.Property<Guid>("ServiceRequestId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<decimal>("Amount")
+                                .HasPrecision(18, 2)
+                                .HasColumnType("numeric(18,2)")
+                                .HasColumnName("FinalAmountPaid_Amount");
+
+                            b1.Property<string>("Currency")
+                                .IsRequired()
+                                .HasMaxLength(10)
+                                .HasColumnType("character varying(10)")
+                                .HasColumnName("FinalAmountPaid_Currency");
+
+                            b1.HasKey("ServiceRequestId");
+
+                            b1.ToTable("ServiceRequests");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ServiceRequestId");
+                        });
+
+                    b.OwnsOne("SmartService.Domain.ValueObjects.Money", "FinalPrice", b1 =>
+                        {
+                            b1.Property<Guid>("ServiceRequestId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<decimal>("Amount")
+                                .HasPrecision(18, 2)
+                                .HasColumnType("numeric(18,2)")
+                                .HasColumnName("FinalPrice_Amount");
+
+                            b1.Property<string>("Currency")
+                                .IsRequired()
+                                .HasMaxLength(10)
+                                .HasColumnType("character varying(10)")
+                                .HasColumnName("FinalPrice_Currency");
+
+                            b1.HasKey("ServiceRequestId");
+
+                            b1.ToTable("ServiceRequests");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ServiceRequestId");
+                        });
+
+                    b.OwnsOne("SmartService.Domain.ValueObjects.Money", "WorkerAmount", b1 =>
+                        {
+                            b1.Property<Guid>("ServiceRequestId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<decimal>("Amount")
+                                .HasPrecision(18, 2)
+                                .HasColumnType("numeric(18,2)")
+                                .HasColumnName("WorkerAmount_Amount");
+
+                            b1.Property<string>("Currency")
+                                .IsRequired()
+                                .HasMaxLength(10)
+                                .HasColumnType("character varying(10)")
+                                .HasColumnName("WorkerAmount_Currency");
+
+                            b1.HasKey("ServiceRequestId");
+
+                            b1.ToTable("ServiceRequests");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ServiceRequestId");
+                        });
+
+                    b.Navigation("CommissionAmount");
+
                     b.Navigation("Complexity")
                         .IsRequired();
 
+                    b.Navigation("DepositAmount");
+
                     b.Navigation("EstimatedCost");
+
+                    b.Navigation("FinalAmountPaid");
+
+                    b.Navigation("FinalPrice");
+
+                    b.Navigation("WorkerAmount");
                 });
 
             modelBuilder.Entity("SmartService.Domain.Entities.ServiceAgent", b =>
@@ -622,6 +1078,8 @@ namespace SmartService.Infrastructure.Migrations
             modelBuilder.Entity("SmartService.Domain.Entities.ServiceRequest", b =>
                 {
                     b.Navigation("Attachments");
+
+                    b.Navigation("CompletionEvidences");
 
                     b.Navigation("MatchingResults");
                 });

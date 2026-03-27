@@ -1,0 +1,8 @@
+{
+  "subCategoryId": "TECH_ELECTRIC",
+  "pricingByComplexity": [
+    { "complexityLevel": 1, "minPrice": { "amount": 200000, "currency": "VND" }, "maxPrice": { "amount": 400000, "currency": "VND" } },
+    { "complexityLevel": 3, "minPrice": { "amount": 500000, "currency": "VND" }, "maxPrice": { "amount": 1200000, "currency": "VND" } },
+    { "complexityLevel": 5, "minPrice": { "amount": 1500000, "currency": "VND" }, "maxPrice": { "amount": 3000000, "currency": "VND" } }
+  ]
+}

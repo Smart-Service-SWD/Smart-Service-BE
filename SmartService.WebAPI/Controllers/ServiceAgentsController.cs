@@ -6,6 +6,7 @@ using SmartService.Application.Features.ServiceAgents.Commands.Create;
 using SmartService.Application.Features.ServiceAgents.Commands.Deactivate;
 using SmartService.Application.Features.ServiceAgents.Commands.SetActiveStatus;
 using SmartService.Application.Features.ServiceAgents.Commands.UpdateCapabilities;
+using SmartService.Application.Features.ServiceAgents.Queries.SearchServiceAgents;
 using SmartService.Domain.ValueObjects;
 using System.Security.Claims;
 
@@ -32,16 +33,8 @@ public class ServiceAgentsController : ControllerBase
     /// <param name="command">Thông tin đại lý dịch vụ cần tạo</param>
     /// <param name="cancellationToken">Token hủy</param>
     /// <returns>ID của đại lý dịch vụ vừa tạo</returns>
-    /// <response code="201">Tạo đại lý dịch vụ thành công</response>
-    /// <response code="400">Dữ liệu đầu vào không hợp lệ</response>
     [HttpPost]
-    [SwaggerOperation(
-        Summary = "Tạo mới đại lý dịch vụ",
-        Description = "Tạo một đại lý dịch vụ mới trong hệ thống",
-        OperationId = "CreateServiceAgent",
-        Tags = new[] { "1. CREATE - Tạo mới" })]
-    [ProducesResponseType(typeof(Guid), StatusCodes.Status201Created)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [SwaggerOperation(Summary = "Tạo mới đại lý dịch vụ", OperationId = "CreateServiceAgent")]
     public async Task<IActionResult> Create([FromBody] CreateServiceAgentCommand command, CancellationToken cancellationToken)
     {
         var agentId = await _mediator.Send(command, cancellationToken);
@@ -50,14 +43,7 @@ public class ServiceAgentsController : ControllerBase
 
     [Authorize(Roles = $"{UserRoleConstants.Agent},{UserRoleConstants.Staff},{UserRoleConstants.Admin}")]
     [HttpPatch("{agentId}/active-status")]
-    [SwaggerOperation(
-        Summary = "Cập nhật trạng thái hoạt động của thợ",
-        Description = "Cho phép thợ bật/tắt nhận việc mới. Staff/Admin cũng có thể cập nhật trạng thái cho thợ.",
-        OperationId = "SetServiceAgentActiveStatus",
-        Tags = new[] { "2. UPDATE - Cập nhật (PATCH)" })]
-    [ProducesResponseType(typeof(ServiceAgentActiveStatusResult), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [SwaggerOperation(Summary = "Cập nhật trạng thái hoạt động của thợ")]
     public async Task<IActionResult> SetActiveStatus(
         [FromRoute] Guid agentId,
         [FromBody] UpdateServiceAgentActiveStatusRequest request,
@@ -70,15 +56,10 @@ public class ServiceAgentsController : ControllerBase
         }
 
         var role = User.FindFirstValue(ClaimTypes.Role);
-        var canManageAnyAgent =
-            role == UserRoleConstants.Staff || role == UserRoleConstants.Admin;
+        var canManageAnyAgent = role == UserRoleConstants.Staff || role == UserRoleConstants.Admin;
 
         var result = await _mediator.Send(
-            new SetServiceAgentActiveStatusCommand(
-                agentId,
-                actorUserId,
-                canManageAnyAgent,
-                request.IsActive),
+            new SetServiceAgentActiveStatusCommand(agentId, actorUserId, canManageAnyAgent, request.IsActive),
             cancellationToken);
 
         return Ok(result);
@@ -86,14 +67,7 @@ public class ServiceAgentsController : ControllerBase
 
     [Authorize(Roles = $"{UserRoleConstants.Staff},{UserRoleConstants.Admin}")]
     [HttpPut("{agentId}/capabilities")]
-    [SwaggerOperation(
-        Summary = "Cập nhật hồ sơ nghề của thợ",
-        Description = "Cho phép Staff/Admin cập nhật lại danh mục, mức độ phức tạp tối đa và danh sách dịch vụ mà thợ có thể nhận.",
-        OperationId = "UpdateServiceAgentCapabilities",
-        Tags = new[] { "2. UPDATE - Cập nhật (PUT)" })]
-    [ProducesResponseType(typeof(UpdateServiceAgentCapabilitiesResult), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [SwaggerOperation(Summary = "Cập nhật hồ sơ nghề của thợ")]
     public async Task<IActionResult> UpdateCapabilities(
         [FromRoute] Guid agentId,
         [FromBody] UpdateServiceAgentCapabilitiesRequest request,
@@ -102,48 +76,41 @@ public class ServiceAgentsController : ControllerBase
         var command = new UpdateServiceAgentCapabilitiesCommand(
             agentId,
             request.Capabilities
-                .Select(capability => new CapabilityInput(
-                    capability.CategoryId,
-                    capability.MaxComplexityLevel,
-                    capability.ServiceIds))
+                .Select(c => new CapabilityInput(c.CategoryId, c.MaxComplexityLevel, c.ServiceIds))
                 .ToList());
 
         var result = await _mediator.Send(command, cancellationToken);
         return Ok(result);
     }
 
-    /// <summary>
-    /// [DELETE] Vô hiệu hóa đại lý dịch vụ
-    /// </summary>
-    /// <param name="agentId">ID của đại lý dịch vụ cần vô hiệu hóa</param>
-    /// <param name="cancellationToken">Token hủy</param>
-    /// <returns>Không có nội dung trả về</returns>
-    /// <response code="204">Vô hiệu hóa đại lý dịch vụ thành công</response>
-    /// <response code="400">Dữ liệu đầu vào không hợp lệ</response>
-    /// <response code="404">Không tìm thấy đại lý dịch vụ</response>
     [HttpDelete("{agentId}")]
-    [SwaggerOperation(
-        Summary = "Vô hiệu hóa đại lý dịch vụ",
-        Description = "Xóa/vô hiệu hóa một đại lý dịch vụ khỏi hệ thống",
-        OperationId = "DeactivateServiceAgent",
-        Tags = new[] { "3. DELETE - Xóa" })]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [SwaggerOperation(Summary = "Vô hiệu hóa đại lý dịch vụ")]
     public async Task<IActionResult> Deactivate([FromRoute] Guid agentId, CancellationToken cancellationToken)
     {
         var command = new DeactivateServiceAgentCommand(agentId);
         await _mediator.Send(command, cancellationToken);
         return NoContent();
     }
+
+    /// <summary>
+    /// [SEARCH] Tìm kiếm thợ với phân trang và sắp xếp theo score
+    /// </summary>
+    [HttpGet("search")]
+    [SwaggerOperation(Summary = "Tìm kiếm thợ với phân trang và sắp xếp")]
+    public async Task<IActionResult> Search(
+        [FromQuery] Guid? categoryId,
+        [FromQuery] Guid? serviceId,
+        [FromQuery] int? minComplexity,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 5,
+        CancellationToken cancellationToken = default)
+    {
+        var query = new SearchServiceAgentsQuery(categoryId, serviceId, minComplexity, page, pageSize);
+        var result = await _mediator.Send(query, cancellationToken);
+        return Ok(result);
+    }
 }
 
 public record UpdateServiceAgentActiveStatusRequest(bool IsActive);
-
-public record UpdateServiceAgentCapabilitiesRequest(
-    IReadOnlyList<UpdateServiceAgentCapabilityItemRequest> Capabilities);
-
-public record UpdateServiceAgentCapabilityItemRequest(
-    Guid CategoryId,
-    int MaxComplexityLevel,
-    IReadOnlyList<Guid> ServiceIds);
+public record UpdateServiceAgentCapabilitiesRequest(IReadOnlyList<UpdateServiceAgentCapabilityItemRequest> Capabilities);
+public record UpdateServiceAgentCapabilityItemRequest(Guid CategoryId, int MaxComplexityLevel, IReadOnlyList<Guid> ServiceIds);

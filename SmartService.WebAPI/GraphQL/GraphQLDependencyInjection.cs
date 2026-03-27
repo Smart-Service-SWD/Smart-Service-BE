@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using SmartService.API.GraphQL.Queries;
+using SmartService.API.GraphQL.Types;
 
 namespace SmartService.API.GraphQL;
 
@@ -24,6 +25,8 @@ public static class GraphQLDependencyInjection
             .AddType<ServiceFeedbackQuery>()
             .AddType<DashboardQuery>()
             .AddType<ServiceDefinitionQuery>()
+            .AddType<AssignmentType>()
+            .AddType<ServiceAgentType>()
             .AddAuthorization() // Enable authorization directive
             .AddErrorFilter<StandardErrorFilter>() // Standardize GraphQL errors
             .AddHttpRequestInterceptor<HttpRequestInterceptor>() // Ensure HttpContext.User is available

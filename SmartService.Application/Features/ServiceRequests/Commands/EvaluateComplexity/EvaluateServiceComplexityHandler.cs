@@ -24,7 +24,17 @@ public class EvaluateServiceComplexityHandler : IRequestHandler<EvaluateServiceC
         if (serviceRequest == null)
             throw new KeyNotFoundException($"ServiceRequest with ID '{request.ServiceRequestId}' not found.");
 
-        serviceRequest.Evaluate(request.Complexity);
+        // Kiểm tra giá không được thấp hơn giá niêm yết của dịch vụ
+        if (request.ServiceDefinitionId.HasValue && request.EstimatedCost != null)
+        {
+            var definition = await _context.ServiceDefinitions.FindAsync(new object[] { request.ServiceDefinitionId.Value }, cancellationToken);
+            if (definition != null && request.EstimatedCost.Amount < definition.BasePrice)
+            {
+                throw new ServiceRequestException.PriceTooLowException(definition.BasePrice);
+            }
+        }
+
+        serviceRequest.Evaluate(request.Complexity, request.ServiceDefinitionId, request.EstimatedCost);
 
         await _context.SaveChangesAsync(cancellationToken);
 

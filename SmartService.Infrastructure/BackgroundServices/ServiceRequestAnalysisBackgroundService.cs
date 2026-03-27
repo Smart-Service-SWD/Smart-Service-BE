@@ -51,6 +51,7 @@ public class ServiceRequestAnalysisBackgroundService : BackgroundService
 
         var pendingRequests = await context.ServiceRequests
             .Where(x => x.Status == ServiceStatus.AwaitingAnalysis)
+            .OrderBy(x => x.CreatedAt)
             .Take(10)
             .ToListAsync(cancellationToken);
 

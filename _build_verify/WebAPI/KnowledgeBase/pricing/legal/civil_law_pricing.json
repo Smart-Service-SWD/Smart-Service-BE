@@ -1,0 +1,8 @@
+{
+  "subCategoryId": "LEGAL_CIVIL",
+  "pricingByComplexity": [
+    { "complexityLevel": 1, "minPrice": { "amount": 1000000, "currency": "VND" }, "maxPrice": { "amount": 3000000, "currency": "VND" } },
+    { "complexityLevel": 3, "minPrice": { "amount": 5000000, "currency": "VND" }, "maxPrice": { "amount": 10000000, "currency": "VND" } },
+    { "complexityLevel": 5, "minPrice": { "amount": 15000000, "currency": "VND" }, "maxPrice": { "amount": 30000000, "currency": "VND" } }
+  ]
+}

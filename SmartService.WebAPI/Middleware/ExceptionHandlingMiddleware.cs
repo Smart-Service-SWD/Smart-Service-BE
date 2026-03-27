@@ -48,7 +48,7 @@ public class ExceptionHandlingMiddleware
                 HttpStatusCode.BadRequest,
                 AppErrorCodes.REQUEST_400_VALIDATION_FAILED,
                 "Validation",
-                "Validation failed.",
+                validationException.Errors.FirstOrDefault()?.ErrorMessage ?? "Validation failed.",
                 (object)validationException.Errors.Select(e => new { e.PropertyName, e.ErrorMessage })
             ),
 

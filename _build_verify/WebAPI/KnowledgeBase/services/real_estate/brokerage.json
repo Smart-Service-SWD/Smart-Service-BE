@@ -1,0 +1,9 @@
+{
+  "serviceGroup": "REAL_ESTATE",
+  "subCategoryId": "RE_BROKERAGE",
+  "name": "Môi giới bất động sản",
+  "cases": [
+    { "caseId": "RE_BUY_SELL", "name": "Mua bán nhà đất" },
+    { "caseId": "RE_RENT", "name": "Cho thuê nhà đất" }
+  ]
+}
